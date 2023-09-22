@@ -49,7 +49,8 @@ async function getUserByUsername(username) {
         SELECT *
         FROM users
         WHERE username=$1
-        `, [ username ]); 
+        `, [ username ]);
+        return user; 
     } catch (error) {
         console.error("Couldn't get user by username", error)
     }
