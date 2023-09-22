@@ -181,7 +181,7 @@ const productsToCreate = [
     medium: 'Oil paint',
     price: 100000000,
     year: 1665,
-    dimensions: '	44.5cm x 39cm',
+    dimensions: '44.5cm x 39cm',
     imgUrl: 'public/images/girl_with_a_pearl_earring.jpeg',
   },
   {
