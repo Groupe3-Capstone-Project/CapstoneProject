@@ -24,7 +24,16 @@ async function getProductById(id) {
     }
 }
 
-async function createProduct({ title, artist, description, period, medium, price, year, dimensions, imgUrl }) {
+async function createProduct({ title, 
+    artist, 
+    description, 
+    period, 
+    medium, 
+    price, 
+    year, 
+    dimensions, 
+    imgUrl 
+}) {
     try {
         const { rows: [product] } = await client.query(`
         INSERT INTO products(title, artist, description, period, medium, price, year, dimensions, imgUrl)
