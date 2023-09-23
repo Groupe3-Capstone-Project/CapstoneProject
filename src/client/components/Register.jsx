@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { registerUser } from "../api/ajaxHelper";
-import earingPerl from '../IMG/earingPerl.jpg';
+import earingPerl from '../assets/IMG/earingPerl.jpg';
 
 export default function Register({ setToken }) {
   const [username, setUsername] = useState('');
