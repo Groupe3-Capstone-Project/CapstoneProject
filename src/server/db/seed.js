@@ -48,6 +48,7 @@ const createTables = async () => {
             id SERIAL PRIMARY KEY,
             name VARCHAR(255) DEFAULT 'name',
             email VARCHAR(255) UNIQUE NOT NULL,
+            address varchar(225),
             password VARCHAR(255) NOT NULL,
         )`)
     }
