@@ -2,19 +2,20 @@ const client = require('./client');
 const { createUser } = require('./users');
 const {  createProduct } = require('./products');
 
-  
+// Changed to drop tables in order to avoid db conflict  
 async function dropTables() {
   console.log('Dropping All Tables...');
-    try {
-        await client.query(`
-        DROP TABLE IF EXISTS users;
-        DROP TABLE IF EXISTS products;
-        DROP TABLE IF EXISTS orders;
-        `)
-    }
-    catch(error) {
-        throw error;
-    }
+  try {
+      // Drop dependent tables first
+      await client.query('DROP TABLE IF EXISTS order_products CASCADE;');
+      await client.query('DROP TABLE IF EXISTS orders CASCADE;');
+      await client.query('DROP TABLE IF EXISTS products CASCADE;')
+
+      // Finally, drop the "users" table
+      await client.query('DROP TABLE IF EXISTS users CASCADE;');
+  } catch (error) {
+      throw error;
+  }
 }
 
 async function createTables() {
@@ -119,7 +120,7 @@ async function insertUsers() {
       // Add more user objects as needed
     ];
     const users = await Promise.all(usersToCreate.map(createUser));
-    console.log('Seed data inserted successfully.');
+    console.log('Users data inserted successfully.');
     console.log(users);
   } catch (error) {
     console.error('Error inserting users seed data:', error);

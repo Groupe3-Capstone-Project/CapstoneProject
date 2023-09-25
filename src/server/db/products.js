@@ -1,4 +1,4 @@
-const { client } = require('./client');
+const client = require('./client');
 
 
 async function getAllProduct() {
@@ -24,7 +24,8 @@ async function getProductById(id) {
     }
 }
 
-async function createProduct({ title, 
+async function createProduct({ 
+    title, 
     artist, 
     description, 
     period, 
@@ -36,11 +37,17 @@ async function createProduct({ title,
 }) {
     try {
         const { rows: [product] } = await client.query(`
-        INSERT INTO products(title, artist, description, period, medium, price, year, dimensions, imgUrl)
+        INSERT INTO products(title, artist, description, period, medium, price, year, dimensions, "imgUrl")
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING *;
         `, [title, artist, description, period, medium, price, year, dimensions, imgUrl]);
-        return (product)
+        
+        if (product) {
+            return product;
+        } else {
+            console.error("Product not created");
+            return null;
+        }
     } catch (error) {
         console.error("Problem creating product into db", error);
     }
