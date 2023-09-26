@@ -1,7 +1,7 @@
 const client = require('./client');
 
 
-async function getAllProduct() {
+async function getAllProducts() {
     try {
         const { rows: products } = await client.query(`
         SELECT * FROM products;
@@ -72,7 +72,7 @@ async function destroyProduct(id) {
 
 module.exports = {
     client,
-    getAllProduct,
+    getAllProducts,
     getProductById,
     createProduct,
     destroyProduct,
