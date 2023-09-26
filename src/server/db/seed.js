@@ -1,6 +1,8 @@
 const client = require('./client');
 const { createUser } = require('./users');
-const {  createProduct } = require('./products');
+const { createProduct } = require('./products');
+const { createOrder } = require ('./orders');
+const { createOrderProduct } = require ('./orderProducts');
 
 // Changed to drop tables in order to avoid db conflict  
 async function dropTables() {
@@ -50,7 +52,7 @@ async function createTables() {
         await client.query(`
         CREATE TABLE orders(
           id SERIAL PRIMARY KEY,
-          "userId" INT REFERENCES users(id),
+          "userId" INTEGER REFERENCES users(id),
           "orderDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           status VARCHAR(50) DEFAULT 'created'
         );`)
@@ -78,7 +80,6 @@ async function insertUsers() {
         address: '13 broad ave, chicago',
         username: 'princessWarrior',
         password: 'securepass',
-        imgUrl: '',
         isAdmin: false,
       },
       {
@@ -87,7 +88,6 @@ async function insertUsers() {
         address: '14 nonya ave, anywhere',
         username: 'morinosei',
         password: 'strongpass',
-        imgUrl: '',
         isAdmin: true,
       },
       {
@@ -96,7 +96,6 @@ async function insertUsers() {
         address: '25 rue fraca, paris',
         username: 'bellagringa',
         password: 'pass1234',
-        imgUrl: '',
         isAdmin: false,
       },
       {
@@ -105,7 +104,6 @@ async function insertUsers() {
         address: '26 rue tamoum, bordeaux',
         username: 'momoismagic',
         password: 'mysecretpassword',
-        imgUrl: '',
         isAdmin: false,
       },
       {
@@ -114,7 +112,6 @@ async function insertUsers() {
         address: '27 hoka street, pismo',
         username: 'getdagold',
         password: 'password123',
-        imgUrl: '',
         isAdmin: false,
       },
       // Add more user objects as needed
@@ -364,7 +361,7 @@ async function createInitialOrders() {
   try {
     const ordersToCreate = [
       {
-        userId: 2,
+        userId: 5,
         status: 'cancelled'
       },
       {
@@ -372,10 +369,12 @@ async function createInitialOrders() {
         status: 'completed'
       },
       {
-        userId: 1
+        userId: 1,
+        status: 'created'
       },
       {
-        userId: 4
+        userId: 4,
+        status: 'created'
       },
     ];
     const orders = await Promise.all(ordersToCreate.map(createOrder));
@@ -415,7 +414,7 @@ async function createInitialOrderProducts() {
         quantity: 1,
       }
     ];
-    const orderProducts = await Promise.all(orderProductsToCreate.map(createOrderProducts));
+    const orderProducts = await Promise.all(orderProductsToCreate.map(createOrderProduct));
     console.log("OrderProducts created:");
     console.log(orderProducts);
     console.log("Finished creating initial orderProducts");
