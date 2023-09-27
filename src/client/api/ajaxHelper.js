@@ -1,13 +1,25 @@
 
+const BASE_URL = "http://localhost:3000/api"
 
+
+function getHeaders() {
+  let headers = {
+    "Content-Type": "application/json",
+  };
+  const currentToken = localStorage.getItem("auth_token");
+  if (currentToken != null) {
+    headers["Authorization"] = "Bearer " + currentToken;
+    console.log("getHeaders current token:", currentToken);
+  }
+  console.log("Current Headers: " + JSON.stringify(headers));
+  return headers;
+};
 
 export async function registerUser(username, password) {
     try {
         const response = await fetch(`${BASE_URL}/users/register`, {
+          headers: getHeaders(),
             method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            },
             body: JSON.stringify({
                 user: {
                     username,
@@ -28,10 +40,8 @@ export async function registerUser(username, password) {
 export async function loginUser(username, password) {
     try {
         const response = await fetch(`${BASE_URL}/user/login`, {
+          headers: getHeaders(),
             method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json',
-            },
             body: JSON.stringify({
                 user: {
                     username,
@@ -50,10 +60,8 @@ export async function loginUser(username, password) {
 
 export async function fetchAllPosts() {
     try {
-      const res = await fetch(`localhost:3000/api/products`, {
-      headers: {
-        "Content-Type" : "application/json",
-      },
+      const res = await fetch(`${BASE_URL}/products`, {
+        headers: getHeaders(),
       });
       const data = await res.json();
       console.log(data)
@@ -64,14 +72,24 @@ export async function fetchAllPosts() {
     }
   }
 
+  export async function fetchSingleProduct(productId) {
+    try {
+        const response = await fetch(`${BASE_URL}/products/${productId}`, {
+          headers: getHeaders(),
+        });
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+      console.log(error)
+    }
+};
+
   export async function deletePost(postId){
     try {
         const response = await fetch(`${BASE_URL}/posts/postId`, {
+          headers: getHeaders(),
             method: "DELETE",
-            headers: {
-                "content-type" : "application/json",
-                "Authorization" : `Bearer ${token}`,
-            },
         });
         const result = await response.json();
         console.log(result);
@@ -84,10 +102,8 @@ export async function fetchAllPosts() {
   export async function createPost() {
     try {
         const response = await fetch(`${BASE_URL}/posts`, {
+          headers: getHeaders(),
             method: "POST",
-            heather: {
-                "Authorization" : `Bearer ${token}`,
-            },
             body: JSON.stringify({
                 post: {
                     title,
@@ -108,11 +124,8 @@ export async function fetchAllPosts() {
   export async function sendMessage(postId, content) {
     try {
         const response = await fetch(`${BASE_URL}/posts/postId/messages`, {
+           headers: getHeaders(),
             method: "POST",
-            headers: {
-                "Content-Type" : "application/json",
-                "Authorization" : `Bearer ${token}`,
-            },
             body: JSON.stringify({
                 message: {
                     content: content,
@@ -149,11 +162,8 @@ export async function fetchAllPosts() {
   
     try {
       const res = await fetch(`${BASE_URL}/posts/postId`, {
+        headers: getHeaders(),
         method: "PATCH",
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, 
-        },
         body: JSON.stringify(sendData),
       });
       const data = await res.json();
@@ -169,11 +179,8 @@ export async function fetchAllPosts() {
   export async function fetchUserData() {
     try {
       const response = await fetch(`${BASE_URL}/users/me`, {
+        headers: getHeaders(),
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
       });
   
       if (response.ok) {
