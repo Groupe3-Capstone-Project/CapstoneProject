@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { registerUser } from "../api/ajaxHelper";
 import earingPerl from '../assets/IMG/earingPerl.jpg';
+import { useNavigate } from "react-router-dom";
 
-export default function Register({ setToken }) {
+export default function Register({ token, setToken }) {
   const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
   const [error, setError] = useState('');
   const [passwordMismatchError, setPasswordMismatchError] = useState('');
+  const navigate = useNavigate();
 
   const handlerRegister = async () => {
     try {
@@ -16,8 +21,9 @@ export default function Register({ setToken }) {
         return;
       }
 
-      await registerUser(username, password);
-      setToken(data.token);
+      const user = await registerUser(name, email, address, username, password); // Get the token
+      console.log(user);
+      navigate("/products")
     } catch (error) {
       setError("Registration failed: " + error.message);
       console.error("Registration failed: ", error);
@@ -52,6 +58,27 @@ export default function Register({ setToken }) {
                 placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+              />
+              <input
+                className="rounded-lg bg-gray-700 mt-2 p-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none"
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <input
+                className="rounded-lg bg-gray-700 mt-2 p-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none"
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <input
+                className="rounded-lg bg-gray-700 mt-2 p-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none"
+                type="text"
+                placeholder="Address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
               />
             </div>
             <div className="flex flex-col text-gray-400 py-2">

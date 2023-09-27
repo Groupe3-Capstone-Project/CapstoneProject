@@ -19,7 +19,7 @@ export default function MainContainer() {
             <Routes>
                 <Route path="/" element={<WelcomePage token={token} setToken={setToken} />} />
                 <Route path="/home" element={<Home token={token} setToken={setToken} />} />
-                <Route path="/register" element={<Register setToken={setToken} />} />
+                <Route path="/register" element={<Register token={token} setToken={setToken} />} />
                 <Route path="/products" element={<Products token={token} setToken={setToken} />} />
                 <Route path="/login" element={<Login setToken={setToken} />} />
                 <Route path="/products/:id" element={<SingleProduct token={token} setToken={setToken} />} />

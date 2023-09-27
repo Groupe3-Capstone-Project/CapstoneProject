@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { loginUser } from "../api/ajaxHelper";
 import earingPerl from '../assets/IMG/earingPerl.jpg';
+import { useNavigate } from "react-router-dom";
 
 export default function Login({ setToken }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handlerLogin = async () => {
     try {
       const response = await loginUser(username, password);
-      if (response && response.token) {
-        setToken(response.token);
-      } else {
-        setError("Login failed: Invalid username or password");
-      }
+      console.log(response)
+        navigate("/products")
     } catch (error) {
       setError("Login failed: " + error.message);
       console.error("Login failed: ", error);
@@ -55,7 +54,7 @@ export default function Login({ setToken }) {
             <button className="w-full my-5 py-2 bg-teal-500 shadow-lg shadow-teal-500/50 hover:shadow-teal-500/40 text-white font-semibold rounded-lg" type="button" onClick={handlerLogin}>
               Login
             </button>
-            {error && <p className=" text-white">{error}</p>}
+            {error && <p className=" text-red-500">{error}</p>}
           </form>
         </div>
       </div>
