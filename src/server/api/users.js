@@ -7,7 +7,8 @@ const {
     createUser,
     getUser,
     getAllUsers,
-    getUserByEmail
+    getUserByEmail,
+    getUserByUsername
 } = require('../db');
 
 
@@ -24,47 +25,48 @@ usersRouter.get('/', async( req, res, next) => {
 });
 
 usersRouter.post('/login', async(req, res, next) => {
-    const { email, password } = req.body;
-    if(!email || !password) {
+    const { username, password } = req.body;
+    if(!username || !password) {
         next({
             name: 'MissingCredentialsError',
             message: 'Please supply both an email and password'
         });
     }
     try {
-        const user = await getUser({email, password});
+        const user = await getUser({username, password});
         if(user) {
             const token = jwt.sign({
                 id: user.id,
-                email
-            }, process.env.JWT_SECRET, {
+                username: user.username
+            }, JWT_SECRET, {
                 expiresIn: '1w'
             });
 
-            res.send({
+            res.status(200).json({
                 message: 'Login successful!',
-                token
+                token: token,
+                user: user
             });
         }
         else {
-            next({
+            res.status(401).json({
                 name: 'IncorrectCredentialsError',
                 message: 'Username or password is incorrect'
             });
         }
-    } catch(err) {
-        next(err);
+    } catch(error) {
+        next(error);
     }
 });
 
 usersRouter.post('/register', async(req, res, next) => {
-    const { name, email, password } = req.body;
+    const { name, email, address, username, password, imgUrl, isAdmin } = req.body;
 
     try {
-        const _user = await getUserByEmail(email);
+        const _user = await getUserByUsername(username);
 
         if(_user) {
-            next({
+            res.status(400).json({
                 name: 'UserExistsError',
                 message: 'A user with that email already exists'
             });
@@ -73,19 +75,24 @@ usersRouter.post('/register', async(req, res, next) => {
         const user = await createUser({
             name,
             email,
-            password
+            address,
+            username,
+            password,
+            imgUrl,
+            isAdmin
         });
 
         const token = jwt.sign({
             id: user.id,
-            email
-        }, process.env.JWT_SECRET, {
+            username: user.username
+        }, JWT_SECRET, {
             expiresIn: '1w'
         });
 
-        res.send({
+        res.status(201).json({
             message: 'Sign up successful!',
-            token
+            token: token,
+            user: user
         });
     } catch({name, message}) {
         next({name, message})

@@ -12,6 +12,14 @@ async function createUser({
     isAdmin,
 }) {
     try {
+        // Insure default imgUrl value is place holder if none provided, and not null
+        if (!imgUrl) {
+            imgUrl = 'https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-default-male-avatar-png-image_2811083.jpg';
+        }
+        // Insure default isAdmin value is false if none provided, and not null
+        if (!isAdmin) {
+            isAdmin = false;
+        } 
         const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
         const { rows: [user] } = await client.query(`
         INSERT INTO users(name, email, address, username, password, "imgUrl", "isAdmin")
