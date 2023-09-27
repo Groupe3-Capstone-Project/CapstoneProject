@@ -50,11 +50,13 @@ export async function loginUser(username, password) {
 
 export async function fetchAllPosts() {
     try {
-      const res = await fetch(`${BASE_URL}/posts`, {
-        headers: getHeaders(),
+      const res = await fetch(`localhost:3000/api/products`, {
+      headers: {
+        "Content-Type" : "application/json",
+      },
       });
       const data = await res.json();
-  
+      console.log(data)
       return data;
     } catch (error) {
       console.error(error);
