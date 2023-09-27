@@ -1,5 +1,5 @@
 
-
+const BASE_URL = "http://localhost:3000/api"
 
 export async function registerUser(username, password) {
     try {
@@ -50,7 +50,7 @@ export async function loginUser(username, password) {
 
 export async function fetchAllPosts() {
     try {
-      const res = await fetch(`localhost:3000/api/products`, {
+      const res = await fetch(`${BASE_URL}/products`, {
       headers: {
         "Content-Type" : "application/json",
       },
@@ -63,6 +63,21 @@ export async function fetchAllPosts() {
       return [];
     }
   }
+
+  export async function fetchSingleProduct(productId) {
+    try {
+        const response = await fetch(`${BASE_URL}/products/${productId}`, {
+          headers: {
+            "content-type" : "application/json",
+          },
+        });
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+      console.log(error)
+    }
+};
 
   export async function deletePost(postId){
     try {
