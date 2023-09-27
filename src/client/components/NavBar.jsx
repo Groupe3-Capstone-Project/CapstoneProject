@@ -8,7 +8,10 @@ export default function NavBar() {
         <Link to="/" className="text-2xl font-bold">Capstone</Link>
         <ul className="flex space-x-4">
           <li>
-            <Link to="/" className="hover:text-blue-400">Home</Link>
+            <Link to="/" className="hover:text-blue-400">Welcome Page</Link>
+          </li>
+          <li>
+            <Link to="/home" className="hover:text-blue-400">Home</Link>
           </li>
           <li>
             <Link to="/register" className="hover:text-blue-400">Register</Link>
@@ -19,8 +22,12 @@ export default function NavBar() {
           <li>
             <Link to="/logout" className="hover:text-blue-400">Logout</Link>
           </li>
+          <li>
+            <Link to="/post" className="hover:text-blue-400">Post</Link>
+          </li>
         </ul>
       </div>
     </nav>
   );
 }
+
