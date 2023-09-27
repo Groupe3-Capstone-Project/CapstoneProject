@@ -13,7 +13,7 @@ export default function SingleProduct() {
                     <div>
                         <div>
                             <img
-                              src={product.imageUrl}
+                              src={product.imgUrl}
                               alt=""
                             />
                         </div>
