@@ -6,7 +6,7 @@ import Register from "./Register"
 import Login from "./Login"
 import NavBar from "./NavBar";
 import WelcomePage from "./WelcomePage";
-import Post from "./Post";
+import Products from "./Products";
 
 
 
@@ -20,8 +20,8 @@ export default function MainContainer() {
                 <Route path="/" element={<WelcomePage token={token} setToken={setToken} />} />
                 <Route path="/home" element={<Home token={token} setToken={setToken} />} />
                 <Route path="/register" element={<Register setToken={setToken} />} />
+                <Route path="/products" element={<Products token={token} setToken={setToken} />} />
                 <Route path="/login" element={<Login setToken={setToken} />} />
-                <Route path="/post" element={<Post token={token} setToken={setToken} />} />
             </Routes>
         </div>
     )

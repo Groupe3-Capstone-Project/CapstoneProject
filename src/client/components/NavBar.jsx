@@ -20,10 +20,10 @@ export default function NavBar() {
             <Link to="/login" className="hover:text-blue-400">Login</Link>
           </li>
           <li>
-            <Link to="/logout" className="hover:text-blue-400">Logout</Link>
+            <Link to="/products" className="hover:text-blue-400">Products</Link>
           </li>
           <li>
-            <Link to="/post" className="hover:text-blue-400">Post</Link>
+            <Link to="/logout" className="hover:text-blue-400">Logout</Link>
           </li>
         </ul>
       </div>

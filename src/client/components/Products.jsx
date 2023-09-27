@@ -3,78 +3,78 @@ import { fetchAllPosts } from "../api/ajaxHelper";
 import { BsPlus, BsEyeFill } from "react-icons/bs"
 
 
-const dummyPosts = [
-    {
-        id: 1,
-        imgUrl: "https://news.artnet.com/app/news-upload/2014/07/Johannes_Vermeer_1632-1675_-_The_Girl_With_The_Pearl_Earring_1665-e1435072137333.jpg",
-        title: "Dummy Post 1",
-        artist: "Dummy Artist 1",
-        description: "This is a dummy post description for post 1.",
-        price: "7000",
-    },
-    {
-        id: 2,
-        imgUrl: "https://news.artnet.com/app/news-upload/2014/07/American-Gothic.jpg",
-        title: "Dummy Post 2",
-        artist: "Dummy Artist 2",
-        description: "This is a dummy post description for post 2.",
-        price: "7000",
-    },
-    {
-        id: 3,
-        imgUrl: "https://sep.turbifycdn.com/ty/cdn/madisonartshop/most-famous-paintings-1.jpg?t=1678352599&",
-        title: "Dummy Post 3",
-        artist: "Dummy Artist 3",
-        description: "This is a dummy post description for post 3.",
-        price: "7000",
-    },
-    {
-        id: 4,
-        imgUrl: "https://sep.turbifycdn.com/ty/cdn/madisonartshop/most-famous-paintings-16.jpg?t=1678352599&",
-        title: "Dummy Post 4",
-        artist: "Dummy Artist 4",
-        description: "This is a dummy post description for post 4.",
-        price: "7000",
-    },
-    {
-        id: 5,
-        imgUrl: "https://sep.turbifycdn.com/ty/cdn/madisonartshop/most-famous-paintings-3.jpg?t=1678352599&",
-        title: "Dummy Post 5",
-        artist: "Dummy Artist 5",
-        description: "This is a dummy post description for post 5.",
-        price: "7000",
-    },
-    {
-        id: 6,
-        imgUrl: "https://sep.turbifycdn.com/ty/cdn/madisonartshop/most-famous-paintings-17.jpg?t=1678352599&",
-        title: "Dummy Post 6",
-        artist: "Dummy Artist 6",
-        description: "This is a dummy post description for post 6.",
-        price: "7000",
-    },
-];
+// const dummyPosts = [
+//     {
+//         id: 1,
+//         imgUrl: "https://news.artnet.com/app/news-upload/2014/07/Johannes_Vermeer_1632-1675_-_The_Girl_With_The_Pearl_Earring_1665-e1435072137333.jpg",
+//         title: "Dummy Post 1",
+//         artist: "Dummy Artist 1",
+//         description: "This is a dummy post description for post 1.",
+//         price: "7000",
+//     },
+//     {
+//         id: 2,
+//         imgUrl: "https://news.artnet.com/app/news-upload/2014/07/American-Gothic.jpg",
+//         title: "Dummy Post 2",
+//         artist: "Dummy Artist 2",
+//         description: "This is a dummy post description for post 2.",
+//         price: "7000",
+//     },
+//     {
+//         id: 3,
+//         imgUrl: "https://sep.turbifycdn.com/ty/cdn/madisonartshop/most-famous-paintings-1.jpg?t=1678352599&",
+//         title: "Dummy Post 3",
+//         artist: "Dummy Artist 3",
+//         description: "This is a dummy post description for post 3.",
+//         price: "7000",
+//     },
+//     {
+//         id: 4,
+//         imgUrl: "https://sep.turbifycdn.com/ty/cdn/madisonartshop/most-famous-paintings-16.jpg?t=1678352599&",
+//         title: "Dummy Post 4",
+//         artist: "Dummy Artist 4",
+//         description: "This is a dummy post description for post 4.",
+//         price: "7000",
+//     },
+//     {
+//         id: 5,
+//         imgUrl: "https://sep.turbifycdn.com/ty/cdn/madisonartshop/most-famous-paintings-3.jpg?t=1678352599&",
+//         title: "Dummy Post 5",
+//         artist: "Dummy Artist 5",
+//         description: "This is a dummy post description for post 5.",
+//         price: "7000",
+//     },
+//     {
+//         id: 6,
+//         imgUrl: "https://sep.turbifycdn.com/ty/cdn/madisonartshop/most-famous-paintings-17.jpg?t=1678352599&",
+//         title: "Dummy Post 6",
+//         artist: "Dummy Artist 6",
+//         description: "This is a dummy post description for post 6.",
+//         price: "7000",
+//     },
+// ];
 
 
-export default function Post() {
-    const [products, setProducts] = useState(dummyPosts);
+export default function Products() {
+    const [products, setProducts] = useState([]);
     const [error, setError] = useState(null);
 
-    // useEffect(() => {
-    //     async function fetchPosts() {
-    //         try {
-    //             const returnedProducts = await fetchAllPosts();
-    //             setPosts(returnedProducts);
-    //         } catch (err) {
-    //             console.error(err)
-    //             setError(err);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     }
+    useEffect(() => {
+        async function fetchPosts() {
+            try {
+                const returnedProducts = await fetchAllPosts();
+                setPosts(returnedProducts);
+            } catch (err) {
+                console.error(err)
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        }
 
-    //     fetchPosts();
-    // }, []);
-    
+        fetchPosts();
+    }, []);
+
 
 
 
