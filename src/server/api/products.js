@@ -1,9 +1,9 @@
 const express = require("express");
 productsRouter = express.Router();
 const { requireAdmin } = require('./utils');
-const { getAllProducts } = require('../db/products');
+const { getAllProducts, getProductById } = require('../db/products');
 
-productsRouter.get("/", async (req, res, next) => {
+productsRouter.get('/', async (req, res, next) => {
     try {
       const allProducts = await getAllProducts();
   
@@ -11,6 +11,17 @@ productsRouter.get("/", async (req, res, next) => {
     } catch ({ name, message }) {
       next({ name, message });
     }
-  });
+});
+
+productsRouter.get('/:productId', async (req, res, next) => {
+    try {
+        const product = await getProductById(req.params.productId);
+        res.send(product)
+    } catch (error) {
+        console.error("Failed to get product:", error);
+    }
+});
+
+
 
   module.exports = productsRouter;
