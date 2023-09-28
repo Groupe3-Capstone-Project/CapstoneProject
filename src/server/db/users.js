@@ -1,5 +1,6 @@
 const client = require('./client')
 const bcrypt = require('bcrypt');
+const { dbFields } = require('./utils');
 const SALT_COUNT = 10;
 
 async function createUser({ 
@@ -43,7 +44,7 @@ async function getAllUsers() {
     } catch (error) {
         console.error("Couldn't get all users:", error);
     }
-}
+};
 
 async function getUser({ username, password}) {
     if(!username || !password) {
@@ -60,7 +61,7 @@ async function getUser({ username, password}) {
     } catch (error) {
         throw error;
     }
-}
+};
 
 async function getUserById(id) {
     try {
@@ -73,7 +74,7 @@ async function getUserById(id) {
     } catch (error) {
         console.error("Couldn't get User by Id:", error);
     }
-}
+};
 
 async function getUserByUsername(username) {
     try {
@@ -86,7 +87,7 @@ async function getUserByUsername(username) {
     } catch (error) {
         console.error("Couldn't get user by username", error)
     }
-}
+};
 
 const getUserByEmail = async(email) => {
     try {
@@ -102,7 +103,47 @@ const getUserByEmail = async(email) => {
     } catch (error) {
         throw error;
     }
-}
+};
+
+// const { insert, vals } = dbFields(toUpdate); // Use dbFields to generate insert and vals
+//     const setClauses = insert;
+
+async function updateUser(id, fields) {
+    try {
+        const toUpdate = {};
+        
+        for(let column in fields) {
+          if(fields[column] !== undefined) { 
+            toUpdate[column] = fields[column];
+          }
+        }
+
+        if (toUpdate.hasOwnProperty('username')) {
+            // Check if the new username already exists in the database, return early if it's the case
+            const existingUser = await getUserByUsername(toUpdate.username);
+            if (existingUser && existingUser.id !== id) {
+              throw new Error('Username already exists.');
+            }
+        }
+        let user;
+        if (dbFields(toUpdate).insert.length > 0) {
+            const {rows} = await client.query(`
+            UPDATE users
+            SET ${ dbFields(toUpdate).insert }
+            WHERE id=${ id }
+            RETURNING *;
+            `, Object.values(toUpdate));
+
+            user = rows[0];
+        }
+        console.log("Updated user correctly:", user);
+        return user;
+    } catch (error) {
+        console.error("DB can't update user:", error);
+        throw error
+    }    
+};
+
 
 module.exports = {
     createUser,
@@ -111,4 +152,52 @@ module.exports = {
     getUserById,
     getUserByEmail,
     getUserByUsername,
+    updateUser
 };
+// async function updateUser(id, fields) {
+//     try {
+//         const toUpdate = {};
+//         const queryValues = [id];
+        
+//         for(let column in fields) {
+//           if(fields[column] !== undefined) { 
+//             toUpdate[column] = fields[column];
+//             queryValues.push(fields[column]);
+//           }
+//         }
+
+//         if (toUpdate.hasOwnProperty('username')) {
+//             // Check if the new username already exists in the database, return early if it's the case
+//             const existingUser = await getUserByUsername(toUpdate.username);
+//             if (existingUser && existingUser.id !== id) {
+//               throw new Error('Username already exists.');
+//             }
+//         }
+
+//         let user;
+//         if (Object.keys(toUpdate).length > 0) {
+//             const setClauses = Object.keys(toUpdate)
+//         .map((column, index) => `"${column}" = $${index + 2}`)
+//         .join(', ');
+
+            
+//             const queryString = `
+//             UPDATE users
+//             SET ${setClauses}
+//             WHERE id = $1
+//             RETURNING *;
+//           `;
+          
+//           // Log the generated query and values for debugging
+//           console.log('Generated Query:', queryString);
+//           console.log('Query Values:', queryValues);
+          
+//           const { rows } = await client.query(queryString, queryValues);
+//           user = rows[0];
+//         }
+//         return user;
+//     } catch (error) {
+//         console.error("DB can't update user:", error);
+//         throw error
+//     }    
+// };

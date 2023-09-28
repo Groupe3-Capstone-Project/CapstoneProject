@@ -8,8 +8,11 @@ const {
     getUser,
     getAllUsers,
     getUserByEmail,
-    getUserByUsername
+    getUserByUsername,
+    getUserById,
+    updateUser
 } = require('../db');
+const { requireUser, requireAdmin, requiredNotSent } = require('./utils');
 
 
 usersRouter.get('/', async( req, res, next) => {
@@ -73,14 +76,7 @@ usersRouter.post('/register', async(req, res, next) => {
         }
 
         const user = await createUser({
-            name,
-            email,
-            address,
-            username,
-            password,
-            imgUrl,
-            isAdmin
-        });
+            name, email, address, username, password, imgUrl, isAdmin });
 
         const token = jwt.sign({
             id: user.id,
@@ -97,6 +93,33 @@ usersRouter.post('/register', async(req, res, next) => {
     } catch({name, message}) {
         next({name, message})
     }
-})
+});
+
+usersRouter.patch('/:userId', requireUser, requiredNotSent({requiredParams: ['name', 'email', 'address', 'username', 'imgurl', 'isAdmin'], atLeastOne: true}), async (req, res, next) => {
+    try {
+        const userToUpdate = await  getUserById(req.params.userId);
+        if (!userToUpdate) {
+            return res.status(404).json({
+                message: 'User not found',
+            });
+        }
+
+        if (userToUpdate.id !== req.user.id) {
+            return res.status(403).json({
+              message: 'Access denied. You can only update your own user profile.',
+            });
+        }
+
+        const { name, email, address, imgUrl, isAdmin } = req.body;
+        const fieldsToUpdate = { name, email, address, imgUrl, isAdmin };
+        const updatedUser = await updateUser(req.params.userId, fieldsToUpdate)
+        res.status(200).json({
+            message: "User succesfully updated:",
+            user: updatedUser});
+
+    } catch (error) {
+        next("Problem updating user:" , error);
+    }
+});
 
 module.exports = usersRouter;
