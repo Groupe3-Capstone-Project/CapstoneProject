@@ -9,15 +9,11 @@ export default function SingleProduct() {
     function renderSingleProduct() {
         return (
             <div key={product.id}>
-                <div>
-                    <div>
-                        <div>
-                            <img
-                              src={product.imgUrl}
-                              alt=""
-                            />
-                        </div>
-                    </div>
+                 <div>
+                     <img
+                      src={product.imgUrl}
+                         alt=""
+                       />
                 </div>
                 <div>
                     <div className=" text-sm capitalize text-gray-500 mb-1">{product.period}</div>

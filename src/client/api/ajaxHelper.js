@@ -15,44 +15,52 @@ function getHeaders() {
   return headers;
 };
 
-export async function registerUser(username, password) {
+
+export async function registerUser( name, email, address, username, password, imgUrl, isAdmin) {
     try {
         const response = await fetch(`${BASE_URL}/users/register`, {
           headers: getHeaders(),
             method: 'POST',
             body: JSON.stringify({
-                user: {
+                    name,
+                    email,
+                    address,
                     username,
-                    password
-                },
+                    password,
+                    imgUrl,
+                    isAdmin,
+                
             }),
         });
 
         const data = await response.json()
-        window.localStorage.setItem("token", data);
-        console.log(data);
+        const token = data.token;
+        window.localStorage.setItem("token", token);
+        // console.log(data);
+        return token;
     } catch (error) {
         console.error("An error occurred: ", error);
+        throw error;
     }
 }
 
 
 export async function loginUser(username, password) {
     try {
-        const response = await fetch(`${BASE_URL}/user/login`, {
+        const response = await fetch(`${BASE_URL}/users/login`, {
           headers: getHeaders(),
             method: 'POST',
             body: JSON.stringify({
-                user: {
                     username,
-                    password
-                },
+                    password,
             }),
         });
 
         const data = await response.json();
-        window.localStorage.setItem("token")
+        const token = data.token;
+        window.localStorage.setItem("token", token)
         console.log(data)
+        return token;
     } catch (error) {
         console.error("An error occurred: ", error)
     }

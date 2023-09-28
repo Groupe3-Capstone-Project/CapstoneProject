@@ -56,8 +56,8 @@ export default function Products() {
                             </div>
                         </div>
                         <div>
+                            <h2 className=" text-sm capitalize text-gray-500 mb-1">{product.artist}</h2>
                             <h3 className="font-semibold mb-1">{product.title}</h3>
-                            <h2 className="font-semibold">{product.artist}</h2>
                             <p className="font-semibold">$ {product.price}</p>
                         </div>
                     </div>
