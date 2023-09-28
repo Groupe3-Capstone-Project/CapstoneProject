@@ -25,17 +25,12 @@ async function getProductById(id) {
 }
 
 async function createProduct({ 
-    title, 
-    artist, 
-    description, 
-    period, 
-    medium, 
-    price, 
-    year, 
-    dimensions, 
-    imgUrl 
-}) {
+    title, artist, description, period, medium, price, year, dimensions, imgUrl }) {
     try {
+        // Insure placeholder img is attributed if none provided by user
+        if (!imgUrl) {
+            imgUrl = 'https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-default-male-avatar-png-image_2811083.jpg';
+        }
         const { rows: [product] } = await client.query(`
         INSERT INTO products(title, artist, description, period, medium, price, year, dimensions, "imgUrl")
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -55,15 +50,17 @@ async function createProduct({
 
 async function destroyProduct(id) {
     try {
-        const { rows: [product] } = await client.query(`
+        await client.query(`
         DELETE FROM order_products
-        USING products
-        WHERE products.id = order_products."productId"
-        AND products.id = $1;
+        WHERE "productId" = $1;
+    `, [id]);
+
+    
+    const { rows: [product] } = await client.query(`
         DELETE FROM products
-        WHERE products.id = $1
+        WHERE id = $1
         RETURNING *;
-        `, [id]);
+    `, [id]);
         return product;
     } catch (error) {
         console.error("Problem destroying product", error);
