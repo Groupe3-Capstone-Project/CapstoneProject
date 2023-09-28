@@ -20,15 +20,15 @@ apiRouter.use(async (req, res, next) => {
     const token = auth.slice(prefix.length);
     
     try {
-      const parsedToken = jwt.verify(token, JWT_SECRET);
-      const id = parsedToken && parsedToken.id
+      const { id } = jwt.verify(token, JWT_SECRET);
+      
       if (id) {
         req.user = await getUserById(id);
         next(); 
       }
       // TODO - Call 'jwt.verify()' to see if the token is valid. If it is, use it to get the user's 'id'. Look up the user with their 'id' and set 'req.user'
-    } catch (error) {
-      next(error);
+    } catch ({ name, message }) {
+      next({ name, message });
     }
   } 
   else {
