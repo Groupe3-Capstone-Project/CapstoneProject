@@ -104,9 +104,12 @@ usersRouter.patch('/:userId', requireUser, requiredNotSent({requiredParams: ['na
             });
         }
 
-        if (userToUpdate.id !== req.user.id) {
+        console.log('req.user.isAdmin:', req.user.isAdmin);
+        console.log('userToUpdate.id:', userToUpdate.id);
+
+        if (!req.user.isAdmin && userToUpdate.id !== req.user.id) {
             return res.status(403).json({
-              message: 'Access denied. You can only update your own user profile.',
+                message: 'Access denied. You can only update your own user profile or you must be an admin to update others.',
             });
         }
 
