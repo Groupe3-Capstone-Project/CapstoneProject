@@ -10,10 +10,15 @@ function requireUser(req, res, next) {
 };
 
 function requireAdmin(req, res, next) {
-    if (!req.user.isAdmin) {
-        next({
-            name: "NotAdmin",
-            message: "You must be an admin to perform this action"
+    if (!req.user) {
+        return res.status(401).send({
+          name: "MissingUserError",
+          message: "You must be logged in to perform this action",
+        });
+      } else if (!req.user.isAdmin) {
+        return res.status(403).send({
+          name: "NotAdmin",
+          message: "You must be an admin to access this information or perform this action",
         });
     }
     next();

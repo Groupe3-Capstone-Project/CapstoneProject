@@ -105,9 +105,6 @@ const getUserByEmail = async(email) => {
     }
 };
 
-// const { insert, vals } = dbFields(toUpdate); // Use dbFields to generate insert and vals
-//     const setClauses = insert;
-
 async function updateUser(id, fields) {
     try {
         const toUpdate = {};
@@ -144,6 +141,19 @@ async function updateUser(id, fields) {
     }    
 };
 
+async function destroyUser(id) {
+    try {
+        const { rows: [user] } = await client.query(`
+        DELETE FROM users
+        WHERE id = $1
+        RETURNING *;
+        `, [id]);
+        return user;
+        } catch (error) {
+        console.error("Problem destroying user", error);
+    }
+}
+
 
 module.exports = {
     createUser,
@@ -152,7 +162,8 @@ module.exports = {
     getUserById,
     getUserByEmail,
     getUserByUsername,
-    updateUser
+    updateUser,
+    destroyUser
 };
 // async function updateUser(id, fields) {
 //     try {

@@ -10,7 +10,8 @@ const {
     getUserByEmail,
     getUserByUsername,
     getUserById,
-    updateUser
+    updateUser,
+    destroyUser
 } = require('../db');
 const { requireUser, requireAdmin, requiredNotSent } = require('./utils');
 
@@ -122,6 +123,17 @@ usersRouter.patch('/:userId', requireUser, requiredNotSent({requiredParams: ['na
 
     } catch (error) {
         next("Problem updating user:" , error);
+    }
+});
+
+usersRouter.delete('/:userId', requireAdmin, async (req, res, next) => {
+    try {
+        const deletedUser = await destroyUser(req.params.userId);
+        res.status(200).json({
+            message: "User successfully deleted:",
+            user: deletedUser})
+    } catch (error) {
+        next(error);
     }
 });
 

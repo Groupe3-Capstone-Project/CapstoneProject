@@ -48,6 +48,10 @@ async function createProduct({
     }
 };
 
+async function updateProduct() {
+    
+}
+
 async function destroyProduct(id) {
     try {
         await client.query(`
