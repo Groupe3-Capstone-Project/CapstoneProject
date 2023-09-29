@@ -35,8 +35,18 @@ productsRouter.post('/', requireAdmin, async (req, res, next) => {
     }
 });
 
+
+
 productsRouter.delete('/:productId', requireAdmin, async (req, res, next) => {
     try {
+        const productId = req.params.productId;
+        const product = await getProductById(productId)
+        if (!product) {
+            return res.status(404).send({
+                name: "ProductNotFoundError",
+                message: `Product with ID ${productId} not found.`,
+            });
+        }
         const deletedProduct = await destroyProduct(req.params.productId);
         res.send(deletedProduct);
     } catch (error) {
