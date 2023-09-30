@@ -2,7 +2,8 @@ const client = require('./client');
 const { createUser } = require('./users');
 const { createProduct } = require('./products');
 const { createOrder } = require ('./orders');
-const { createOrderProduct } = require ('./orderProducts');
+const { addProductToOrder } = require ('./orderProducts');
+const { IMAGE_BASE_URL } = process.env;
 
 // Changed to drop tables in order to avoid db conflict  
 async function dropTables() {
@@ -414,7 +415,7 @@ async function createInitialOrderProducts() {
         quantity: 1,
       }
     ];
-    const orderProducts = await Promise.all(orderProductsToCreate.map(createOrderProduct));
+    const orderProducts = await Promise.all(orderProductsToCreate.map(addProductToOrder));
     console.log("OrderProducts created:");
     console.log(orderProducts);
     console.log("Finished creating initial orderProducts");
