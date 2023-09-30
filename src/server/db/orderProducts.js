@@ -1,6 +1,6 @@
 const client = require('./client'); // Import your PostgreSQL client
 
-async function createOrderProduct({
+async function addProductToOrder({
     orderId, 
     productId, 
     price,
@@ -21,6 +21,6 @@ async function createOrderProduct({
     console.error('Error creating order product:', error);
     throw error;
   }
-}
+};
 
-module.exports = { createOrderProduct };
+module.exports = { addProductToOrder };
