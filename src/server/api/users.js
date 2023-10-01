@@ -16,7 +16,7 @@ const {
 const { requireUser, requireAdmin, requiredNotSent } = require('./utils');
 
 
-usersRouter.get('/', async( req, res, next) => {
+usersRouter.get('/', requireAdmin, async( req, res, next) => {
     try {
         const users = await getAllUsers();
 
