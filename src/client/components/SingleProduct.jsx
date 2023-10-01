@@ -8,14 +8,12 @@ export default function SingleProduct() {
 
     function renderSingleProduct() {
         return (
-            <div key={product.id}>
-                 <div>
+            <div>
+                <div key={product.id}>
                      <img
                       src={product.imgUrl}
                          alt=""
                        />
-                </div>
-                <div>
                     <div className=" text-sm capitalize text-gray-500 mb-1">{product.period}</div>
                     <h3 className="font-semibold mb-1">{product.title}</h3>
                     <h2 className="font-semibold">{product.artist}</h2>
@@ -36,7 +34,7 @@ export default function SingleProduct() {
         setProduct(data);  
     }
     singlePlayerHandle();
- }, []);
+ }, [id]);
 
 
  return (
