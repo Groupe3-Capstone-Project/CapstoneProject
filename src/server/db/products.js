@@ -69,7 +69,7 @@ async function destroyProduct(id) {
     } catch (error) {
         console.error("Problem destroying product", error);
     }
-}
+};
 
 module.exports = {
     client,
@@ -77,4 +77,4 @@ module.exports = {
     getProductById,
     createProduct,
     destroyProduct,
-}
+};
