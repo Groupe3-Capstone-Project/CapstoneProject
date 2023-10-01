@@ -35,8 +35,6 @@ productsRouter.post('/', requireAdmin, async (req, res, next) => {
     }
 });
 
-
-
 productsRouter.delete('/:productId', requireAdmin, async (req, res, next) => {
     try {
         const productId = req.params.productId;
@@ -56,4 +54,4 @@ productsRouter.delete('/:productId', requireAdmin, async (req, res, next) => {
 
 
 
-  module.exports = productsRouter;
+module.exports = productsRouter;

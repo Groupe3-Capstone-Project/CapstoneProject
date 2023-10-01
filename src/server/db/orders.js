@@ -46,35 +46,96 @@ async function getOrderById(id) {
     }
 };
 
-async function getCartByUserId(id) {
+async function getOrderByUserId(id) {
+    try {
+        const { rows: order } = await client.query(`
+            SELECT *
+            FROM orders
+            WHERE "userId" = $1; 
+        `, [id]);
+
+        if (!order) {
+            return null;
+        }
+        return order;
+    } catch (error) {
+        console.error("Couldn't get order by id:", error);
+    }
+};
+
+async function getCartByUserId(userId) {
     try {
         const { rows } = await client.query(`
         SELECT
             orders."userId" as user_id,
             orders.id AS order_id,
-            products.id AS product_id,
-            products.title,
-            products.artist,
-            order_products.quantity,
-            order_products.price
+            orders.status
         FROM 
             orders
-        JOIN
-            order_products ON orders.id = order_products."orderId"
-        JOIN
-            products ON order_products."productId" = products.id
         WHERE
             orders."userId" = $1
         AND 
             orders.status = 'created'
-        `, [id]);
+        `, [userId]);
+
         if (rows.length === 0) {
-            return null; // Return null if no cart is found
+            return null; // Return null if no cart order with status 'created' is found
         }
-        return rows 
+console.log("Fired from getCartByUserId:", rows)
+        return rows;
     } catch (error) {
-        console.error("Could get order by userId:", error);
+        console.error("Could not get cart order by userId:", error);
         throw error;
+    }
+}
+
+// async function getCartByUserId(id) {
+//     try {
+//         const { rows } = await client.query(`
+//         SELECT
+//             orders."userId" as user_id,
+//             orders.id AS order_id,
+//             products.id AS product_id,
+//             products.title,
+//             products.artist,
+//             order_products.quantity,
+//             order_products.price
+//         FROM 
+//             orders
+//         JOIN
+//             order_products ON orders.id = order_products."orderId"
+//         JOIN
+//             products ON order_products."productId" = products.id
+//         WHERE
+//             orders."userId" = $1
+//         AND 
+//             orders.status = 'created'
+//         `, [id]);
+//         if (rows.length === 0) {
+//             return null; // Return null if no cart is found
+//         }
+//         return rows 
+//     } catch (error) {
+//         console.error("Could get order by userId:", error);
+//         throw error;
+//     }
+// };
+
+async function destroyOrder(id) {
+    try {
+        await client.query(`
+            DELETE FROM order_products
+            WHERE "orderId" = $1;
+        `, [id]);
+
+        const { rows: [product] } = await client.query(`
+            DELETE FROM orders
+            WHERE id = $1
+            RETURNING *
+        `, [id]);
+        return (product);
+    } catch (error) {
+        console.error("Couldn't destroy order", error);
     }
 };
 
@@ -82,7 +143,9 @@ module.exports = {
     createOrder,
     getAllOrders,
     getOrderById,
-    getCartByUserId
+    getOrderByUserId,
+    getCartByUserId,
+    destroyOrder
 };
 
 
