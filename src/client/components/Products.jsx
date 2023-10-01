@@ -1,13 +1,16 @@
+
+
 import React, { useState, useEffect } from "react";
 import { fetchAllPosts } from "../api/ajaxHelper";
 import { BsPlus, BsEyeFill } from "react-icons/bs"
 import { Link } from "react-router-dom";
+import Cart from "./Cart";
 
 
-
-export default function Products() {
+export default function Products({ addToCart }) {
     const [products, setProducts] = useState([]);
     const [error, setError] = useState(null);
+    const [cart, setCart] = useState([]);
 
     useEffect(() => {
         async function fetchPosts() {
@@ -23,16 +26,48 @@ export default function Products() {
         fetchPosts();
     }, []);
 
+    
+  function addToCart(product) {
+    // Check if the product is already in the cart
+    const existingItemIndex = cart.findIndex((item) => item.id === product.id);
 
+    if (existingItemIndex !== -1) {
+      // If the product is already in the cart, increase its quantity
+      const updatedCart = [...cart];
+      updatedCart[existingItemIndex].quantity += 1;
+      setCart(updatedCart);
+    } else {
+      // If the product is not in the cart, add it with a quantity of 1
+      setCart([...cart, { ...product, quantity: 1 }]);
+    }
+  }
+
+  function removeFromCart(productId) {
+    // Remove the product with the specified productId from the cart
+    const updatedCart = cart.filter((item) => item.id !== productId);
+    setCart(updatedCart);
+  }
+
+  function calculateTotal() {
+    // Calculate the total price of items in the cart
+    const total = cart.reduce((accumulator, item) => {
+      return accumulator + item.price * item.quantity;
+    }, 0);
+    return total;
+  }
 
 
     function renderAllPosts() {
 
         return (
+
+   <div className="mx-4 md:mx-8">      
+      <div className="flex">
+         <div className="flex-1"> 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[30px] max-w-sm mx-auto md:max-w-none md:mx-0">
                 {products.map((product) => (
                     <div key={product.id} className="mb-4 relative overflow-hidden group transition">
-                        <div className="border border-[#e4e4e4] h-[300px] w-[300px]">
+                        <div className="border border-[#e4e4e4] h-[250px] w-[250px]">
                             <div className="w-full h-full flex  justify-center items-center">
                                 <div className="w-[200px] mx-auto flex justify-center items-center">
                                     <img
@@ -42,11 +77,11 @@ export default function Products() {
                                     />
                                 </div>
                                 <div className="absolute top-0 -right-8 group-hover:right-5 p-2 flex flex-col items-center justify-center gap-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                    <button>
-                                        <div className="flex justify-center items-center text-white w-5 h-5 bg-red-500">
-                                            <BsPlus className="text-3xl" />
-                                        </div>
-                                    </button>
+                                <button onClick={() => addToCart(product)}>
+                                 <div className="flex justify-center items-center text-white w-5 h-5 bg-red-500">
+                                 <BsPlus className="text-3xl" />
+                                 </div>
+                                </button>
                                     <Link to={`/products/${product.id}`}>
                                         <BsEyeFill 
                                         className="w-5 h-5 bg-white flex justify-center items-center text-primary drop-shadow-xl" 
@@ -63,8 +98,15 @@ export default function Products() {
                     </div>
                 ))}
             </div>
+            </div>
+            <div className=" ml-10">
+                <Cart cart={cart} removeFromCart={removeFromCart} calculateTotal={calculateTotal} />
+            </div>
+        </div>
+    </div>    
         );
     }
+
     
 
 
@@ -73,3 +115,4 @@ export default function Products() {
         <div>{renderAllPosts()}</div>
     )
 }
+

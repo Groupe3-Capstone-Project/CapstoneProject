@@ -11,7 +11,7 @@ function getHeaders() {
     headers["Authorization"] = "Bearer " + currentToken;
     console.log("getHeaders current token:", currentToken);
   }
-  console.log("Current Headers: " + JSON.stringify(headers));
+  // console.log("Current Headers: " + JSON.stringify(headers));
   return headers;
 };
 
@@ -36,7 +36,7 @@ export async function registerUser( name, email, address, username, password, im
         const data = await response.json()
         const token = data.token;
         window.localStorage.setItem("token", token);
-        // console.log(data);
+        console.log(data);
         return token;
     } catch (error) {
         console.error("An error occurred: ", error);
@@ -56,6 +56,7 @@ export async function loginUser(username, password) {
             }),
         });
 
+
         const data = await response.json();
         const token = data.token;
         window.localStorage.setItem("token", token)
@@ -63,6 +64,7 @@ export async function loginUser(username, password) {
         return token;
     } catch (error) {
         console.error("An error occurred: ", error)
+        throw error;
     }
 }
 
