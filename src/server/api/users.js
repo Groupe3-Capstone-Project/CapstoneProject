@@ -33,7 +33,7 @@ usersRouter.post('/login', async(req, res, next) => {
     if(!username || !password) {
         next({
             name: 'MissingCredentialsError',
-            message: 'Please supply both an email and password'
+            message: 'Please supply both a username and a password'
         });
     }
     try {

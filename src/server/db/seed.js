@@ -3,7 +3,7 @@ const { createUser } = require('./users');
 const { createProduct } = require('./products');
 const { createOrder } = require ('./orders');
 const { addProductToOrder } = require ('./orderProducts');
-const BASE_IMAGE_URL = 'http://localhost:3000';
+// const BASE_IMAGE_URL = 'http://localhost:3000';
 
 
 // Changed to drop tables in order to avoid db conflict  
@@ -138,7 +138,7 @@ async function createInitialProducts() {
         price: 8600,
         year: 1503,
         dimensions: '77cm x 53cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/mona_lisa.jpeg`,
+        imgUrl: `/images/mona_lisa.jpeg`,
       },
       {
         title: 'Starry Night',
@@ -149,7 +149,7 @@ async function createInitialProducts() {
         price: 1000,
         year: 1889,
         dimensions: '73.7cm x 92.1cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/starry_night.jpeg`,
+        imgUrl: `/images/starry_night.jpeg`,
       },
       {
         title: 'The Scream',
@@ -160,7 +160,7 @@ async function createInitialProducts() {
         price: 1199,
         year: 1893,
         dimensions: '91cm x 73.5cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/the_scream.jpeg`,
+        imgUrl: `/images/the_scream.jpeg`,
       },
       {
         title: 'Guernica',
@@ -171,7 +171,7 @@ async function createInitialProducts() {
         price: 2000,
         year: 1937,
         dimensions: '3.49m x 7.76m',
-        imgUrl:`${BASE_IMAGE_URL}/'public/images/guernica.jpeg`,
+        imgUrl:`/images/guernica.jpeg`,
       },
       {
         title: 'The Persistence of Memory',
@@ -182,7 +182,7 @@ async function createInitialProducts() {
         price: 1500,
         year: 1931,
         dimensions: '24cm x 33cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/the_persistence_of_memory.jpe`,
+        imgUrl: `/images/the_persistence_of_memory.jpeg`,
       },
       {
         title: 'Three Musicians',
@@ -193,7 +193,7 @@ async function createInitialProducts() {
         price: 10000,
         year: 1921,
         dimensions: '204.5cm x 188.3cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/three_musicians`,
+        imgUrl: `/images/three_musicians.jpeg`,
       },
       {
         title: 'A Sunday Afternoon on the Island of La Grande Jatte',
@@ -204,7 +204,7 @@ async function createInitialProducts() {
         price: 6500,
         year: 1884,
         dimensions: '2m x 3m',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/a_sunday_afternoon.jpeg`,
+        imgUrl: `/images/a_sunday_afternoon.jpeg`,
       },
       {
         title: 'Girl with a Pearl Earring',
@@ -215,7 +215,7 @@ async function createInitialProducts() {
         price: 1000,
         year: 1665,
         dimensions: '44.5cm x 39cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/girl_with_a_pearl_earring.jpeg`,
+        imgUrl: `/images/girl_with_a_pearl_earring.jpeg`,
       },
       {
         title: "Whistler's Mother",
@@ -226,7 +226,7 @@ async function createInitialProducts() {
         price: 360,
         year: 1871,
         dimensions: '144.15cm x 162.56cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/whistlers_mother.jpeg`,
+        imgUrl: `/images/whistlers_mother.jpeg`,
       },
       {
         title: "Portrait de L'artiste Sans Barbe",
@@ -237,7 +237,7 @@ async function createInitialProducts() {
         price: 715,
         year: 1889,
         dimensions: '41cm x 32.6cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/self_portrait_without_beard.jpeg`,
+        imgUrl: `/images/self_portrait_without_beard.jpeg`,
       },
       {
         title: 'The Night Watch',
@@ -248,7 +248,7 @@ async function createInitialProducts() {
         price: 5000,
         year: 1642,
         dimensions: '3.6m x 4.4m',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/the_night_watch.jpeg`,
+        imgUrl: `/images/the_night_watch.jpeg`,
       },
       {
         title: 'The Kiss',
@@ -259,7 +259,7 @@ async function createInitialProducts() {
         price: 240,
         year: 1907,
         dimensions: '99cm x 81cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/the_kiss.jpeg`,
+        imgUrl: `/images/the_kiss.jpeg`,
       },
       {
         title: 'Water Lilies',
@@ -270,7 +270,7 @@ async function createInitialProducts() {
         price: 870,
         year: 1840,
         dimensions: '81cm x 100cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/water_lilies.jpeg`,
+        imgUrl: `/images/water_lilies.jpeg`,
       },
       {
         title: 'The Flower Carrier',
@@ -281,7 +281,7 @@ async function createInitialProducts() {
         price: 200,
         year: 1935,
         dimensions: '121.9cm x 121.3cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/the_flower_carrier`,
+        imgUrl: `/images/the_flower_carrier.jpeg`,
       },
       {
         title: 'American Gothic',
@@ -292,7 +292,7 @@ async function createInitialProducts() {
         price: 600,
         year: 1930,
         dimensions: '78cm x 65.3cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/american_gothic.jpeg`,
+        imgUrl: `/images/american_gothic.jpeg`,
       },
       {
         title: 'Cafe Terrace at Night',
@@ -303,7 +303,7 @@ async function createInitialProducts() {
         price: 2000,
         year: 1888,
         dimensions: '80.7cm x 65.3cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/cafe_terrace_at_night.jpeg`,
+        imgUrl: `/images/cafe_terrace_at_night.jpeg`,
       },
       {
         title: 'The Son of Man',
@@ -314,7 +314,7 @@ async function createInitialProducts() {
         price: 800,
         year: 1964,
         dimensions: '116cm x 89cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/the_son_of_man.jpeg`,
+        imgUrl: `/images/the_son_of_man.jpeg`,
       },
       {
         title: 'No. 5, 1948',
@@ -325,7 +325,7 @@ async function createInitialProducts() {
         price: 1400,
         year: 1948,
         dimensions: '2.4m x 1.2m',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/no_5.jpeg`,
+        imgUrl: `/images/no_5.jpeg`,
       },
       {
         title: 'Bal du moulin de la Galette',
@@ -336,7 +336,7 @@ async function createInitialProducts() {
         price: 800,
         year: 1876,
         dimensions: '131cm x 175cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/bal_du_moulin_de_la_galette.jpeg`,
+        imgUrl: `/images/bal_du_moulin_de_la_galette.jpeg`,
       },
       {
         title: 'Dogs Playing Poker',
@@ -347,7 +347,7 @@ async function createInitialProducts() {
         price: 658,
         year: 1903,
         dimensions: '60cm x 80cm',
-        imgUrl: `${BASE_IMAGE_URL}/public/images/dogs_playing_poker.jpeg`,
+        imgUrl: `/images/dogs_playing_poker.jpeg`,
       },
     ];
     const products = await Promise.all(productsToCreate.map(createProduct));
