@@ -5,6 +5,15 @@ import { useParams } from "react-router"
 export default function SingleProduct() {
     const [product, setProduct] = useState({})
     let {id} = useParams()
+   
+    useEffect(() => {
+    async function singlePlayerHandle() {
+        const data = await fetchSingleProduct(id);
+        console.log(data);
+        setProduct(data);  
+    }
+    singlePlayerHandle();
+ }, [id]);
 
     function renderSingleProduct() {
         return (
@@ -12,7 +21,7 @@ export default function SingleProduct() {
                 <div key={product.id}>
                      <img
                       src={product.imgUrl}
-                         alt=""
+                         alt={product.title}
                        />
                     <div className=" text-sm capitalize text-gray-500 mb-1">{product.period}</div>
                     <h3 className="font-semibold mb-1">{product.title}</h3>
@@ -27,14 +36,6 @@ export default function SingleProduct() {
     };
 
  
-    useEffect(() => {
-    async function singlePlayerHandle() {
-        const data = await fetchSingleProduct(id);
-        console.log(data);
-        setProduct(data);  
-    }
-    singlePlayerHandle();
- }, [id]);
 
 
  return (
