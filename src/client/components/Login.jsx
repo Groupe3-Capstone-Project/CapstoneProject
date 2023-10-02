@@ -11,23 +11,24 @@ export default function Login({ token, setToken }) {
   const navigate = useNavigate();
 
   const handlerLogin = async () => {
-    try {
-
-      const response = await loginUser(username, password);
-      if (response) {
-        setToken(response);
-        navigate("/products");
-        setSuccessMessage("Login successful!"); 
-        setError(''); 
-      }
-    } catch (error) {
-      setError("Login failed: ",  error);
-      console.error("Login failed: ", error);
-      setSuccessMessage(''); 
+  try {
+    const response = await loginUser(username, password);
+    if (response) {
+      setToken(response);
+      navigate("/products");
+      setSuccessMessage("Login successful!"); 
+      setError(''); 
+    } else {
+      setError("Login failed: Invalid username or password");
     }
-  };
+  } catch (error) {
+    setError("Login failed: ",  error);
+    console.error("Login failed: ", error);
+    setSuccessMessage(''); 
+  }
+};
   
-
+  
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
@@ -63,7 +64,7 @@ export default function Login({ token, setToken }) {
             <button className="w-full my-5 py-2 bg-teal-500 shadow-lg shadow-teal-500/50 hover:shadow-teal-500/40 text-white font-semibold rounded-lg" type="button" onClick={handlerLogin}>
               Login
             </button>
-            {error && <p className=" text-white">{error}</p>}
+            {error && <p className="text-red-500 text-center">{error}</p>}
           </form>
         </div>
       </div>

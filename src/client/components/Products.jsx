@@ -6,6 +6,9 @@ import { BsPlus, BsEyeFill } from "react-icons/bs"
 import { Link } from "react-router-dom";
 import Cart from "./Cart";
 
+const backgroundImageUrl =
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg/640px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg";
+
 
 export default function Products({ addToCart }) {
     const [products, setProducts] = useState([]);
@@ -64,7 +67,15 @@ export default function Products({ addToCart }) {
    <div className="mx-4 md:mx-8">      
       <div className="flex">
          <div className="flex-1"> 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[30px] max-w-sm mx-auto md:max-w-none md:mx-0">
+         <div
+              className="bg-cover bg-center w-full h-[500px] relative"
+              style={{ backgroundImage: `url(${backgroundImageUrl})` }}
+            >
+              <h1 className="text-white text-4xl font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                Welcome to your online art gallery
+              </h1>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-[30px] max-w-sm mx-auto md:max-w-none md:mx-0 mt-3">
                 {products.map((product) => (
                     <div key={product.id} className="mb-4 relative overflow-hidden group transition">
                         <div className="border border-[#e4e4e4] h-[250px] w-[250px]">
