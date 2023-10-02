@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { PORT = 3000 } = process.env;
+const PORT = 3000;
 const express = require('express');
 const router = require('vite-express');
 const app = express();
@@ -11,9 +11,10 @@ const bodyParser = require('body-parser')
 app.use(bodyParser.json());
 
 // const cors = require('cors');
-// app.use(cors({ origin: 'http://localhost:8000' }));
+// app.use(cors({ origin: 'http://localhost:4000' }));
 
 // app.use(function (req, res, next) {
+//   console.log('CORS Middleware Executed');
 //   res.header("Access-Control-Allow-Origin", "*");
 //   res.header(
 //     "Access-Control-Allow-Headers",
@@ -32,8 +33,8 @@ app.use((req, res, next) => {
 
 app.use(express.static('public'))
 
-const db = require('./db/client')
-db.connect()
+const client = require('./db/client')
+client.connect()
 
 const apiRouter = require('./api');
 app.use('/api', apiRouter);

@@ -25,7 +25,18 @@ export default function Home() {
     }, []);
 
     function renderAllPosts() {
-
+        // if (!Array.isArray(products)) {
+        //     // Handle loading or error state here
+        //     return (
+        //       <div>
+        //         {error ? (
+        //           <div>Error: {error.message}</div>
+        //         ) : (
+        //           <div>Loading...</div>
+        //         )}
+        //       </div>
+        //     );
+        // }            
         return (         
    <div className="mx-4 md:mx-8">      
       <div className="flex">
