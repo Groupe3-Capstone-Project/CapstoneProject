@@ -10,7 +10,8 @@ const {
     updateOrderProduct,
     getCartByUserId,
     getOrderProductByOrderId,
-    destroyOrder
+    destroyOrder,
+    getProductById
 } = require('../db');
 
 
@@ -38,14 +39,14 @@ ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
         }
         // If the user doesn't have a cart, create a new order
         if (!userCart) {
-        const newOrder = await createOrder({userId, status: 'created' });
+        const newOrder = await createOrder({ userId, status: 'created' });
         // Use the newly created order for the user's cart
-        userCart = [newOrder];
+        // userCart = [newOrder];
         }
   
         // Check if the product is already in the cart
-        const existingCartItem = userCart[0].find(item => item.product_Id === productId);
-        console.log(existingCartItem)
+        const existingCartItem = userCart[0].cart_items.find(item => item.productId === productId);
+        console.log("Existing cart:", existingCartItem)
         if (existingCartItem) {
             // Update the quantity and price of the existing cart item
             existingCartItem.quantity += quantity;
@@ -54,7 +55,7 @@ ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
         } else {
             // Add the product as a new cart item
             await addProductToOrder(userCart[0].id, productId, quantity, price);
-            userCart.push({ productId, quantity, price }); // Add to the user's cart array
+            // userCart.push({ productId, quantity, price }); // Add to the user's cart array
         }
 
         res.status(200).json({ 
@@ -69,27 +70,48 @@ ordersRouter.get('/cart/:userId', requireUser, async (req, res, next) => {
     try {
         const userId = req.params.userId;
         const cartOrder = await getCartByUserId(userId);
-        const cartItems = await getOrderProductByOrderId(cartOrder[0].order_id);
         
-        if (cartOrder.length === 0) {
+        
+        if (!cartOrder) {
             return res.status(404).json({ message: 'User cart not found' });
         }
 
         if (!req.user.isAdmin && cartOrder[0].userId !== req.user.id) {
             return res.status(403).json({ message: 'Access denied, current user does not match cart user id'})
         }
-        const response = {
-            user_id: cartOrder[0].user_id,
-            order_id: cartOrder[0].order_id,
-            status: cartOrder[0].status,
-            cart_items: cartItems
-        };
-        res.status(200).json(response);
-        console.log("response:", response)
+        
+        res.status(200).json(cartOrder);
+        console.log("response:", cartOrder)
     }catch (error) {
         next(error);
     }
 });
+
+// ordersRouter.get('/cart/:userId', requireUser, async (req, res, next) => {
+//     try {
+//         const userId = req.params.userId;
+//         const cartOrder = await getCartByUserId(userId);
+//         const cartItems = await getOrderProductByOrderId(cartOrder[0].order_id);
+        
+//         if (cartOrder.length === 0) {
+//             return res.status(404).json({ message: 'User cart not found' });
+//         }
+
+//         if (!req.user.isAdmin && cartOrder[0].userId !== req.user.id) {
+//             return res.status(403).json({ message: 'Access denied, current user does not match cart user id'})
+//         }
+//         const response = {
+//             user_id: cartOrder[0].user_id,
+//             order_id: cartOrder[0].order_id,
+//             status: cartOrder[0].status,
+//             cart_items: cartItems
+//         };
+//         res.status(200).json(response);
+//         console.log("response:", response)
+//     }catch (error) {
+//         next(error);
+//     }
+// });
 
 // ordersRouter.get('/cart/:userId', requireUser, async (req, res, next) => {
 //     try {

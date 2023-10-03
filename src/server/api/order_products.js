@@ -1,10 +1,10 @@
 const express = require("express");
 const orderProductsRouter = express.Router();
 const { requireUser, requireAdmin } = require('./utils');
-const { getAllOrderProducts, getOrderProductByOrderId, destroyOrderProduct } = require('../db');
+const { getAllOrderProducts, getOrderProductByOrderId, getOrderProductById, destroyOrderProduct, updateOrderProduct } = require('../db');
 
 
-orderProductsRouter.get('/', requireAdmin, async (req, res, next) =>{
+orderProductsRouter.get('/', requireAdmin, async (req, res, next) => {
     try {
         const allOrderProducts = await getAllOrderProducts();
         res.status(200).json(allOrderProducts);
@@ -12,6 +12,30 @@ orderProductsRouter.get('/', requireAdmin, async (req, res, next) =>{
         next(error);
     }
 });
+
+orderProductsRouter.patch('/:orderProductId', requireAdmin, async (req, res, next) => {
+    try {
+        const orderProductId = req.params.orderProductId;
+        const orderProductToUpdate = await getOrderProductByOrderId(orderProductId);
+
+        if (!orderProductToUpdate) {
+            return res.status(404).json({
+                message: "orderProduct not found!"
+            });
+        }
+
+        const { quantity, price } = req.body;
+
+        const updatedOrderProduct = await updateOrderProduct(orderProductId, quantity, price);
+        res.status(200).json({
+            message: "Order product patched successfully",
+            updatedOrderProduct: updatedOrderProduct
+        });
+
+    } catch ({ name, message }) {
+        next({ name, message });
+    }
+})
 
 orderProductsRouter.delete('/:orderProductId', requireUser, async (req, res, next) => {
     try {
