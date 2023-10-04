@@ -70,7 +70,7 @@ async function getUserById(id) {
         FROM users
         WHERE id = $1;
         `, [id]);
-        return user
+        return user;
     } catch (error) {
         console.error("Couldn't get User by Id:", error);
     }
@@ -114,12 +114,20 @@ async function updateUser(id, fields) {
             toUpdate[column] = fields[column];
           }
         }
-
+        console.log("toUpdate:", toUpdate)
+        console.log("id is:", id)
         if (toUpdate.hasOwnProperty('username')) {
             // Check if the new username already exists in the database, return early if it's the case
             const existingUser = await getUserByUsername(toUpdate.username);
-            if (existingUser && existingUser.id !== id) {
-              throw new Error('Username already exists.');
+            console.log("Existing user:", existingUser)
+            if (existingUser) {
+                // Check if the existing username belongs to the same user
+                if (existingUser.id === id) {
+                    console.log('Same user re-entering the same username.');
+                } else {
+                    // A different user already has this username
+                    throw new Error('Username already exists.');
+                }
             }
         }
         let user;
@@ -152,7 +160,7 @@ async function destroyUser(id) {
         } catch (error) {
         console.error("Problem destroying user", error);
     }
-}
+};
 
 
 module.exports = {

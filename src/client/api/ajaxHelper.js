@@ -29,7 +29,6 @@ export async function registerUser( name, email, address, username, password, im
                     password,
                     imgUrl,
                     isAdmin,
-                
             }),
         });
 

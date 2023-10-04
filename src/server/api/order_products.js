@@ -25,7 +25,6 @@ orderProductsRouter.patch('/:orderProductId', requireAdmin, async (req, res, nex
         }
 
         const { quantity, price } = req.body;
-
         const updatedOrderProduct = await updateOrderProduct(orderProductId, quantity, price);
         res.status(200).json({
             message: "Order product patched successfully",

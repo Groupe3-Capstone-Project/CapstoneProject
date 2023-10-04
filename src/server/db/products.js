@@ -1,5 +1,5 @@
 const client = require('./client');
-
+const { dbFields } = require('./utils');
 
 async function getAllProducts() {
     try {
@@ -10,7 +10,7 @@ async function getAllProducts() {
     } catch (error) {
         console.error("Problem retrieving products from db", error);
     }
-}
+};
 
 async function getProductById(id) {
     try {
@@ -22,7 +22,20 @@ async function getProductById(id) {
     } catch (error) {
         console.error("Problem getting product by id", error);
     }
-}
+};
+
+async function getProductByTitle(title) {
+    try {
+        const { rows: [product] } = await client.query(`
+            SELECT * 
+            FROM products
+            WHERE title = $1;
+        `, [title]);
+        return product;
+    } catch (error) {
+        console.error("DB couldn't get product by name", error);
+    }
+};
 
 async function createProduct({ 
     title, artist, description, period, medium, price, year, dimensions, imgUrl }) {
@@ -48,9 +61,39 @@ async function createProduct({
     }
 };
 
-async function updateProduct() {
+async function updateProduct(id, fields) {
+    try {
+        const toUpdate = {};
     
-}
+        for(let column in fields) {
+            if(fields[column] !== undefined) {
+                toUpdate[column] = fields[column];
+            }
+        }
+
+        if (toUpdate.hasOwnProperty('title')) {
+            const existingProduct = await getProductByTitle(toUpdate.title);
+            console.log("Existing: ", existingProduct);
+            if (existingProduct && existingProduct.id !== id) {
+                throw new Error('Another painting already has this title');
+            }
+        }
+        let product;
+        if (dbFields(toUpdate).insert.length > 0) {
+            const {rows} = await client.query(`
+            UPDATE products
+            SET ${ dbFields(toUpdate).insert }
+            WHERE id = ${ id }
+            RETURNING *;
+            `, Object.values(toUpdate));
+            product = rows[0];
+        }
+        console.log(`Updated product with id ${id} successfully`, product);
+        return product;
+    } catch (error) {
+        console.error(`DB couldn't update product with id ${id}`, error);
+    }
+};
 
 async function destroyProduct(id) {
     try {
@@ -75,6 +118,8 @@ module.exports = {
     client,
     getAllProducts,
     getProductById,
+    getProductByTitle,
     createProduct,
+    updateProduct,
     destroyProduct,
 };
