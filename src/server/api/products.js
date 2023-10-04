@@ -1,7 +1,7 @@
 const express = require("express");
 productsRouter = express.Router();
-const { requireAdmin } = require('./utils');
-const { getAllProducts, getProductById, destroyProduct, createProduct } = require('../db/products');
+const { requireAdmin, requireUser, requiredNotSent } = require('./utils');
+const { getAllProducts, getProductById, updateProduct, destroyProduct, createProduct } = require('../db/products');
 
 productsRouter.get('/', async (req, res, next) => {
     try {
@@ -32,6 +32,30 @@ productsRouter.post('/', requireAdmin, async (req, res, next) => {
         res.send(createdProduct);
     } catch (error) {
         next("Couldn't post product:", error);
+    }
+});
+
+productsRouter.patch('/:productId', requireAdmin, requiredNotSent({requiredParams: ['title', 'artist', 'description', 'period', 'medium', 'price', 'year', 'dimensions', 'imgUrl'], atLeastOne: true}), async (req, res, next) => {
+    try {
+        const productId = parseInt(req.params.productId, 10);
+        // console.log("productId:", productId)
+        const productToUpdate = await getProductById(productId);
+        if (!productToUpdate) {
+            return res.status(404).json({
+                message: 'product not found',
+            });
+        }
+
+        const { title, artist, description, period, medium, price, year, dimensions, imgUrl } = req.body;
+        const fieldsToUpdate = { title, artist, description, period, medium, price, year, dimensions, imgUrl };
+        const updatedProduct = await updateProduct(productId, fieldsToUpdate);
+        // console.log("Updated Product",updatedProduct)
+        res.status(200).json({
+            message: "Product succesfully updated:",
+            product: updatedProduct
+        });
+    } catch ({ name, message }) {
+        next({ name, message });
     }
 });
 

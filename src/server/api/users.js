@@ -98,15 +98,17 @@ usersRouter.post('/register', async(req, res, next) => {
 
 usersRouter.patch('/:userId', requireUser, requiredNotSent({requiredParams: ['name', 'email', 'address', 'username', 'imgurl', 'isAdmin'], atLeastOne: true}), async (req, res, next) => {
     try {
-        const userToUpdate = await  getUserById(req.params.userId);
+        // The second argument specifies the radix (base 10).
+        const userId = parseInt(req.params.userId, 10)
+        const userToUpdate = await getUserById(userId);
         if (!userToUpdate) {
             return res.status(404).json({
                 message: 'User not found',
             });
         }
 
-        console.log('req.user.isAdmin:', req.user.isAdmin);
-        console.log('userToUpdate.id:', userToUpdate.id);
+        // console.log('req.user.isAdmin:', req.user.isAdmin);
+        // console.log('userToUpdate.id:', req.params.userId);
 
         if (!req.user.isAdmin && userToUpdate.id !== req.user.id) {
             return res.status(403).json({
@@ -114,15 +116,15 @@ usersRouter.patch('/:userId', requireUser, requiredNotSent({requiredParams: ['na
             });
         }
 
-        const { name, email, address, imgUrl, isAdmin } = req.body;
-        const fieldsToUpdate = { name, email, address, imgUrl, isAdmin };
-        const updatedUser = await updateUser(req.params.userId, fieldsToUpdate)
+        const { name, email, address, username, imgUrl, isAdmin } = req.body;
+        const fieldsToUpdate = { name, email, address, username, imgUrl, isAdmin };
+        const updatedUser = await updateUser(userId, fieldsToUpdate);
         res.status(200).json({
             message: "User succesfully updated:",
             user: updatedUser});
 
-    } catch (error) {
-        next("Problem updating user:" , error);
+    } catch ({name, message}) {
+        next({name, message});
     }
 });
 
