@@ -3,18 +3,20 @@ const client = require('./client'); // Import your PostgreSQL client
 async function addProductToOrder({
     orderId, 
     productId, 
-    price,
-    quantity 
+    quantity, 
+    price
 }) {
+    console.log("From apto value:", orderId)
     try {
     // Use the PostgreSQL client to execute an INSERT query to create a new order product record.
         const { rows: [order_product] } = await client.query(`
-            INSERT INTO order_products("orderId", "productId", price, quantity)
+            INSERT INTO order_products("orderId", "productId", quantity, price)
             VALUES ($1, $2, $3, $4)
             RETURNING *;
-        `, [orderId, productId, price, quantity]);
+        `, [orderId, productId, quantity, price]);
 
     // Return the newly created order product.
+    console.log("Fired from addProductToOrder:", order_product);
     return order_product;
     } catch (error) {
     // Handle errors here (e.g., log the error or throw an exception).
@@ -36,13 +38,13 @@ async function getAllOrderProducts() {
 
 async function getOrderProductById(id) {
     try {
-        const { rows: orderProduct } = await client.query(`
+        const { rows: [orderProduct] } = await client.query(`
             SELECT * FROM order_products
             WHERE id = $1
         `, [id]);
 
         if (!orderProduct) {
-            return null
+            return null;
         }
 
         return orderProduct;
@@ -53,11 +55,16 @@ async function getOrderProductById(id) {
 
 async function getOrderProductByOrderId(id) {
     try {
-        const { rows: orderProduct } = await client.query(`
+        const { rows: [orderProduct] } = await client.query(`
             SELECT * FROM order_products
             WHERE "orderId" = $1
         `, [id]);
-        console.log("fired from getOrderProductByOrderId:", orderProduct)
+
+        if (!orderProduct) {
+            return null;
+        }
+
+        console.log("fired from getOrderProductByOrderId:", orderProduct);
         return (orderProduct);
     } catch (error) {
         console.error("Couldn't get OrderProduct by order:", error)
@@ -67,15 +74,19 @@ async function getOrderProductByOrderId(id) {
 async function updateOrderProduct(orderProductId, quantity, price) {
     try {
         // Use the PostgreSQL client to execute an UPDATE query to update the order product.
-        const { rows: [updatedOrderProduct] } = await client.query(`
+        const { rows: [orderProduct] } = await client.query(`
             UPDATE order_products
             SET quantity = $2, price = $3
             WHERE id = $1
             RETURNING *;
         `, [orderProductId, quantity, price]);
 
+        if (!orderProduct) {
+            return null;
+        }
         // Return the updated order product.
-        return updatedOrderProduct;
+        console.log("Fired from updateOrderProduct:", orderProduct);
+        return orderProduct;
     } catch (error) {
         // Handle errors here (e.g., log the error or throw an exception).
         console.error('Error updating order product:', error);
@@ -87,9 +98,14 @@ async function destroyOrderProduct(id) {
     try {
         const { rows: [orderProduct]} = await client.query(`
             DELETE FROM order_products
-            WHERE id = $1;
-            RETURNING *
+            WHERE id = $1
+            RETURNING *;
         `, [id]);
+
+        if (!orderProduct) {
+            return null;
+        }
+
         return orderProduct;
     } catch (error) {
         console.error("Problem destroying product", error);

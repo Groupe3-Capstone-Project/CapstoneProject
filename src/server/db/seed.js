@@ -372,7 +372,7 @@ async function createInitialOrders() {
       },
       {
         userId: 1,
-        status: 'created'
+        status: 'cancelled'
       },
       {
         userId: 4,

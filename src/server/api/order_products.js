@@ -8,17 +8,19 @@ orderProductsRouter.get('/', requireAdmin, async (req, res, next) => {
     try {
         const allOrderProducts = await getAllOrderProducts();
         res.status(200).json(allOrderProducts);
-    } catch (error) {
-        next(error);
+    } catch ({ name, message }) {
+        next({ name, message });
     }
 });
 
 orderProductsRouter.patch('/:orderProductId', requireAdmin, async (req, res, next) => {
     try {
-        const orderProductId = req.params.orderProductId;
-        const orderProductToUpdate = await getOrderProductByOrderId(orderProductId);
+        const orderProductId = parseInt(req.params.orderProductId, 10);
+        console.log("orderProductId :", orderProductId)
+        const orderProductToUpdate = await getOrderProductById(orderProductId);
+        console.log("to update", orderProductToUpdate)
 
-        if (!orderProductToUpdate) {
+        if (orderProductToUpdate === null) {
             return res.status(404).json({
                 message: "orderProduct not found!"
             });
@@ -34,28 +36,31 @@ orderProductsRouter.patch('/:orderProductId', requireAdmin, async (req, res, nex
     } catch ({ name, message }) {
         next({ name, message });
     }
-})
+});
 
 orderProductsRouter.delete('/:orderProductId', requireUser, async (req, res, next) => {
     try {
-        const orderProductId = req.params.orderProductId;
-        deletedOrderProduct = await destroyOrderProduct(orderProductId)
+        const orderProductId = parseInt(req.params.orderProductId, 10);
+        console.log("OrderP id:", orderProductId);
+        const orderProductToDelete = await getOrderProductById(orderProductId);
+        console.log("OrderP to delete", orderProductToDelete)
+
+        if (orderProductToDelete === null) {
+            return res.status(404).json({
+                message: "orderProduct not found!"
+            });
+        }
+
+        const deletedOrderProduct = await destroyOrderProduct(orderProductId);
+        res.status(200).json({
+            message: `Deleted orderPorduct id ${orderProductId}`,
+            orderProduct: deletedOrderProduct
+        });
+
     } catch ({ name, message }) {
         next({ name, message });
     }
-})
-
-
-
-
-
-
-
-
-
-
-
-
+});
 
 
 
