@@ -81,7 +81,7 @@ async function getUserByUsername(username) {
         const { rows: [ user ] } = await client.query(`
         SELECT *
         FROM users
-        WHERE username=$1
+        WHERE username = $1;
         `, [ username ]);
         return user; 
     } catch (error) {
@@ -94,9 +94,9 @@ const getUserByEmail = async(email) => {
         const { rows: [ user ] } = await client.query(`
         SELECT * 
         FROM users
-        WHERE email=$1;`, [ email ]);
-
-        if(!user) {
+        WHERE email = $1;
+        `, [ email ]);
+           if(!user) {
             return;
         }
         return user;
