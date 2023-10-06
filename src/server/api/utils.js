@@ -1,3 +1,5 @@
+
+// To check and make sure user is logged-in
 function requireUser(req, res, next) {
     if (!req.user) {
       res.status(401);
@@ -9,6 +11,7 @@ function requireUser(req, res, next) {
   next(); 
 };
 
+// To check and make sure user isAdmin
 function requireAdmin(req, res, next) {
     if (!req.user) {
         return res.status(401).send({

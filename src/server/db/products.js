@@ -1,6 +1,8 @@
 const client = require('./client');
 const { dbFields } = require('./utils');
 
+
+// Get all products
 async function getAllProducts() {
     try {
         const { rows: products } = await client.query(`
@@ -12,6 +14,7 @@ async function getAllProducts() {
     }
 };
 
+// Get product from productId
 async function getProductById(id) {
     try {
         const { rows: [product] } = await client.query(`
@@ -24,6 +27,7 @@ async function getProductById(id) {
     }
 };
 
+// Get product from title
 async function getProductByTitle(title) {
     try {
         const { rows: [product] } = await client.query(`
@@ -37,6 +41,7 @@ async function getProductByTitle(title) {
     }
 };
 
+// Create product
 async function createProduct({ 
     title, artist, description, period, medium, price, year, dimensions, imgUrl }) {
     try {
@@ -61,6 +66,7 @@ async function createProduct({
     }
 };
 
+// Update product from productId with it's fields
 async function updateProduct(id, fields) {
     try {
         const toUpdate = {};
@@ -95,6 +101,7 @@ async function updateProduct(id, fields) {
     }
 };
 
+// Destroy product from productId
 async function destroyProduct(id) {
     try {
         await client.query(`
