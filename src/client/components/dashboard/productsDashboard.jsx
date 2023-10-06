@@ -1,10 +1,10 @@
 import { useState, React, useEffect } from "react";
 import ProductModal from "./productModal";
 import {
-  fetchAllPosts,
-  editPost,
-  createPost,
-  deletePost,
+  fetchAllProducts,
+  editProduct,
+  createProduct,
+  deleteProduct,
 } from "../../api/ajaxHelper";
 import DeleteModal from "./deleteModal";
 
@@ -13,12 +13,12 @@ const productsDashboard = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    fetchPosts();
+    fetchProducts();
   }, []);
 
-  async function fetchPosts() {
+  async function fetchProducts() {
     try {
-      const returnedProducts = await fetchAllPosts();
+      const returnedProducts = await fetchAllProducts();
       setProducts(returnedProducts);
     } catch (err) {
       setError(err);
@@ -27,8 +27,8 @@ const productsDashboard = () => {
 
   const handleCreate = async (data) => {
     try {
-      await createPost(data);
-      fetchPosts();
+      await createProduct(data);
+      fetchProducts();
     } catch (err) {
       setError(err);
     }
@@ -50,16 +50,16 @@ const productsDashboard = () => {
         )}
       </div>
 
-      <Products fetchPosts={fetchPosts} products={products} />
+      <Products fetchProducts={fetchProducts} products={products} />
     </>
   );
 };
 
-function Products({ fetchPosts, products }) {
+function Products({ fetchProducts, products }) {
   const handleEdit = async (data) => {
     try {
-      const rv = await editPost(data);
-      fetchPosts();
+      const rv = await editProduct(data);
+      fetchProducts();
     } catch (err) {
       console.error(err);
     }
@@ -67,8 +67,8 @@ function Products({ fetchPosts, products }) {
 
   const handleDelete = async (id) => {
     try {
-      await deletePost(id);
-      fetchPosts();
+      await deleteProduct(id);
+      fetchProducts();
     } catch (err) {
       console.error(err);
     }
