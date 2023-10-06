@@ -1,24 +1,14 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-
-
-function Logout({setToken}) {
+function Logout({ setToken, setIsAdmin }) {
   const navigate = useNavigate();
-  const handleLogout = () => {
+  useEffect(() => {
     setToken(null);
+    setIsAdmin(null);
     window.localStorage.clear();
     navigate("/");
-  };
-
-  return (
-    <div className="logout-container">
-      <h2 className='logout-header'>Logout</h2>
-      <button type="button" onClick={handleLogout} className='button-logout'>
-        Logout
-      </button>
-    </div>
-  );
+  }, []);
 }
 
 export default Logout;

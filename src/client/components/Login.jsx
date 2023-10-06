@@ -3,7 +3,7 @@ import { loginUser } from "../api/ajaxHelper";
 import earingPerl from '../assets/IMG/earingPerl.jpg';
 import { useNavigate } from "react-router-dom";
 
-export default function Login({ token, setToken }) {
+export default function Login({ setIsAdmin, setToken }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState("");
@@ -11,24 +11,25 @@ export default function Login({ token, setToken }) {
   const navigate = useNavigate();
 
   const handlerLogin = async () => {
-  try {
-    const response = await loginUser(username, password);
-    if (response) {
-      setToken(response);
-      navigate("/products");
-      setSuccessMessage("Login successful!"); 
-      setError(''); 
-    } else {
-      setError("Login failed: Invalid username or password");
+    try {
+      const { token, isAdmin } = await loginUser(username, password);
+      if (token) {
+        setToken(token);
+        setIsAdmin(isAdmin);
+        navigate("/products");
+        setSuccessMessage("Login successful!");
+        setError('');
+      } else {
+        setError("Login failed: Invalid username or password");
+      }
+    } catch (error) {
+      setError("Login failed: ", error);
+      console.error("Login failed: ", error);
+      setSuccessMessage('');
     }
-  } catch (error) {
-    setError("Login failed: ",  error);
-    console.error("Login failed: ", error);
-    setSuccessMessage(''); 
-  }
-};
-  
-  
+  };
+
+
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
