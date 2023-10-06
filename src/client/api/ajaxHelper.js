@@ -9,9 +9,8 @@ function getHeaders() {
   const currentToken = localStorage.getItem("token");
   if (currentToken != null) {
     headers["Authorization"] = "Bearer " + currentToken;
-    console.log("getHeaders current token:", currentToken);
+    // console.log("getHeaders current token:", currentToken);
   }
-  // console.log("Current Headers: " + JSON.stringify(headers));
   return headers;
 };
 
@@ -45,40 +44,42 @@ export async function registerUser(name, email, address, username, password, img
 
 
 export async function loginUser(username, password) {
-  try {
-    const response = await fetch(`${BASE_URL}/users/login`, {
-      headers: getHeaders(),
-      method: 'POST',
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    try {
+        const response = await fetch(`${BASE_URL}/users/login`, {
+          headers: getHeaders(),
+            method: 'POST',
+            body: JSON.stringify({
+                    username,
+                    password,
+            }),
+        });
 
 
-    const data = await response.json();
-    const token = data.token;
-    const isAdmin = data.user.isAdmin;
-    window.localStorage.setItem("isAdmin", isAdmin);
-    window.localStorage.setItem("token", token);
-    return { token, isAdmin };
-  } catch (error) {
-    console.error("An error occurred: ", error)
-    throw error;
-  }
+        const data = await response.json();
+        const token = data.token;
+        const isAdmin = data.user.isAdmin;
+        window.localStorage.setItem("isAdmin", isAdmin);
+        window.localStorage.setItem("token", token);
+        // console.log(data)
+        return {token, isAdmin};
+    } catch (error) {
+        console.error("An error occurred: ", error)
+        throw error;
+    }
 }
 
-export async function fetchAllPosts() {
-  try {
-    const res = await fetch(`${BASE_URL}/products`, {
-      headers: getHeaders(),
-    });
-    const data = await res.json();
-    console.log(data)
-    return data;
-  } catch (error) {
-    console.error(error);
-    return [];
+export async function fetchAllProducts() {
+    try {
+      const res = await fetch(`${BASE_URL}/products`, {
+        headers: getHeaders(),
+      });
+      const data = await res.json();
+      // console.log(data)
+      return data;
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
   }
 }
 
@@ -109,43 +110,27 @@ export async function deletePost(postId) {
     throw error;
   }
 }
-
-export async function createPost({
-  title,
-  artist,
-  description,
-  price,
-  imgUrl,
-  year,
-  medium,
-  period,
-  dimensions,
-}) {
-  try {
-    const response = await fetch(`${BASE_URL}/products`, {
-      headers: getHeaders(),
-      method: "POST",
-      body: JSON.stringify({
-        post: {
-          title,
-          artist,
-          description,
-          price,
-          imgUrl,
-          year,
-          period,
-          dimensions,
-          medium,
-        },
-      }),
-    });
-    const result = await response.json();
-    console.log(result);
-    return result;
-  } catch (error) {
-    console.error(error);
-  }
-}
+  export async function createProduct() {
+    try {
+        const response = await fetch(`${BASE_URL}/products`, {
+          headers: getHeaders(),
+            method: "POST",
+            body: JSON.stringify({
+                post: {
+                    title,
+                    artist,
+                    description,
+                    price,
+                    imgUrl,
+                },
+            }),
+        });
+        const result = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error(error);
+    }
+  };
 
 export async function sendMessage(postId, content) {
   try {

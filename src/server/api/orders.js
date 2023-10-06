@@ -14,7 +14,8 @@ const {
     updateOrder,
     updateOrderStatus,
     destroyOrder,
-    getProductById
+    getProductById,
+    destroyOrderProduct
 } = require('../db');
 
 // Get all orders (Admin)
@@ -33,17 +34,17 @@ ordersRouter.get('/', requireAdmin, async (req, res, next) => {
 ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
     try {
         const userId = parseInt(req.user.id, 10); // Get the user's ID from req.user
-        console.log("User id int?", userId)
-        const { productId, quantity, price } = req.body;
+        // console.log("User id int?", userId)
+        const { productId } = req.body;
         
         // Check if the user already has a cart (order)
         let userCart = await getCartByUserId(userId);
-        console.log("userCart?:", userCart);
+        // console.log("userCart?:", userCart);
         
         // If the user doesn't have a cart, create a new order
         if (userCart === null) {
         const newOrder = await createOrder({ userId: userId, status: 'created' });
-        console.log("newOrder?:", newOrder);
+        // console.log("newOrder?:", newOrder);
         // Use the newly created order for the user's cart
         userCart = await getCartByOrderId(newOrder.id);
         }
@@ -51,28 +52,69 @@ ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
         if (!req.user.isAdmin && userCart.userId !== req.user.id) {
             return res.status(403).json({ message: 'Access denied, current user does not match cart user id, or is not admin'})
         }
-        console.log("if cart: ",userCart)
+        // console.log("if cart: ",userCart)
         
         // Check if the product is already in the cart
         const existingCartItem = userCart.cart_items.find(item => item.productId === productId);
-
+        const itemToAdd = await getProductById(productId);
         console.log("Existing cartItem:", existingCartItem)
         if (existingCartItem !== undefined) {
             // Update the quantity and price of the existing cart item
             existingCartItem.quantity += 1;
-            existingCartItem.price += price;
-            console.log("userCart quantity:", quantity);
+            existingCartItem.price += itemToAdd.price;
+            // console.log("userCart quantity:", quantity);
             await updateOrderProduct(existingCartItem.id, existingCartItem.quantity, existingCartItem.price);
         } else {
-            // Add the product as a new cart item
-            console.log("else cart: ",userCart)
-            await addProductToOrder({orderId: userCart.orderId, productId, quantity: 1, price});
+            console.log("item to add?", itemToAdd);
+            if (!itemToAdd) {
+                return res.status(404).json({ message: 'Item not found in db' });
+            }
+            if (itemToAdd) {
+                await addProductToOrder({orderId: userCart.orderId, productId, quantity: 1, price: itemToAdd.price});
+            }
             // userCart.push({ productId, quantity, price }); // Add to the user's cart array
         }
         const updatedCart = await getCartByUserId(userId);
-        console.log("do I got a cart:", updatedCart);
+        // console.log("do I got a cart:", updatedCart);
         res.status(200).json({ 
             message: 'Product added to cart successfully',
+            userCart: updatedCart });
+    } catch ({ name, message }) {
+      next({ name, message });
+    }
+});
+
+// Delete cart item (User)
+// DELETE /api/orders/remove_from_cart
+ordersRouter.delete('/remove_from_cart', requireUser, async (req, res, next) => {
+    try {
+        const userId = parseInt(req.user.id, 10); // Get the user's ID from req.user
+        const { productId } = req.body;
+        let userCart = await getCartByUserId(userId);
+        if (userCart === null) {
+            return res.status(404).json({ message: 'User cart not found' });
+        }
+        if (!req.user.isAdmin && userCart.userId !== req.user.id) {
+            return res.status(403).json({ message: 'Access denied, current user does not match cart user id, or is not admin'})
+        }
+        const existingCartItem = userCart.cart_items.find(item => item.productId === productId);
+        const itemToAdd = await getProductById(productId);
+        if (existingCartItem === undefined) {
+            return res.status(404).json({ message: 'Item not found in the cart' });
+        }
+        if (existingCartItem.quantity > 1) {
+            existingCartItem.quantity -= 1;
+            existingCartItem.price -= itemToAdd.price;
+            await updateOrderProduct(existingCartItem.id, existingCartItem.quantity, existingCartItem.price);
+        } else {
+            if (!itemToAdd) {
+                return res.status(404).json({ message: 'Item not found in db' });
+            }
+            await destroyOrderProduct(existingCartItem.id);
+        }
+        const updatedCart = await getCartByUserId(userId);
+        res.status(200).json({ 
+            message: 'Product removed from cart successfully',
             userCart: updatedCart });
     } catch ({ name, message }) {
       next({ name, message });
