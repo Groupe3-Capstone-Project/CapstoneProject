@@ -3,25 +3,35 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa"; 
 
-export default function NavBar({token, setToken}) {
+export default function NavBar({token, setToken, isAdmin}) {
   const navigate = useNavigate();
   const handleLogout = () => {
     setToken(null);
     window.localStorage.clear();
     navigate("/");
   };
-  
-
   return (
     <nav className="bg-gray-900 text-white p-4 fixed top-0 w-full z-50">
       <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">Capstone</Link>
+        <Link to="/" className="text-2xl font-bold">
+          Capstone
+        </Link>
         <ul className="flex space-x-4">
           <li>
-              {!token ? (
-            <Link to="/" className="hover:text-blue-400">Welcome Page</Link>
-              ) : null}
+            {!token ? (
+              <Link to="/" className="hover:text-blue-400">
+                Welcome Page
+              </Link>
+            ) : null}
           </li>
+          <li>
+            {token && isAdmin && isAdmin != "false" ? (
+              <Link to="/dashboard/users" className="hover:text-blue-400">
+                Admin
+              </Link>
+            ) : null}
+          </li>
+
           <li>
              {token ? (
             <Link to="/products" className="hover:text-blue-400">Home</Link>
@@ -47,4 +57,3 @@ export default function NavBar({token, setToken}) {
     </nav>
   );
 }
-
