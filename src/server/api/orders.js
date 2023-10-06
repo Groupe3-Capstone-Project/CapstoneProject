@@ -11,11 +11,14 @@ const {
     getCartByOrderId,
     getCartByUserId,
     getOrderProductByOrderId,
+    updateOrder,
+    updateOrderStatus,
     destroyOrder,
     getProductById
 } = require('../db');
 
-
+// Get all orders (Admin)
+// GET /api/orders
 ordersRouter.get('/', requireAdmin, async (req, res, next) => {
     try {
         const allOrders = await getAllOrders();
@@ -25,6 +28,8 @@ ordersRouter.get('/', requireAdmin, async (req, res, next) => {
     }
 });
 
+// Post Item to cart / create order if none (User/Admin)
+// POST /api/orders/add_to_cart
 ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
     try {
         const userId = parseInt(req.user.id, 10); // Get the user's ID from req.user
@@ -44,7 +49,7 @@ ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
         }
         
         if (!req.user.isAdmin && userCart.userId !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied, current user does not match cart user id'})
+            return res.status(403).json({ message: 'Access denied, current user does not match cart user id, or is not admin'})
         }
         console.log("if cart: ",userCart)
         
@@ -74,28 +79,30 @@ ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
     }
 });
 
+
+// Get cart by userId (User)
+// GET /api/orders/cart/:userId
 ordersRouter.get('/cart/:userId', requireUser, async (req, res, next) => {
     try {
         const userId = parseInt(req.params.userId, 10);
-        console.log("get cart params id:", userId);
+        // console.log("get cart params id:", userId);
         const cartOrder = await getCartByUserId(userId);
-        console.log("cartOrder:", cartOrder);
-        
+        // console.log("cartOrder:", cartOrder);
         if (!cartOrder) {
             return res.status(404).json({ message: 'User cart not found' });
         }
-        
         if (!req.user.isAdmin && cartOrder.userId !== req.user.id) {
-            return res.status(403).json({ message: 'Access denied, current user does not match cart user id'})
+            return res.status(403).json({ message: 'Access denied, current user does not match cart user id, or is not admin'})
         }
-        console.log("response:", cartOrder);
-        
+        // console.log("response:", cartOrder);
         res.status(200).json(cartOrder);
     }catch ({name, message}) {
         next({name, message});
     }
 });
 
+// Get order by userId (Admin)
+// GET /api/order/user/:userId
 ordersRouter.get('/user/:userId', requireAdmin, async (req, res, next) =>{
     try {
         const userId = req.params.userId
@@ -105,13 +112,15 @@ ordersRouter.get('/user/:userId', requireAdmin, async (req, res, next) =>{
                 message: `'Order(s) for user ${userId}  not found'`,
             });
         }
-        console.log("order:", order)
+        // console.log("order:", order)
         res.status(200).json(order)
     } catch ({ name, message }) {
         next({ name, message });
     }
 });
 
+// Get order by userId (Admin)
+// GET /api/orders/:userId
 ordersRouter.get('/:orderId', requireAdmin, async (req, res, next) =>{
     try {
         const order = await getOrderByUserId(req.params.orderId);
@@ -126,31 +135,102 @@ ordersRouter.get('/:orderId', requireAdmin, async (req, res, next) =>{
     }
 });
 
-ordersRouter.patch('/:orderId', requireUser, async (req, res, next) => {
+// Patch order by orderId (Admin)
+// PATCH /api/orders/:orderId
+ordersRouter.patch('/:orderId', requireAdmin, async (req, res, next) => {
     try {
-        const orderId = req.params.orderId;
+        const orderId = parseInt(req.params.orderId, 10);
+        const { userId, orderDate, status } = req.body;
         const orderToUpdate = await getOrderById(orderId);
+        // console.log("to update:", orderToUpdate)
         if (!orderToUpdate) {
             return res.status(400).json({
                 message: `Order Product id${orderId} not found!`
             })
         }
+        const updatedOrder = await updateOrder(orderId, userId, orderDate, status)
+        res.status(200).json({
+            message:` updated order ${orderId} :`, 
+            updatedOrder: updatedOrder});
     } catch ({name, message}) {
         next({name, message});
     }
 });
 
-ordersRouter.delete('/:orderId', requireAdmin, async (req, res, next) => {
+// Patch order by orderId to make status 'completed' (User/Admin)
+// PATCH /api/orders/:orderId/completed
+ordersRouter.patch('/:orderId/completed', requireUser, async (req, res, next) => {
     try {
-        const orderId = req.params.orderId;
-        const deletedOrder = await destroyOrder(orderId); 
-        res.status(200).json({message:`deleted order ${orderId} and it's appended orderProducts:`, deletedOrder});
+        const orderId = parseInt(req.params.orderId);
+        const toBeCompleted = await getOrderById(orderId);
+        // console.log("to update:", toBeCompleted);
+        if (toBeCompleted === null) {
+            return res.status(404).json({
+                message: 'Order not found',
+            });
+        }
+        if (toBeCompleted.status === 'cancelled') {
+            return res.status(400).json({ message: 'Order is already cancelled' });
+        }
+        if (toBeCompleted.status === 'completed') {
+            return res.status(400).json({ message: 'Order is already completed' });
+        }
+        if (!req.user.isAdmin && toBeCompleted.userId !== req.user.id) {
+            return res.status(403).json({ message: 'Access denied, current user does not match order user id, or is not admin'})
+        }
+        const completedOrder = await updateOrderStatus(orderId, 'completed'); 
+        res.status(200).json({
+            message:`Completed order ${orderId}:`,
+            completedOrder: completedOrder
+        });
+    } catch ({name, message}) {
+        next({name, message});
+    }
+});
+
+// Delete order by orderId to make status 'cancelled' (User/Admin)
+// DELETE /api/orders/:orderId/cancelled
+ordersRouter.delete('/:orderId/cancelled', requireUser, async (req, res, next) => {
+    try {
+        const orderId = parseInt(req.params.orderId);
+        const toBeDeleted = await getOrderById(orderId);
+        // console.log("to update:", toBeDeleted);
+        if (toBeDeleted === null) {
+            return res.status(404).json({
+                message: 'Order not found',
+            });
+        }
+        if (toBeDeleted.status === 'cancelled') {
+            return res.status(400).json({ message: 'Order is already cancelled' });
+        }
+        if (toBeDeleted.status === 'completed') {
+            return res.status(400).json({ message: 'Order is already completed' });
+        }
+        if (!req.user.isAdmin && toBeDeleted.userId !== req.user.id) {
+            return res.status(403).json({ message: 'Access denied, current user does not match order user id, or is not admin'})
+        }
+        const deletedOrder = await updateOrderStatus(orderId, 'cancelled'); 
+        res.status(200).json({
+            message:`Cancelled order ${orderId} and it's appended orderProducts:`,
+            deletedOrder: deletedOrder
+        });
     } catch ({name, message}) {
         next({name, message});
     }
 });
 
 module.exports = ordersRouter;
+
+// ordersRouter.delete('/:orderId', requireAdmin, async (req, res, next) => {
+//     try {
+//         const orderId = req.params.orderId;
+//         const deletedOrder = await destroyOrder(orderId); 
+//         res.status(200).json({message:`deleted order ${orderId} and it's appended orderProducts:`, deletedOrder});
+//     } catch ({name, message}) {
+//         next({name, message});
+//     }
+// });
+
 
 // ordersRouter.get('/cart/:userId', requireUser, async (req, res, next) => {
 //     try {

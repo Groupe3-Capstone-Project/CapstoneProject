@@ -1,7 +1,7 @@
 const client = require('./client');
 
 
-
+// Create new order
 async function createOrder({userId, status}) {
     try {
         // console.log("Createorder id:", userId);
@@ -22,6 +22,7 @@ async function createOrder({userId, status}) {
     }
 };
 
+// Get all orders
 async function getAllOrders() {
     try {
         const { rows: orders } = await client.query(`
@@ -34,6 +35,7 @@ async function getAllOrders() {
     }
 };
 
+// Get order by orderId
 async function getOrderById(id) {
     try {
         const { rows: [order] } = await client.query(`
@@ -52,6 +54,7 @@ async function getOrderById(id) {
     }
 };
 
+// Get order by userId
 async function getOrderByUserId(id) {
     try {
         const { rows: order } = await client.query(`
@@ -69,6 +72,7 @@ async function getOrderByUserId(id) {
     }
 };
 
+// Get cart from orderId
 async function getCartByOrderId(orderId) {
     try {
         console.log("getCart order:", orderId);
@@ -130,6 +134,7 @@ console.log("Fired from getCartByUserId:", result)
     }
 };
 
+// Get cart from userId
 async function getCartByUserId(userId) {
     try {
         console.log("getCart id:", userId);
@@ -191,14 +196,20 @@ console.log("Fired from getCartByUserId:", result)
     }
 };
 
-async function updateOrder(id, status) {
+// Update order
+async function updateOrder(id, userId, orderDate, status) {
     try {
+        console.log("DB update:", status)
         const { rows: [order] } = await client.query(`
         UPDATE orders
-        SET status = $2
+        SET "userId" = $2, "orderDate" = $3, status = $4
         WHERE id = $1
         RETURNING *; 
-        `, [id, status]);
+        `, [id, userId, orderDate, status]);
+
+        if (!order) {
+            return null;
+        }
 
         return order;
     } catch (error) {
@@ -206,7 +217,28 @@ async function updateOrder(id, status) {
     }
 };
 
+// Update order status
+async function updateOrderStatus(id, status) {
+    try {
+        console.log("DB update:", status)
+        const { rows: [order] } = await client.query(`
+        UPDATE orders
+        SET status = $2
+        WHERE id = $1
+        RETURNING *; 
+        `, [id, status]);
 
+        if (!order) {
+            return null;
+        }
+
+        return order;
+    } catch (error) {
+        console.error(`DB couldn't update order with id ${id}:`, error);
+    }
+};
+
+// Destroy Order
 async function destroyOrder(id) {
     try {
         await client.query(`
@@ -233,6 +265,7 @@ module.exports = {
     getCartByOrderId,
     getCartByUserId,
     updateOrder,
+    updateOrderStatus,
     destroyOrder
 };
 

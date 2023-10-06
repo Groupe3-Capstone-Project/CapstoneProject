@@ -3,25 +3,31 @@ productsRouter = express.Router();
 const { requireAdmin, requireUser, requiredNotSent } = require('./utils');
 const { getAllProducts, getProductById, updateProduct, destroyProduct, createProduct } = require('../db/products');
 
+
+// Get all products
+// GET /api/products
 productsRouter.get('/', async (req, res, next) => {
     try {
       const allProducts = await getAllProducts();
-  
       res.send(allProducts);
     } catch ({ name, message }) {
       next({ name, message });
     }
 });
 
+// Get product by productId
+// GET /api/products/:productId
 productsRouter.get('/:productId', async (req, res, next) => {
     try {
         const product = await getProductById(req.params.productId);
         res.send(product)
-    } catch (error) {
-        next("Failed to get product:", error);
+    } catch ({ name, message }) {
+        next({ name, message });
     }
 });
 
+// Post new product (Admin)
+// POST /api/products
 productsRouter.post('/', requireAdmin, async (req, res, next) => {
     const {
     title, artist, description, period, medium, price,year, dimensions, imgUrl } = req.body;
@@ -30,11 +36,13 @@ productsRouter.post('/', requireAdmin, async (req, res, next) => {
             title, artist, description, period, medium, price,year, dimensions, imgUrl
         });
         res.send(createdProduct);
-    } catch (error) {
-        next("Couldn't post product:", error);
+    } catch ({ name, message }) {
+        next({ name, message });
     }
 });
 
+// Patch product by productId (Admin) needs at least one param
+// PATCH /api/products/:productId
 productsRouter.patch('/:productId', requireAdmin, requiredNotSent({requiredParams: ['title', 'artist', 'description', 'period', 'medium', 'price', 'year', 'dimensions', 'imgUrl'], atLeastOne: true}), async (req, res, next) => {
     try {
         const productId = parseInt(req.params.productId, 10);
@@ -45,7 +53,6 @@ productsRouter.patch('/:productId', requireAdmin, requiredNotSent({requiredParam
                 message: 'product not found',
             });
         }
-
         const { title, artist, description, period, medium, price, year, dimensions, imgUrl } = req.body;
         const fieldsToUpdate = { title, artist, description, period, medium, price, year, dimensions, imgUrl };
         const updatedProduct = await updateProduct(productId, fieldsToUpdate);
@@ -59,6 +66,8 @@ productsRouter.patch('/:productId', requireAdmin, requiredNotSent({requiredParam
     }
 });
 
+// Delete product by productId (Admin)
+// DELETE /api/products/:productId
 productsRouter.delete('/:productId', requireAdmin, async (req, res, next) => {
     try {
         const productId = req.params.productId;
@@ -71,8 +80,8 @@ productsRouter.delete('/:productId', requireAdmin, async (req, res, next) => {
         }
         const deletedProduct = await destroyProduct(req.params.productId);
         res.send(deletedProduct);
-    } catch (error) {
-        next("Couldn't delete product:", error);
+    } catch ({ name, message }) {
+        next({ name, message });
     }
 });
 

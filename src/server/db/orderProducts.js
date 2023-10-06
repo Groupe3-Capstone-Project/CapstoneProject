@@ -1,10 +1,9 @@
 const client = require('./client'); // Import your PostgreSQL client
 
+
+// Create a new orderProduct
 async function addProductToOrder({
-    orderId, 
-    productId, 
-    quantity, 
-    price
+    orderId, productId, quantity, price
 }) {
     console.log("From apto value:", orderId)
     try {
@@ -25,6 +24,7 @@ async function addProductToOrder({
     }
 };
 
+// Get all orderProducts
 async function getAllOrderProducts() {
     try {
         const { rows: orderProduct } = await client.query(`
@@ -36,6 +36,7 @@ async function getAllOrderProducts() {
     }
 }; 
 
+// Get orderProduct from orderPorductid
 async function getOrderProductById(id) {
     try {
         const { rows: [orderProduct] } = await client.query(`
@@ -53,6 +54,7 @@ async function getOrderProductById(id) {
     }
 };
 
+// Get orderProduct from orderId
 async function getOrderProductByOrderId(id) {
     try {
         const { rows: [orderProduct] } = await client.query(`
@@ -71,6 +73,7 @@ async function getOrderProductByOrderId(id) {
     }
 };
 
+// Update orderProduct from orderPorductId with it's values
 async function updateOrderProduct(orderProductId, quantity, price) {
     try {
         // Use the PostgreSQL client to execute an UPDATE query to update the order product.
@@ -94,6 +97,7 @@ async function updateOrderProduct(orderProductId, quantity, price) {
     }
 }
 
+// Destroy orderProduct from orderProductId
 async function destroyOrderProduct(id) {
     try {
         const { rows: [orderProduct]} = await client.query(`

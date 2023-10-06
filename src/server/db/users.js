@@ -3,14 +3,9 @@ const bcrypt = require('bcrypt');
 const { dbFields } = require('./utils');
 const SALT_COUNT = 10;
 
+// Create a new user / register
 async function createUser({ 
-    name, 
-    email, 
-    address, 
-    username, 
-    password,
-    imgUrl,
-    isAdmin,
+    name, email, address, username, password, imgUrl, isAdmin,
 }) {
     try {
         // Insure default imgUrl value is place holder if none provided, and not null
@@ -35,6 +30,7 @@ async function createUser({
     }
 };
 
+// Get all users
 async function getAllUsers() {
     try {
         const { rows: users } = await client.query(`
@@ -46,6 +42,7 @@ async function getAllUsers() {
     }
 };
 
+// Get user / login
 async function getUser({ username, password}) {
     if(!username || !password) {
         return;
@@ -63,6 +60,7 @@ async function getUser({ username, password}) {
     }
 };
 
+// Get user from userId
 async function getUserById(id) {
     try {
         const { rows: [user] } = await client.query(`
@@ -76,6 +74,7 @@ async function getUserById(id) {
     }
 };
 
+// Get user from username
 async function getUserByUsername(username) {
     try {
         const { rows: [ user ] } = await client.query(`
@@ -89,6 +88,7 @@ async function getUserByUsername(username) {
     }
 };
 
+// Get user fron email
 const getUserByEmail = async(email) => {
     try {
         const { rows: [ user ] } = await client.query(`
@@ -105,6 +105,7 @@ const getUserByEmail = async(email) => {
     }
 };
 
+// Update user from id with it's fields
 async function updateUser(id, fields) {
     try {
         const toUpdate = {};
@@ -149,6 +150,7 @@ async function updateUser(id, fields) {
     }    
 };
 
+// Destroy User
 async function destroyUser(id) {
     try {
         const { rows: [user] } = await client.query(`
