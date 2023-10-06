@@ -6,12 +6,11 @@ function getHeaders() {
   let headers = {
     "Content-Type": "application/json",
   };
-  const currentToken = localStorage.getItem("auth_token");
+  const currentToken = localStorage.getItem("token");
   if (currentToken != null) {
     headers["Authorization"] = "Bearer " + currentToken;
-    console.log("getHeaders current token:", currentToken);
+    // console.log("getHeaders current token:", currentToken);
   }
-  // console.log("Current Headers: " + JSON.stringify(headers));
   return headers;
 };
 
@@ -59,7 +58,7 @@ export async function loginUser(username, password) {
         const data = await response.json();
         const token = data.token;
         window.localStorage.setItem("token", token)
-        console.log(data)
+        // console.log(data)
         return token;
     } catch (error) {
         console.error("An error occurred: ", error)
@@ -67,13 +66,13 @@ export async function loginUser(username, password) {
     }
 }
 
-export async function fetchAllPosts() {
+export async function fetchAllProducts() {
     try {
       const res = await fetch(`${BASE_URL}/products`, {
         headers: getHeaders(),
       });
       const data = await res.json();
-      console.log(data)
+      // console.log(data)
       return data;
     } catch (error) {
       console.error(error);
@@ -108,9 +107,9 @@ export async function fetchAllPosts() {
     }
   }
 
-  export async function createPost() {
+  export async function createProduct() {
     try {
-        const response = await fetch(`${BASE_URL}/posts`, {
+        const response = await fetch(`${BASE_URL}/products`, {
           headers: getHeaders(),
             method: "POST",
             body: JSON.stringify({

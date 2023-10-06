@@ -47,9 +47,9 @@ const images = [
 
   export default function WelcomePage() {
     return (
-      <div className="bg-gray-900 h-screen flex flex-col sm:flex-row">
+      <div className="bg-gray-900 min-h-screen flex flex-col sm:flex-row">
         <div className="transition-opacity duration-500 ease-in-out w-full sm:w-1/2">
-          <div className="fade-in-out" >
+          <div className="fade-in-out">
             <Gallery
               items={images}
               autoPlay={true}
@@ -58,14 +58,19 @@ const images = [
               showThumbnails={false}
               slideInterval={6000}
               showNav={false}
-              className="w-full h-full object-cover "
+              className="w-full h-full object-cover"
             />
           </div>
         </div>
         <div className="flex flex-col justify-center items-center p-4 sm:w-1/2">
           <h1 className="text-white text-4xl font-bold mb-6 text-center">
-            Welcome to Art Gallery
+            Welcome to Online Gallery - Where Art Comes to Life
           </h1>
+          <div className="sm:max-w-md"> {/* Limit the maximum width on smaller screens */}
+            <p className="text-white text-lg leading-relaxed mb-8">
+              At Online Gallery, we believe that art has the power to inspire, captivate, and transform. Our passion lies in bringing the beauty and brilliance of famous paintings to life through meticulously crafted reproductions. We are thrilled to invite you on a journey through the world of art, where each canvas tells a story, and every stroke of the brush conveys the essence of the artist's vision.
+            </p>
+          </div>
           <div className="flex space-x-4">
             <Link
               to="/register"
@@ -78,6 +83,12 @@ const images = [
               className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600"
             >
               Login
+            </Link>
+            <Link
+              to="/products"
+              className="bg-orange-500 text-white py-2 px-4 rounded-full hover:bg-orange-600"
+            >
+              Home
             </Link>
           </div>
         </div>
