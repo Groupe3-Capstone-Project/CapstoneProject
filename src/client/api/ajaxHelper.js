@@ -167,26 +167,34 @@ export async function sendMessage(postId, content) {
 
 
 export async function editPost({
-  postId,
   title,
   artist,
   description,
   price,
   imgUrl,
-  token,
+  year,
+  medium,
+  period,
+  dimensions,
+  postId
 }) {
   const sendData = {
-    post: {
-      title: title,
-      artist: artist,
-      description: description,
-      price: price,
-      imgUrl: imgUrl,
-    },
-  };
 
+    title,
+    artist,
+    description,
+    price,
+    imgUrl,
+    year,
+    period,
+    dimensions,
+    medium,
+
+  };
+  console.log("SEND DAta ");
+  console.log(sendData);
   try {
-    const res = await fetch(`${BASE_URL}/posts/${postId}`, {
+    const res = await fetch(`${BASE_URL}/products/${postId}`, {
       headers: getHeaders(),
       method: "PATCH",
       body: JSON.stringify(sendData),
