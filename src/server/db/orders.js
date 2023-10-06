@@ -43,11 +43,9 @@ async function getOrderById(id) {
             FROM orders
             WHERE id = $1; 
         `, [id]);
-        
         if (!order) {
             return null
         }
-
         return order;
     } catch (error) {
         console.error("Couldn't get order by id:", error);
@@ -62,7 +60,6 @@ async function getOrderByUserId(id) {
             FROM orders
             WHERE "userId" = $1; 
         `, [id]);
-
         if (!order) {
             return null;
         }
@@ -100,11 +97,9 @@ async function getCartByOrderId(orderId) {
         AND 
             orders.status = 'created'
         `, [orderId]);
-
         if (rows.length === 0) {
             return null; // Return null if no cart order with status 'created' is found
         }
-
         const result = {
             userId: rows[0].user_id,
             username: rows[0].username,
@@ -112,7 +107,6 @@ async function getCartByOrderId(orderId) {
             status: rows[0].status,
             cart_items: [],
         };
-
         rows.forEach((row) => {
             if (row.cart_item_id) {
                 result.cart_items.push({
@@ -125,7 +119,6 @@ async function getCartByOrderId(orderId) {
                 });
             }
         });
-
 console.log("Fired from getCartByUserId:", result)
         return result;
     } catch (error) {
