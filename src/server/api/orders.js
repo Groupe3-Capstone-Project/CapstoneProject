@@ -84,7 +84,8 @@ ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
     }
 });
 
-
+// Delete cart item (User)
+// DELETE /api/orders/remove_from_cart
 ordersRouter.delete('/remove_from_cart', requireUser, async (req, res, next) => {
     try {
         const userId = parseInt(req.user.id, 10); // Get the user's ID from req.user
@@ -109,7 +110,7 @@ ordersRouter.delete('/remove_from_cart', requireUser, async (req, res, next) => 
             if (!itemToAdd) {
                 return res.status(404).json({ message: 'Item not found in db' });
             }
-            await destroyOrderProduct(productId);
+            await destroyOrderProduct(existingCartItem.id);
         }
         const updatedCart = await getCartByUserId(userId);
         res.status(200).json({ 

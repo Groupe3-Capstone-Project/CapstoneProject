@@ -5,7 +5,7 @@ const client = require('./client'); // Import your PostgreSQL client
 async function addProductToOrder({
     orderId, productId, quantity, price
 }) {
-    console.log("From apto value:", orderId)
+    // console.log("From apto value:", orderId)
     try {
     // Use the PostgreSQL client to execute an INSERT query to create a new order product record.
         const { rows: [order_product] } = await client.query(`
@@ -13,9 +13,8 @@ async function addProductToOrder({
             VALUES ($1, $2, $3, $4)
             RETURNING *;
         `, [orderId, productId, quantity, price]);
-
     // Return the newly created order product.
-    console.log("Fired from addProductToOrder:", order_product);
+    // console.log("Fired from addProductToOrder:", order_product);
     return order_product;
     } catch (error) {
     // Handle errors here (e.g., log the error or throw an exception).
@@ -43,11 +42,9 @@ async function getOrderProductById(id) {
             SELECT * FROM order_products
             WHERE id = $1
         `, [id]);
-
         if (!orderProduct) {
             return null;
         }
-
         return orderProduct;
     } catch (error) {
         console.error("Couldn't get orderProduct by id: ", error);
@@ -61,12 +58,10 @@ async function getOrderProductByOrderId(id) {
             SELECT * FROM order_products
             WHERE "orderId" = $1
         `, [id]);
-
         if (!orderProduct) {
             return null;
         }
-
-        console.log("fired from getOrderProductByOrderId:", orderProduct);
+        // console.log("fired from getOrderProductByOrderId:", orderProduct);
         return (orderProduct);
     } catch (error) {
         console.error("Couldn't get OrderProduct by order:", error)
@@ -83,12 +78,11 @@ async function updateOrderProduct(orderProductId, quantity, price) {
             WHERE id = $1
             RETURNING *;
         `, [orderProductId, quantity, price]);
-
         if (!orderProduct) {
             return null;
         }
         // Return the updated order product.
-        console.log("Fired from updateOrderProduct:", orderProduct);
+        // console.log("Fired from updateOrderProduct:", orderProduct);
         return orderProduct;
     } catch (error) {
         // Handle errors here (e.g., log the error or throw an exception).
@@ -109,7 +103,6 @@ async function destroyOrderProduct(id) {
         if (!orderProduct) {
             return null;
         }
-
         return orderProduct;
     } catch (error) {
         console.error("Problem destroying product", error);
