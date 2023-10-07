@@ -19,7 +19,7 @@ import ProductsDashboard from "./dashboard/productsDashboard";
 
 export default function MainContainer() {
     const [token, setToken] = useState(window.localStorage.getItem("token"));
-    const [userId, setUserId] = window.localStorage.getItem("userId")
+    const [userId, setUserId] = useState(window.localStorage.getItem("userId"));
     const [isAdmin, setIsAdmin] = useState(window.localStorage.getItem("isAdmin"));
 
 
@@ -44,7 +44,7 @@ export default function MainContainer() {
                     <Route path="users" element={<UsersDashboard token={token} />} />
                     <Route
                         path="products"
-                        element={<ProductsDashboard token={token} />}
+                        element={<ProductsDashboard userId={userId} token={token} />}
                     />
                 </Route>
                 <Route path="/cart" element={<Cart token={token} setToken={setToken} />} />
