@@ -9,4 +9,6 @@ export default {
   },
   plugins: [],
 }
+
+// This made the non admin part of the website lose it's styling!
 // plugins: [require("daisyui")],
