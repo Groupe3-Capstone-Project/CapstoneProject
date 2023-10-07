@@ -19,8 +19,9 @@ import ProductsDashboard from "./dashboard/productsDashboard";
 
 export default function MainContainer() {
     const [token, setToken] = useState(window.localStorage.getItem("token"));
-    const [isAdmin, setIsAdmin] = useState(
-        window.localStorage.getItem("isAdmin"));
+    const [userId, setUserId] = window.localStorage.getItem("userId")
+    const [isAdmin, setIsAdmin] = useState(window.localStorage.getItem("isAdmin"));
+
 
     return (
         <div>
@@ -28,15 +29,9 @@ export default function MainContainer() {
             <Routes>
                 <Route path="/" element={<WelcomePage token={token} setToken={setToken} />} />
                 <Route path="/register" element={<Register token={token} setToken={setToken} />} />
-                <Route path="/products" element={<Products token={token} setToken={setToken} />} />
-                <Route
-                    path="/login"
-                    element={<Login setToken={setToken} setIsAdmin={setIsAdmin} />}
-                />
-                <Route
-                    path="/logout"
-                    element={<Logout setToken={setToken} setIsAdmin={setIsAdmin} />}
-                />
+                <Route path="/products" element={<Products userId={userId} token={token} setToken={setToken} />} />
+                <Route path="/login" element={<Login setToken={setToken} setIsAdmin={setIsAdmin} />} />
+                <Route path="/logout" element={<Logout setToken={setToken} setIsAdmin={setIsAdmin} />} />
                 <Route path="/products/:id" element={<SingleProduct token={token} setToken={setToken} />} />
                 <Route
                     path="/dashboard"

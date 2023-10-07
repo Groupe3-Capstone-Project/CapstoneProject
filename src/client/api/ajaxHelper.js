@@ -44,28 +44,29 @@ export async function registerUser(name, email, address, username, password, img
 
 
 export async function loginUser(username, password) {
-  try {
-    const response = await fetch(`${BASE_URL}/users/login`, {
-      headers: getHeaders(),
-      method: 'POST',
-      body: JSON.stringify({
-        username,
-        password,
-      }),
-    });
+    try {
+        const response = await fetch(`${BASE_URL}/users/login`, {
+          headers: getHeaders(),
+            method: 'POST',
+            body: JSON.stringify({
+                    username,
+                    password,
+            }),
+        });
 
 
-    const data = await response.json();
-    const token = data.token;
-    const isAdmin = data.user.isAdmin;
-    window.localStorage.setItem("isAdmin", isAdmin);
-    window.localStorage.setItem("token", token);
-    // console.log(data)
-    return { token, isAdmin };
-  } catch (error) {
-    console.error("An error occurred: ", error)
-    throw error;
-  }
+        const data = await response.json();
+        const token = data.token;
+        const isAdmin = data.user.isAdmin;
+        window.localStorage.setItem("isAdmin", isAdmin);
+        window.localStorage.setItem("token", token)
+        window.localStorage.setItem("userId", data.user.id)
+        // console.log(data.user.id)
+        return { token, isAdmin };
+    } catch (error) {
+        console.error("An error occurred: ", error)
+        throw error;
+    }
 }
 
 export async function fetchAllProducts() {
@@ -83,6 +84,24 @@ export async function fetchAllProducts() {
 }
 
 
+
+export async function addProduct(productId) {
+  try {
+    const response = await fetch(`${BASE_URL}/orders/add_to_cart`, {
+      headers: getHeaders(),
+      method: 'POST',
+      body: JSON.stringify({
+        productId,
+      }),
+       });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+};
+
 export async function fetchSingleProduct(productId) {
   try {
     const response = await fetch(`${BASE_URL}/products/${productId}`, {
@@ -95,6 +114,21 @@ export async function fetchSingleProduct(productId) {
     console.log(error)
   }
 };
+
+export async function getCart(userId) {
+  try {
+    const response = await fetch(`${BASE_URL}/orders/cart/${userId}`, {
+      headers: getHeaders(),
+    });
+    console.log(userId)
+    const data = await response.json();
+    console.log("fire from getCart", data);
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+};
+
 
 export async function deleteProduct(postId) {
   try {
@@ -110,6 +144,7 @@ export async function deleteProduct(postId) {
     throw error;
   }
 }
+
 export async function createProduct() {
   try {
     const response = await fetch(`${BASE_URL}/products`, {

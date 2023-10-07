@@ -6,48 +6,66 @@ import { BsPlus, BsEyeFill } from "react-icons/bs"
 import { Link } from "react-router-dom";
 import Cart from "./Cart";
 import SearchBar from "./SearchBar";
-// import SearchResult from "./SearchResult";
 import SearchResultList from "./SearchResultList";
+import { addProduct, getCart } from "../api/ajaxHelper";
+
 
 const backgroundImageUrl =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg/640px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg";
 
 
-export default function Products({ addToCart }) {
+export default function Products({ addToCart, userId }) {
     const [products, setProducts] = useState([]);
     const [error, setError] = useState(null);
     const [cart, setCart] = useState([]);
     const [result, setResult] = useState([])
+    // const [userId, setUserId] = useState(null)
+
+    // useEffect(() => {
+    //   const currentUserId = window.localStorage.getItem("userId")
+    //   if (currentUserId) {
+    //     // console.log(currentUserId);
+    //     setUserId(currentUserId);
+    //   }
+    // },[])
 
     useEffect(() => {
-        async function fetchProducts() {
-            try {
-                const returnedProducts = await fetchAllProducts();
-                setProducts(returnedProducts);
-            } catch (err) {
-                console.error(err)
-                setError(err);
-            } 
+      async function fetchProductsAndCart() {
+        try {
+          // Fetch the list of products
+          const returnedProducts = await fetchAllProducts();
+          setProducts(returnedProducts);
+    
+          // Fetch the user's cart
+          const cartData = await getCart(userId); // You may need to pass the user's ID if required
+          setCart(cartData); // Assuming cartData contains the cart array
+        } catch (err) {
+          console.error(err);
+          setError(err);
         }
-
-        fetchProducts();
-    }, []);
+      }
+    
+      fetchProductsAndCart();
+    }, [userId]);
+    
 
     
-  function addToCart(product) {
-    // Check if the product is already in the cart
-    const existingItemIndex = cart.findIndex((item) => item.id === product.id);
-
-    if (existingItemIndex !== -1) {
-      // If the product is already in the cart, increase its quantity
-      const updatedCart = [...cart];
-      updatedCart[existingItemIndex].quantity += 1;
-      setCart(updatedCart);
-    } else {
-      // If the product is not in the cart, add it with a quantity of 1
-      setCart([...cart, { ...product, quantity: 1 }]);
+    async function addToCart(product) {
+      try {
+        // Call the addProduct function from the backend to add the product to the cart
+        const response = await addProduct(product.id);  // Assuming product.id is the ID of the product to add
+        if (response) {
+          // If the addition was successful, update the cart state by fetching the updated cart
+          const cartData = await getCart(response.userCart.userId); // You may need to pass the user's ID if required
+          setCart(cartData); // Assuming cartData contains the updated cart array
+        } else {
+          console.error("Failed to add product to cart.");
+        }
+      } catch (error) {
+        console.error("Error adding product to cart:", error);
+      }
     }
-  }
+    
 
   function removeFromCart(productId) {
     // Remove the product with the specified productId from the cart
