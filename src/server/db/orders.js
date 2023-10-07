@@ -83,7 +83,8 @@ async function getCartByOrderId(orderId) {
             order_products."productId",
             order_products.quantity,
             order_products.price,
-            products.title AS product_title
+            products.title AS product_title,
+            products."imgUrl" AS product_img
         FROM 
             orders
         LEFT JOIN
@@ -114,6 +115,7 @@ async function getCartByOrderId(orderId) {
                     orderId: row.order_id,
                     productId: row.productId,
                     product_title: row.product_title,
+                    product_img: row.product_img,
                     quantity: row.quantity,
                     price: row.price,
                 });
@@ -141,7 +143,8 @@ async function getCartByUserId(userId) {
             order_products."productId",
             order_products.quantity,
             order_products.price,
-            products.title AS product_title
+            products.title AS product_title,
+            products."imgUrl" AS product_img
         FROM 
             orders
         LEFT JOIN
@@ -175,6 +178,7 @@ async function getCartByUserId(userId) {
                     orderId: row.order_id,
                     productId: row.productId,
                     product_title: row.product_title,
+                    product_img: row.product_img,
                     quantity: row.quantity,
                     price: row.price,
                 });
