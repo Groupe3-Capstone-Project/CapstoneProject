@@ -254,6 +254,42 @@ export async function editProduct({
   }
 }
 
+export async function editUser({
+  name,
+  email,
+  address,
+  username,
+  password,
+  imgUrl,
+  isAdmin,
+  userId
+}) {
+  const sendData = {
+    name,
+    email,
+    address,
+    username,
+    password,
+    imgUrl,
+    isAdmin
+  };
+  console.log("SEND DAta ");
+  console.log(sendData);
+  try {
+    const res = await fetch(`${BASE_URL}/users/${userId}`, {
+      headers: getHeaders(),
+      method: "PATCH",
+      body: JSON.stringify(sendData),
+    });
+    const data = await res.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error);
+    return {};
+  }
+}
+
 export async function fetchUserData() {
   try {
     const response = await fetch(`${BASE_URL}/users/me`, {

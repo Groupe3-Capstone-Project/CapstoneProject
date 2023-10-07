@@ -1,4 +1,4 @@
-import { createUser, deleteUser, fetchAllUsers } from "../../api/ajaxHelper";
+import { createUser, deleteUser, editUser, fetchAllUsers } from "../../api/ajaxHelper";
 import UserModal from "./userModal";
 import DeleteModal from "./deleteModal";
 import { useEffect, useState } from "react";
@@ -65,8 +65,8 @@ function Users({ users, fetchUsers }) {
 
   const handleEdit = async (data) => {
     try {
-      // await editUser(data);
-      // fetchUsers();
+      await editUser(data);
+      fetchUsers();
     } catch (err) {
       console.error(err);
     }

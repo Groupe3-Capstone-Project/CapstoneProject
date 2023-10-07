@@ -22,6 +22,7 @@ function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
 
   const handleSave = () => {
     handleSubmit(formData);
+    setModalOpen(false);
   };
 
   return (
