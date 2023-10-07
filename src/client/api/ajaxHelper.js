@@ -58,7 +58,8 @@ export async function loginUser(username, password) {
         const data = await response.json();
         const token = data.token;
         window.localStorage.setItem("token", token)
-        // console.log(data)
+        window.localStorage.setItem("userId", data.user.id)
+        // console.log(data.user.id)
         return token;
     } catch (error) {
         console.error("An error occurred: ", error)
@@ -91,6 +92,37 @@ export async function fetchAllProducts() {
     } catch (error) {
       console.log(error)
     }
+};
+
+export async function addProduct(productId) {
+  try {
+    const response = await fetch(`${BASE_URL}/orders/add_to_cart`, {
+      headers: getHeaders(),
+      method: 'POST',
+      body: JSON.stringify({
+        productId,
+      }),
+    });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+};
+
+export async function getCart(userId) {
+  try {
+    const response = await fetch(`${BASE_URL}/orders/cart/${userId}`, {
+      headers: getHeaders(),
+    });
+    console.log(userId)
+    const data = await response.json();
+    console.log("fire from getCart", data);
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
 };
 
   export async function deletePost(postId){
