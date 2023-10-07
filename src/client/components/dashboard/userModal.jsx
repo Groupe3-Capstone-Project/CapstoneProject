@@ -9,7 +9,7 @@ function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
     address: user?.address || "",
     password: user?.password || "",
     imgUrl: user?.imgUrl || "",
-    isAdmin: user?.isAdmin || "",
+    isAdmin: user?.isAdmin || false,
   });
 
   const handleChange = (e) => {
