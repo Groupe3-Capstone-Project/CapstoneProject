@@ -8,10 +8,10 @@ const { getAllProducts, getProductById, updateProduct, destroyProduct, createPro
 // GET /api/products
 productsRouter.get('/', async (req, res, next) => {
     try {
-      const allProducts = await getAllProducts();
-      res.send(allProducts);
+        const allProducts = await getAllProducts();
+        res.send(allProducts);
     } catch ({ name, message }) {
-      next({ name, message });
+        next({ name, message });
     }
 });
 
@@ -30,10 +30,10 @@ productsRouter.get('/:productId', async (req, res, next) => {
 // POST /api/products
 productsRouter.post('/', requireAdmin, async (req, res, next) => {
     const {
-    title, artist, description, period, medium, price,year, dimensions, imgUrl } = req.body;
+        title, artist, description, period, medium, price, year, dimensions, imgUrl } = req.body.post;
     try {
         const createdProduct = await createProduct({
-            title, artist, description, period, medium, price,year, dimensions, imgUrl
+            title, artist, description, period, medium, price, year, dimensions, imgUrl
         });
         res.send(createdProduct);
     } catch ({ name, message }) {
@@ -43,7 +43,7 @@ productsRouter.post('/', requireAdmin, async (req, res, next) => {
 
 // Patch product by productId (Admin) needs at least one param
 // PATCH /api/products/:productId
-productsRouter.patch('/:productId', requireAdmin, requiredNotSent({requiredParams: ['title', 'artist', 'description', 'period', 'medium', 'price', 'year', 'dimensions', 'imgUrl'], atLeastOne: true}), async (req, res, next) => {
+productsRouter.patch('/:productId', requireAdmin, requiredNotSent({ requiredParams: ['title', 'artist', 'description', 'period', 'medium', 'price', 'year', 'dimensions', 'imgUrl'], atLeastOne: true }), async (req, res, next) => {
     try {
         const productId = parseInt(req.params.productId, 10);
         // console.log("productId:", productId)
