@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { GoChevronRight } from "react-icons/go";
 
-export default function Cart({ cart, removeFromCart, calculateTotal }) {
+export default function Cart({ cart, removeFromCart }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleCart = () => {
@@ -33,16 +33,16 @@ export default function Cart({ cart, removeFromCart, calculateTotal }) {
             <GoChevronRight />
           </button>
           <h2 className="text-lg font-semibold mb-4">Your Shopping Cart</h2>
-          {cart.map((item) => (
+          {cart.cart_items.map((item) => (
             <div key={item.id} className="flex items-center justify-between mb-2">
               <div className="flex items-center">
                 <img
                   src={item.imgUrl}
-                  alt={item.name}
+                  alt={item.product_title}
                   className="w-12 h-12 object-cover rounded"
                 />
                 <div className="ml-2">
-                  <p className="text-gray-700 font-semibold">{item.title}</p>
+                  <p className="text-gray-700 font-semibold">{item.product_title}</p>
                   <p className="text-gray-500 text-sm">Price: ${item.price}</p>
                 </div>
               </div>
@@ -60,7 +60,7 @@ export default function Cart({ cart, removeFromCart, calculateTotal }) {
           <hr className="my-4 border-t border-gray-300" />
           <div className="flex items-center justify-between">
             <p className="text-lg font-semibold">Total Price:</p>
-            <p className="text-lg font-semibold">${calculateTotal()}</p>
+            {/* <p className="text-lg font-semibold">${calculateTotal()}</p> */}
           </div>
         </div>
       )}
