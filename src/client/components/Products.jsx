@@ -24,7 +24,6 @@ export default function Products({ addToCart, userId }) {
     const [totalProducts, setTotalProducts] = useState(0);
     const itemsPerPage = 10; // Items per page (you can adjust this)
 
-
     useEffect(() => {
       async function fetchProductsAndCart() {
         try {
@@ -54,7 +53,7 @@ export default function Products({ addToCart, userId }) {
     }
 
     
-    async function addToCart(product) {
+    async function handleAddToCart(product) {
       try {
         // Call the addProduct function from the backend to add the product to the cart
         const response = await addProduct(product.id);  // Assuming product.id is the ID of the product to add
@@ -77,13 +76,13 @@ export default function Products({ addToCart, userId }) {
     setCart(updatedCart);
   }
 
-  function calculateTotal() {
-    // Calculate the total price of items in the cart
-    const total = cart.reduce((accumulator, item) => {
-      return accumulator + item.price * item.quantity;
-    }, 0);
-    return total;
-  }
+  // function calculateTotal() {
+  //   // Calculate the total price of items in the cart
+  //   const total = cart.reduce((accumulator, item) => {
+  //     return accumulator + item.price * item.quantity;
+  //   }, 0);
+  //   return total;
+  // }
 
 
     function renderAllProducts() {
@@ -118,7 +117,7 @@ export default function Products({ addToCart, userId }) {
                                 </Link>    
                                 </div>
                                 <div className="absolute top-0 -right-8 group-hover:right-5 p-2 flex flex-col items-center justify-center gap-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                <button onClick={() => addToCart(product)}>
+                                <button onClick={() => handleAddToCart(product)}>
                                  <div className="flex justify-center items-center text-white w-5 h-5 bg-red-500">
                                  <BsPlus className="text-3xl" />
                                  </div>
@@ -141,7 +140,7 @@ export default function Products({ addToCart, userId }) {
             </div>
             </div>
             <div className=" ml-10 mt-20">
-                <Cart cart={cart} removeFromCart={removeFromCart} calculateTotal={calculateTotal} />
+                <Cart cart={cart} removeFromCart={removeFromCart} />
             </div>
         </div>
     </div>    
