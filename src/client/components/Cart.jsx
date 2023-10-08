@@ -37,7 +37,7 @@ export default function Cart({ cart, removeFromCart }) {
             <div key={item.id} className="flex items-center justify-between mb-2">
               <div className="flex items-center">
                 <img
-                  src={item.imgUrl}
+                  src={item.product_img}
                   alt={item.product_title}
                   className="w-12 h-12 object-cover rounded"
                 />
