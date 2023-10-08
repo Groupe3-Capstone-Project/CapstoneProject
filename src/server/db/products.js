@@ -6,7 +6,7 @@ const { dbFields } = require('./utils');
 async function getAllProducts() {
     try {
         const { rows: products } = await client.query(`
-        SELECT * FROM products;
+            SELECT * FROM products;
         `);
         return products
     } catch (error) {
@@ -18,8 +18,8 @@ async function getAllProducts() {
 async function getProductById(id) {
     try {
         const { rows: [product] } = await client.query(`
-        SELECT * FROM products
-        WHERE id = $1;
+            SELECT * FROM products
+            WHERE id = $1;
         `, [id]);
         return product;
     } catch (error) {
@@ -109,7 +109,6 @@ async function destroyProduct(id, isActive) {
         DELETE FROM order_products
         WHERE "productId" = $1;
     `, [id]);
-
     const { rows: [product] } = await client.query(`
         UPDATE products
         SET "isActive" = $2

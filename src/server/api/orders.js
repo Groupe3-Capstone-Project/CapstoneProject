@@ -77,7 +77,7 @@ ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
         const updatedCart = await getCartByUserId(userId);
         // console.log("do I got a cart:", updatedCart);
         res.status(200).json({ 
-            message: 'Product added to cart successfully',
+            message: `Product id ${productId} added to cart successfully`,
             userCart: updatedCart });
     } catch ({ name, message }) {
       next({ name, message });
