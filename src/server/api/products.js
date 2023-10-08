@@ -26,6 +26,34 @@ productsRouter.get('/', async (req, res, next) => {
     }
 });
 
+productsRouter.get('/paginated', async (req, res, next) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        const allProducts = await getAllProducts();
+        if (!allProducts) {
+            res.status(404).json({
+                message: "Problem getting allProducts"
+            });
+        }
+
+        const filteredProducts = allProducts.filter(allProduct => allProduct.isActive); // Regular user sees only active products
+
+        // Paginate the filtered products
+        const paginatedProducts = filteredProducts.slice((page - 1) * limit, page * limit);
+
+        res.status(200).json({
+            products: paginatedProducts,
+            totalProducts: filteredProducts.length,
+            page,
+            limit
+        });
+    } catch ({ name, message }) {
+        next({ name, message });
+    }
+});
+
 // Get product by productId
 //Admin sees all products isActive and !isActive, reg user sees only isActive products
 // GET /api/products/:productId

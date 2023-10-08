@@ -1,13 +1,14 @@
 
 
 import React, { useState, useEffect } from "react";
-import { fetchAllProducts } from "../api/ajaxHelper";
+// import { fetchAllProducts } from "../api/ajaxHelper";
 import { BsPlus, BsEyeFill } from "react-icons/bs"
 import { Link } from "react-router-dom";
 import Cart from "./Cart";
 import SearchBar from "./SearchBar";
 import SearchResultList from "./SearchResultList";
-import { addProduct, getCart } from "../api/ajaxHelper";
+import { addProduct, getCart, fetchPaginatedProducts } from "../api/ajaxHelper";
+
 
 
 const backgroundImageUrl =
@@ -18,15 +19,21 @@ export default function Products({ addToCart, userId }) {
     const [products, setProducts] = useState([]);
     const [error, setError] = useState(null);
     const [cart, setCart] = useState([]);
-    const [result, setResult] = useState([])
-   
+    const [result, setResult] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1); // Track current page
+    const [totalProducts, setTotalProducts] = useState(0);
+    const itemsPerPage = 10; // Items per page (you can adjust this)
 
     useEffect(() => {
       async function fetchProductsAndCart() {
         try {
-          // Fetch the list of products
-          const returnedProducts = await fetchAllProducts();
-          setProducts(returnedProducts);
+          // Fetch the list of paginated products
+          const data = await fetchPaginatedProducts(currentPage, itemsPerPage);
+
+          if (data && data.products) {
+          setProducts(data.products);
+          setTotalProducts(data.totalProducts);
+          }
     
           // Fetch the user's cart
           const cartData = await getCart(userId); // You may need to pass the user's ID if required
@@ -38,8 +45,12 @@ export default function Products({ addToCart, userId }) {
       }
     
       fetchProductsAndCart();
-    }, [userId]);
-    
+    }, [userId, currentPage]);
+
+    async function handlePageChange(newPage) {
+      // Handle page change when user clicks on pagination buttons
+      setCurrentPage(newPage);
+    }
 
     
     async function handleAddToCart(product) {
@@ -136,12 +147,38 @@ export default function Products({ addToCart, userId }) {
         );
     }
 
+    function renderPagination() {
+      const totalPages = Math.ceil(totalProducts / itemsPerPage);
+      const pageButtons = [];
+  
+      for (let i = 1; i <= totalPages; i++) {
+        pageButtons.push(
+          <button
+            key={i}
+            onClick={() => handlePageChange(i)}
+            className={`mx-1 ${
+              currentPage === i ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'
+            } rounded-md px-3 py-1 focus:outline-none focus:ring`}
+          >
+            {i}
+          </button>
+        );
+      }
+  
+      return (
+        <div className="flex justify-center mt-4">{pageButtons}</div>
+      );
+    }
+
     
 
 
 
     return (
-        <div>{renderAllProducts()}</div>
+        <div>
+          {renderAllProducts()}
+          {renderPagination()}
+        </div>
     )
 }
 

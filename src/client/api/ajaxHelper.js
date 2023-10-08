@@ -1,5 +1,5 @@
 
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "http://localhost:4000/api";
 
 
 function getHeaders() {
@@ -75,11 +75,21 @@ export async function fetchAllProducts() {
       headers: getHeaders(),
     });
     const data = await res.json();
-    // console.log(data)
     return data;
   } catch (error) {
     console.error(error);
     return [];
+  }
+}
+
+export async function fetchPaginatedProducts(currentPage, itemsPerPage) {
+  try {
+    const response = await fetch(`/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching paginated products:', error);
+    throw error;
   }
 }
 
