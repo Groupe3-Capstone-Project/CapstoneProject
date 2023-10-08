@@ -1,4 +1,5 @@
 const client = require('./client'); // Import your PostgreSQL client
+const {getProductById} = require('./products');
 
 
 // Create a new orderProduct
@@ -7,6 +8,10 @@ async function addProductToOrder({
 }) {
     // console.log("From apto value:", orderId)
     try {
+        const product = await getProductById(productId);
+        if (!product || !product.isActive) {
+            throw new Error('Product is not active or does not exist');
+        }
     // Use the PostgreSQL client to execute an INSERT query to create a new order product record.
         const { rows: [order_product] } = await client.query(`
             INSERT INTO order_products("orderId", "productId", quantity, price)
@@ -99,7 +104,6 @@ async function destroyOrderProduct(id) {
             WHERE id = $1
             RETURNING *;
         `, [id]);
-
         if (!orderProduct) {
             return null;
         }

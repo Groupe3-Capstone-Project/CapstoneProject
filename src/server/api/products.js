@@ -112,7 +112,7 @@ productsRouter.delete('/:productId', requireAdmin, async (req, res, next) => {
         }
         const deletedProduct = await destroyProduct(productId, false);
         res.status(200).json({
-            message: `Product with id${productId} was successfully made inactive`,
+            message: `Product with id ${productId} was successfully made inactive`,
             deletedProduct: deletedProduct});
     } catch ({ name, message }) {
         next({ name, message });
