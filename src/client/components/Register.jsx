@@ -3,7 +3,7 @@ import { registerUser } from "../api/ajaxHelper";
 import earingPerl from '../assets/IMG/earingPerl.jpg';
 import { useNavigate } from "react-router-dom";
 
-export default function Register({ token, setToken }) {
+export default function Register({ token, setToken, setUserId }) {
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
@@ -21,9 +21,13 @@ export default function Register({ token, setToken }) {
         return;
       }
 
-      const user = await registerUser(name, email, address, username, password);
-      console.log(user);
-      setToken(user);
+      const response = await registerUser(name, email, address, username, password);
+      const token = response.token;
+      const userId = response.user.id;
+      // const userId = response.user.id;
+      console.log("user from register:", userId);
+      setToken(token);
+      setUserId(userId)
       navigate("/products")
     } catch (error) {
       setError("Registration failed: " + error.message);
