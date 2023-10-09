@@ -34,8 +34,9 @@ export async function registerUser(name, email, address, username, password, img
     const data = await response.json()
     const token = data.token;
     window.localStorage.setItem("token", token);
-    console.log(data);
-    return token;
+    window.localStorage.setItem("userId", data.user.id)
+    console.log("from the ajax register:", data);
+    return data;
   } catch (error) {
     console.error("An error occurred: ", error);
     throw error;
@@ -62,7 +63,7 @@ export async function loginUser(username, password) {
         window.localStorage.setItem("token", token)
         window.localStorage.setItem("userId", data.user.id)
         // console.log(data.user.id)
-        return { token, isAdmin };
+        return  data;
     } catch (error) {
         console.error("An error occurred: ", error)
         throw error;
@@ -146,6 +147,7 @@ export async function fetchSingleProduct(productId) {
 
 export async function getCart(userId) {
   try {
+    console.log("From ajax cart:", userId)
     const response = await fetch(`${BASE_URL}/orders/cart/${userId}`, {
       headers: getHeaders(),
     });
@@ -197,24 +199,6 @@ export async function createProduct() {
   }
 };
 
-export async function sendMessage(postId, content) {
-  try {
-    const response = await fetch(`${BASE_URL}/posts/postId/messages`, {
-      headers: getHeaders(),
-      method: "POST",
-      body: JSON.stringify({
-        message: {
-          content: content,
-        },
-      }),
-    });
-    const result = await response.json();
-    console.log(result);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 
 export async function editProduct({
   title,
@@ -258,21 +242,3 @@ export async function editProduct({
   }
 }
 
-
-export async function fetchUserData() {
-  try {
-    const response = await fetch(`${BASE_URL}/users/me`, {
-      headers: getHeaders(),
-      method: "GET",
-    });
-
-    if (response.ok) {
-      const userData = await response.json();
-      console.log(userData)
-    } else {
-      console.log("Failed to fetch user data");
-    }
-  } catch (error) {
-    console.log("Error fetching user data:", error);
-  }
-}
