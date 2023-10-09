@@ -112,6 +112,25 @@ export async function addProduct(productId) {
   }
 };
 
+export async function removeProduct(productId) {
+  try {
+    console.log("From ajax remove:", productId)
+    const response = await fetch(`${BASE_URL}/orders/remove_from_cart`, {
+      headers: getHeaders(),
+      method: 'DELETE',
+      body: JSON.stringify({
+        productId,
+      }),
+       });
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error)
+  }
+};
+
+
 export async function fetchSingleProduct(productId) {
   try {
     const response = await fetch(`${BASE_URL}/products/${productId}`, {
@@ -140,11 +159,12 @@ export async function getCart(userId) {
 };
 
 
-export async function deleteProduct(postId) {
+export async function deleteProduct(productId) {
   try {
-    const response = await fetch(`${BASE_URL}/products/${postId}`, {
+    const response = await fetch(`${BASE_URL}/products/${productId}`, {
       headers: getHeaders(),
       method: "DELETE",
+      
     });
     const result = await response.json();
     console.log(result);

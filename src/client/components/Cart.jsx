@@ -1,12 +1,30 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { GoChevronRight } from "react-icons/go";
+import { getCart, removeProduct } from "../api/ajaxHelper";
 
-export default function Cart({ cart, removeFromCart }) {
+export default function Cart({ userId, cart, setCart }) {
   const [isOpen, setIsOpen] = useState(false);
+  
+  
+  useEffect(() => {
+    async function fetchCartData() {
+      try {
+        const cartData = await getCart(userId);
+        setCart(cartData);
+        console.log("Cart data fetched:", cartData);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-  const toggleCart = () => {
+    // Call the fetchCartData function when the component is mounted
+    fetchCartData();
+  }, [userId, setCart]);
+ 
+
+  const toggleCart = async () => {
     setIsOpen(!isOpen);
   };
 
@@ -14,6 +32,22 @@ export default function Cart({ cart, removeFromCart }) {
     setIsOpen(false);
   };
 
+  async function removeFromCart(productId) {
+    try {
+      const response = await removeProduct(productId);
+      console.log("from remove in cart:", response);
+      
+      setCart(response.userCart);
+      if (response) {
+      } else {
+        console.error("Failed to remove product from cart.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  console.log("2nd one:", cart)
   return (
     <div className="relative">
       {!isOpen && (
@@ -48,7 +82,7 @@ export default function Cart({ cart, removeFromCart }) {
               </div>
               <div className="flex items-center">
                 <button
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => removeFromCart(item.productId)}
                   className="text-red-500 hover:text-red-700 font-semibold"
                 >
                   Remove
