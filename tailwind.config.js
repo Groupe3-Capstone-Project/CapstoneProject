@@ -7,7 +7,10 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: ['garden'],
+  },
 }
 
 // This made the non admin part of the website lose it's styling!
