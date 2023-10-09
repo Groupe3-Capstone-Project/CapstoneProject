@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import Cart from "./Cart";
 import SearchBar from "./SearchBar";
 import SearchResultList from "./SearchResultList";
-import { addProduct, getCart, fetchPaginatedProducts } from "../api/ajaxHelper";
+import { addProduct, getCart, fetchPaginatedProducts, removeProduct } from "../api/ajaxHelper";
 
 
 
@@ -25,7 +25,7 @@ export default function Products({ addToCart, userId }) {
     const itemsPerPage = 10; // Items per page (you can adjust this)
 
     useEffect(() => {
-      async function fetchProductsAndCart() {
+      async function fetchProducts() {
         try {
           // Fetch the list of paginated products
           const data = await fetchPaginatedProducts(currentPage, itemsPerPage);
@@ -34,18 +34,29 @@ export default function Products({ addToCart, userId }) {
           setProducts(data.products);
           setTotalProducts(data.totalProducts);
           }
-    
-          // Fetch the user's cart
-          const cartData = await getCart(userId); // You may need to pass the user's ID if required
-          setCart(cartData); // Assuming cartData contains the cart array
         } catch (err) {
           console.error(err);
           setError(err);
         }
       }
     
-      fetchProductsAndCart();
-    }, [userId, currentPage]);
+      fetchProducts();
+    }, [currentPage]);
+
+    useEffect(() => {
+      async function fetchCartData() {
+        try {
+          const cartData = await getCart(userId);
+          setCart(cartData);
+          console.log("Cart data fetched:", cartData);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+  
+      // Call the fetchCartData function when the component is mounted
+      fetchCartData();
+    }, [userId]);
 
     async function handlePageChange(newPage) {
       // Handle page change when user clicks on pagination buttons
@@ -56,13 +67,12 @@ export default function Products({ addToCart, userId }) {
     async function handleAddToCart(product) {
       try {
         // Call the addProduct function from the backend to add the product to the cart
-        const response = await addProduct(product.id);  // Assuming product.id is the ID of the product to add
-        if (response) {
-          // If the addition was successful, update the cart state by fetching the updated cart
-          const cartData = await getCart(response.userCart.userId); // You may need to pass the user's ID if required
-          setCart(cartData); // Assuming cartData contains the updated cart array
-        } else {
+        const response = await addProduct(product.id); 
+        // Assuming product.id is the ID of the product to add
+        if (!response) {
           console.error("Failed to add product to cart.");
+        } else {
+          setCart(response.userCart);
         }
       } catch (error) {
         console.error("Error adding product to cart:", error);
@@ -70,11 +80,7 @@ export default function Products({ addToCart, userId }) {
     }
     
 
-  function removeFromCart(productId) {
-    // Remove the product with the specified productId from the cart
-    const updatedCart = cart.filter((item) => item.id !== productId);
-    setCart(updatedCart);
-  }
+  
 
   // function calculateTotal() {
   //   // Calculate the total price of items in the cart
@@ -140,7 +146,7 @@ export default function Products({ addToCart, userId }) {
             </div>
             </div>
             <div className=" ml-10 mt-20">
-                <Cart cart={cart} removeFromCart={removeFromCart} />
+                <Cart userId={userId} cart={cart} setCart={setCart} />
             </div>
         </div>
     </div>    
