@@ -1,3 +1,29 @@
+# TO START
+
+1. Install packages & dependencies
+
+```bash
+npm install
+```
+
+2. Add a `.env` file, in the root of your project, with your secret value for auth
+
+```
+JWT_SECRET='somesecretvalue'
+```
+
+3. Create the database
+
+- In your terminal:
+
+```bash
+- psql
+- CREATE DATABASE capstone_groupe3;
+```
+(The ';' after the database name is crucial)
+
+--------------------------------------------------------------------
+
 #  API DOCUMENTATION
 
 ### ROUTES INDEX :
