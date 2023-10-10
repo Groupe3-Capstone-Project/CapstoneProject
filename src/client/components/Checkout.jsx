@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { AiFillCreditCard } from "react-icons/ai";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Checkout() {
   const [firstName, setFirstName] = useState("");
@@ -15,6 +16,27 @@ export default function Checkout() {
   const [expirationMonth, setExpirationMonth] = useState("");
   const [expirationYear, setExpirationYear] = useState("");
   const [cvv, setCVV] = useState("");
+  const [thankYouMessage, setThankYouMessage] = useState(false);
+  const navigate = useNavigate();
+
+//   const handleCheckout = () => {
+//     setThankYouMessage(true);
+//     setTimeout(() => {
+//         setThankYouMessage(false);
+//       }, 5000);
+  
+//   };
+
+
+  const handleCheckout = () => {
+    alert("Thank you for purchasing our product!")
+  
+  };
+
+  const handleCheckoutHistory = () => {
+    // Redirect to the products page
+    navigate("/products");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -110,12 +132,23 @@ export default function Checkout() {
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-400"
             />
             <div className="col-span-2 mt-4">
+             <Link to="/products">  
               <button
+              onClick={() => {
+                  handleCheckout();
+                handleCheckoutHistory();
+              }}
                 type="submit"
                 className="w-full py-2 bg-gray-800 text-white rounded hover:bg-gray-900 focus:outline-none focus:ring focus:border-blue-400"
               >
                 Place Order
               </button>
+              {thankYouMessage && (
+            <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-400 text-white px-4 py-2 rounded-md shadow-lg text-xl">
+              Thank you for purchasing our product!
+            </div>
+          )}
+              </Link>  
             </div>
           </div>
         </div>
