@@ -94,7 +94,7 @@
 
 **Route:** `DELETE /api/users/:userId`
 
-**Description:** This route allows administrators to delete a user by providing their user ID.
+**Description:** This route allows administrators to delete a user by providing their user ID. It makes the user inactive by changing the value of isActive to false
 
 **Request Parameters:**
 - `userId`: ID of the user to be deleted.
