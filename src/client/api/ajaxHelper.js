@@ -40,7 +40,7 @@ export async function registerUser(
     const token = data.token;
     window.localStorage.setItem("token", token);
     window.localStorage.setItem("userId", data.user.id)
-    console.log("from the ajax register:", data);
+    // console.log("from the ajax register:", data);
     return data;
   } catch (error) {
     console.error("An error occurred: ", error);
@@ -56,11 +56,12 @@ export async function createUser({
   username,
   password,
   imgUrl,
-  isAdmin
+  isAdmin,
+  isActive
 }) {
   try {
-    console.log("is admin in ajax");
-    console.log(isAdmin);
+    // console.log("is admin in ajax");
+    // console.log(isAdmin);
     await fetch(`${BASE_URL}/users/register`, {
       headers: { "Content-Type": "application/json" },
       method: "POST",
@@ -72,6 +73,7 @@ export async function createUser({
         password,
         imgUrl,
         isAdmin,
+        isActive
       }),
     });
     return "ok";
@@ -91,15 +93,13 @@ export async function loginUser(username, password) {
                     password,
             }),
         });
-
-
         const data = await response.json();
         const token = data.token;
         const isAdmin = data.user.isAdmin;
         window.localStorage.setItem("isAdmin", isAdmin);
         window.localStorage.setItem("token", token)
         window.localStorage.setItem("userId", data.user.id)
-        // console.log(data.user.id)
+        console.log("Logged as user: ", data);
         return  data;
     } catch (error) {
         console.error("An error occurred: ", error)
@@ -113,6 +113,7 @@ export async function fetchAllProducts() {
       headers: getHeaders(),
     });
     const data = await res.json();
+    console.log("Fetched all products: ", data);
     return data;
   } catch (error) {
     console.error(error);
@@ -126,6 +127,7 @@ export async function fetchPaginatedProducts(currentPage, itemsPerPage) {
     const response = await fetch(`/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`);
 
     const data = await response.json();
+    console.log("Fetched paginated products: ", data);
     return data;
   } catch (error) {
     console.error('Error fetching paginated products:', error);
@@ -145,7 +147,7 @@ export async function addProduct(productId) {
       }),
        });
     const data = await response.json();
-    console.log(data);
+    console.log("Added product: ", data);
     return data;
   } catch (error) {
     console.log(error)
@@ -163,7 +165,7 @@ export async function removeProduct(productId) {
       }),
        });
     const data = await response.json();
-    console.log(data);
+    console.log("Removed Product: ", data);
     return data;
   } catch (error) {
     console.log(error)
@@ -190,7 +192,7 @@ export async function fetchSingleProduct(productId) {
       headers: getHeaders(),
     });
     const data = await response.json();
-    console.log(data);
+    console.log("Fetched single product: ", data);
     return data;
   } catch (error) {
     console.log(error);
@@ -203,7 +205,7 @@ export async function getCart(userId) {
     const response = await fetch(`${BASE_URL}/orders/cart/${userId}`, {
       headers: getHeaders(),
     });
-    console.log(userId)
+    // console.log(userId)
     const data = await response.json();
     console.log("fire from getCart", data);
     return data;
@@ -221,7 +223,7 @@ export async function deleteProduct(productId) {
       
     });
     const result = await response.json();
-    console.log(result);
+    console.log("Deleted product:", result);
     return result;
   } catch (error) {
     console.error(error);
@@ -236,7 +238,7 @@ export async function deleteUser(userId) {
       method: "DELETE",
     });
     const result = await response.json();
-    console.log(result);
+    console.log("deleted user:", result);
     return result;
   } catch (error) {
     console.error(error);
@@ -275,7 +277,7 @@ export async function createProduct({
       }),
     });
     const result = await response.json();
-    console.log(result);
+    console.log("Created product:", result);
   } catch (error) {
     console.error(error);
   }
@@ -304,8 +306,8 @@ export async function editProduct({
     dimensions,
     medium,
   };
-  console.log("SEND DAta ");
-  console.log(sendData);
+  // console.log("SEND DAta ");
+  // console.log(sendData);
   try {
     const res = await fetch(`${BASE_URL}/products/${postId}`, {
       headers: getHeaders(),
@@ -313,7 +315,7 @@ export async function editProduct({
       body: JSON.stringify(sendData),
     });
     const data = await res.json();
-    console.log(data);
+    console.log("Edited product:", data);
     return data.data.post;
   } catch (error) {
     console.log(error);
@@ -329,6 +331,7 @@ export async function editUser({
   password,
   imgUrl,
   isAdmin,
+  isActive,
   userId
 }) {
   const sendData = {
@@ -338,10 +341,11 @@ export async function editUser({
     username,
     password,
     imgUrl,
-    isAdmin
+    isAdmin,
+    isActive
   };
-  console.log("SEND DAta ");
-  console.log(sendData);
+  // console.log("SEND DAta ");
+  // console.log(sendData);
   try {
     const res = await fetch(`${BASE_URL}/users/${userId}`, {
       headers: getHeaders(),
@@ -349,7 +353,7 @@ export async function editUser({
       body: JSON.stringify(sendData),
     });
     const data = await res.json();
-    console.log(data);
+    console.log("Edited user:", data);
     return data;
   } catch (error) {
     console.log(error);

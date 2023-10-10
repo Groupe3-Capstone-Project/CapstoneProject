@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { registerUser } from "../api/ajaxHelper";
+import { clearCart } from "../api/initializeGuestCart";
 import earingPerl from '../assets/IMG/earingPerl.jpg';
 import { useNavigate } from "react-router-dom";
 
@@ -27,8 +28,10 @@ export default function Register({ token, setToken, setUserId }) {
       // const userId = response.user.id;
       console.log("user from register:", userId);
       setToken(token);
-      setUserId(userId)
-      navigate("/products")
+      setUserId(userId);
+      navigate("/products");
+      setError("");
+      // clearCart();
     } catch (error) {
       setError("Registration failed: " + error.message);
       console.error("Registration failed: ", error);

@@ -33,6 +33,7 @@ export default function Products({ addToCart, userId }) {
       return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     };
   
+    // console.log("init total?:", totalPrice);
     useEffect(() => {
       async function fetchProducts() {
         try {
@@ -56,7 +57,7 @@ export default function Products({ addToCart, userId }) {
       async function fetchCartData() {
         try {
           if (userId) {
-            console.log("Cart data fetched:", userId);
+            // console.log("Cart data fetched:", userId);
             const cartData = await getCart(userId);
             setCart(cartData);
           } else {
@@ -65,22 +66,22 @@ export default function Products({ addToCart, userId }) {
             if (!guestCart) {
               // Initialize the guest cart and store the cartKey
               const generatedGuestCart = initializeGuestCart();
-              console.log("gen cart:", generatedGuestCart)
-              // setCart(parsedCart);
+              // console.log("gen cart:", generatedGuestCart)
             }
             // Use the function to get guest cart data
             const parsedCart = JSON.parse(guestCart);
             setCart(parsedCart);
-            console.log("cart from if:", parsedCart)
-            const total = calculateTotal(parsedCart.cart_items);
-            setTotalPrice(total);
-            
+            // console.log("cart from if:", parsedCart);
+            if (parsedCart && parsedCart.cart_items) {
+              const total = calculateTotal(parsedCart.cart_items);
+              setTotalPrice(total);
+              // console.log("totalPrice from prod:", totalPrice)            
+            }
           }
         } catch (error) {
           console.error(error);
         }
       }
-  
       // Call the fetchCartData function when the component is mounted
       fetchCartData();
     }, [userId]);
@@ -103,7 +104,7 @@ export default function Products({ addToCart, userId }) {
             setCart(response.userCart);
           }
         } else {
-          console.log("From handleAddCart:", product)
+          // console.log("From handleAddCart:", product);
           // Guest user, add the product to the guest cart in local storage
           addToGuestCart("guest_cart", product);
           const guestCart = localStorage.getItem("guest_cart");
@@ -111,7 +112,7 @@ export default function Products({ addToCart, userId }) {
           setCart(parsedCart);
           const total = calculateTotal(parsedCart.cart_items);
           setTotalPrice(total);
-          console.log("UpdatedCart:", parsedCart);
+          // console.log("UpdatedCart:", parsedCart);
         }
       } catch (error) {
         console.error("Error adding product to cart:", error);

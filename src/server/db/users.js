@@ -5,7 +5,7 @@ const SALT_COUNT = 10;
 
 // Create a new user / register
 async function createUser({ 
-    name, email, address, username, password, imgUrl, isAdmin,
+    name, email, address, username, password, imgUrl, isAdmin, isActive
 }) {
     try {
         // Insure default imgUrl value is place holder if none provided, and not null
@@ -15,14 +15,18 @@ async function createUser({
         // Insure default isAdmin value is false if none provided, and not null
         if (!isAdmin) {
             isAdmin = false;
-        } 
+        }
+        // Insure default value of isActive is true, incase none provided
+        if (!isActive) {
+            isActive = true;
+        }
         const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
         const { rows: [user] } = await client.query(`
-            INSERT INTO users(name, email, address, username, password, "imgUrl", "isAdmin")
-            VALUES($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO users(name, email, address, username, password, "imgUrl", "isAdmin", "isActive")
+            VALUES($1, $2, $3, $4, $5, $6, $7, $8)
             ON CONFLICT (username) DO NOTHING
             RETURNING *`, 
-        [name, email, address, username, hashedPassword, imgUrl, isAdmin]);
+        [name, email, address, username, hashedPassword, imgUrl, isAdmin, isActive]);
         delete user.password
         return user;
     } catch (error) {
@@ -164,7 +168,8 @@ async function updateUser(id, fields) {
 async function destroyUser(id) {
     try {
         const { rows: [user] } = await client.query(`
-            DELETE FROM users
+            UPDATE users
+            SET "isActive" = false
             WHERE id = $1
             RETURNING *;
         `, [id]);
