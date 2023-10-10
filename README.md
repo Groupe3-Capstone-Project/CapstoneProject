@@ -122,6 +122,26 @@
 
 ---
 
+## Get all products paginated
+
+**Route:** `GET /api/products/paginated`
+
+**Description:** This route retrieves a paginated list of products, allowing clients to specify the page number and the number of products per page using query parameters.
+
+**Request Parameters:**
+- `page` (optional): The page number to retrieve (default: 1).
+- `limit` (optional): The number of products per page (default: 10).
+
+**Response:**
+- `products` (array): An array of product objects representing the products on the requested page.
+- `totalProducts` (number): The total number of active products in the system.
+- `page` (number): The current page number.
+- `limit` (number): The number of products displayed per page.
+
+**Errors:** Returns a 404 error if there is a problem retrieving the list of products.
+ 
+---
+
 ## Get product by productId
 
 **Route:** `GET /api/products/:productId`

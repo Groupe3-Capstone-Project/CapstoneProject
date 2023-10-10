@@ -2,9 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 // import { fetchAllProducts } from "../api/ajaxHelper";
+import { v4 as uuidv4 } from 'uuid';
 import { BsPlus, BsEyeFill } from "react-icons/bs"
 import { Link } from "react-router-dom";
 import Cart from "./Cart";
+import GuestCart from "./GuestCart";
+import { initializeGuestCart, getGuestCart, addToGuestCart, removeFromCart, clearCart } from "../api/initializeGuestCart";
 import SearchBar from "./SearchBar";
 import SearchResultList from "./SearchResultList";
 import { addProduct, getCart, fetchPaginatedProducts, removeProduct } from "../api/ajaxHelper";
@@ -19,11 +22,17 @@ export default function Products({ addToCart, userId }) {
     const [products, setProducts] = useState([]);
     const [error, setError] = useState(null);
     const [cart, setCart] = useState([]);
+    const [cartKey, setCartKey] = useState('');
+    const [totalPrice, setTotalPrice] = useState(0)
     const [result, setResult] = useState([]);
     const [currentPage, setCurrentPage] = useState(1); // Track current page
     const [totalProducts, setTotalProducts] = useState(0);
     const itemsPerPage = 10; // Items per page (you can adjust this)
 
+    const calculateTotal = (cartItems) => {
+      return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    };
+  
     useEffect(() => {
       async function fetchProducts() {
         try {
@@ -46,9 +55,27 @@ export default function Products({ addToCart, userId }) {
     useEffect(() => {
       async function fetchCartData() {
         try {
-          const cartData = await getCart(userId);
-          setCart(cartData);
-          console.log("Cart data fetched:", cartData);
+          if (userId) {
+            console.log("Cart data fetched:", userId);
+            const cartData = await getCart(userId);
+            setCart(cartData);
+          } else {
+            // Retrieve the cartKey directly
+            const guestCart = localStorage.getItem("guest_cart");
+            if (!guestCart) {
+              // Initialize the guest cart and store the cartKey
+              const generatedGuestCart = initializeGuestCart();
+              console.log("gen cart:", generatedGuestCart)
+              // setCart(parsedCart);
+            }
+            // Use the function to get guest cart data
+            const parsedCart = JSON.parse(guestCart);
+            setCart(parsedCart);
+            console.log("cart from if:", parsedCart)
+            const total = calculateTotal(parsedCart.cart_items);
+            setTotalPrice(total);
+            
+          }
         } catch (error) {
           console.error(error);
         }
@@ -66,13 +93,25 @@ export default function Products({ addToCart, userId }) {
     
     async function handleAddToCart(product) {
       try {
-        // Call the addProduct function from the backend to add the product to the cart
-        const response = await addProduct(product.id); 
-        // Assuming product.id is the ID of the product to add
-        if (!response) {
-          console.error("Failed to add product to cart.");
+        if (userId) {
+          // User is logged in, add the product to the user's cart
+          const response = await addProduct(product.id);
+          // Assuming product.id is the ID of the product to add
+          if (!response) {
+            console.error("Failed to add product to cart.");
+          } else {
+            setCart(response.userCart);
+          }
         } else {
-          setCart(response.userCart);
+          console.log("From handleAddCart:", product)
+          // Guest user, add the product to the guest cart in local storage
+          addToGuestCart("guest_cart", product);
+          const guestCart = localStorage.getItem("guest_cart");
+          const parsedCart = JSON.parse(guestCart);
+          setCart(parsedCart);
+          const total = calculateTotal(parsedCart.cart_items);
+          setTotalPrice(total);
+          console.log("UpdatedCart:", parsedCart);
         }
       } catch (error) {
         console.error("Error adding product to cart:", error);
@@ -145,9 +184,15 @@ export default function Products({ addToCart, userId }) {
                 ))}
             </div>
             </div>
+            {userId ? (
             <div className=" ml-10 mt-20">
                 <Cart userId={userId} cart={cart} setCart={setCart} />
             </div>
+            ) : (
+              <div className=" ml-10 mt-20">
+                <GuestCart cart={cart} setCart={setCart} totalPrice={totalPrice} setTotalPrice={setTotalPrice} />
+            </div>
+            )}
         </div>
     </div>    
         );
