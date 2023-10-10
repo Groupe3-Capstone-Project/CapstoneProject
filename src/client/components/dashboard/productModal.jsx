@@ -67,34 +67,30 @@ function ProductModal({ setModalOpen, type = "edit", handleSubmit, product }) {
                   handleChange={handleChange}
                   formData={formData}
                 />
-                {type == "new" ? (
-                  <>
-                    <div className="flex gap-4">
-                      <TextInput
-                        name="year"
-                        handleChange={handleChange}
-                        formData={formData}
-                      />
-                      <TextInput
-                        name="period"
-                        handleChange={handleChange}
-                        formData={formData}
-                      />
-                    </div>
-                    <div className="flex gap-4">
-                      <TextInput
-                        name="dimensions"
-                        handleChange={handleChange}
-                        formData={formData}
-                      />
-                      <TextInput
-                        name="medium"
-                        handleChange={handleChange}
-                        formData={formData}
-                      />
-                    </div>
-                  </>
-                ) : null}
+                <div className="flex gap-4">
+                  <TextInput
+                    name="year"
+                    handleChange={handleChange}
+                    formData={formData}
+                  />
+                  <TextInput
+                    name="period"
+                    handleChange={handleChange}
+                    formData={formData}
+                  />
+                </div>
+                <div className="flex gap-4">
+                  <TextInput
+                    name="dimensions"
+                    handleChange={handleChange}
+                    formData={formData}
+                  />
+                  <TextInput
+                    name="medium"
+                    handleChange={handleChange}
+                    formData={formData}
+                  />
+                </div>
                 <TextAreaInput
                   name="description"
                   handleChange={handleChange}

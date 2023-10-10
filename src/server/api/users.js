@@ -18,30 +18,30 @@ const { requireUser, requireAdmin, requiredNotSent } = require('./utils');
 
 // Get all users (Admin)
 // GET /api/users
-usersRouter.get('/', requireAdmin, async( req, res, next) => {
+usersRouter.get('/', requireAdmin, async (req, res, next) => {
     try {
         const users = await getAllUsers();
         res.send({
             users
         });
-    } catch ({name, message}) {
-        next({name, message})
+    } catch ({ name, message }) {
+        next({ name, message })
     }
 });
 
 // Post login User
 // POST /api/users/login
-usersRouter.post('/login', async(req, res, next) => {
+usersRouter.post('/login', async (req, res, next) => {
     const { username, password } = req.body;
-    if(!username || !password) {
+    if (!username || !password) {
         next({
             name: 'MissingCredentialsError',
             message: 'Please supply both a username and a password'
         });
     }
     try {
-        const user = await getUser({username, password});
-        if(user) {
+        const user = await getUser({ username, password });
+        if (user) {
             const token = jwt.sign({
                 id: user.id,
                 username: user.username
@@ -60,25 +60,28 @@ usersRouter.post('/login', async(req, res, next) => {
                 message: 'Username or password is incorrect'
             });
         }
-    } catch({ name, message }) {
+    } catch ({ name, message }) {
         next({ name, message });
     }
 });
 
 // Post register new user
 // POST api/users/register
-usersRouter.post('/register', async(req, res, next) => {
+usersRouter.post('/register', async (req, res, next) => {
     const { name, email, address, username, password, imgUrl, isAdmin } = req.body;
+    console.log("creating user with admin rights");
+    console.log(isAdmin);
     try {
         const _user = await getUserByUsername(username);
-        if(_user) {
+        if (_user) {
             res.status(400).json({
                 name: 'UserExistsError',
                 message: 'A user with that email already exists'
             });
         }
         const user = await createUser({
-            name, email, address, username, password, imgUrl, isAdmin });
+            name, email, address, username, password, imgUrl, isAdmin
+        });
         const token = jwt.sign({
             id: user.id,
             username: user.username
@@ -95,14 +98,14 @@ usersRouter.post('/register', async(req, res, next) => {
             user: user,
             order: order
         });
-    } catch({name, message}) {
-        next({name, message})
+    } catch ({ name, message }) {
+        next({ name, message })
     }
 });
 
 // Patch user by userId (User/Admin) needs at least one param
 // PATCH /api/users/:userId
-usersRouter.patch('/:userId', requireUser, requiredNotSent({requiredParams: ['name', 'email', 'address', 'username', 'imgurl', 'isAdmin'], atLeastOne: true}), async (req, res, next) => {
+usersRouter.patch('/:userId', requireUser, requiredNotSent({ requiredParams: ['name', 'email', 'address', 'username', 'imgurl', 'isAdmin'], atLeastOne: true }), async (req, res, next) => {
     try {
         // The second argument specifies the radix (base 10).
         const userId = parseInt(req.params.userId, 10)
@@ -124,9 +127,10 @@ usersRouter.patch('/:userId', requireUser, requiredNotSent({requiredParams: ['na
         const updatedUser = await updateUser(userId, fieldsToUpdate);
         res.status(200).json({
             message: "User succesfully updated:",
-            user: updatedUser});
-    } catch ({name, message}) {
-        next({name, message});
+            user: updatedUser
+        });
+    } catch ({ name, message }) {
+        next({ name, message });
     }
 });
 
@@ -137,7 +141,8 @@ usersRouter.delete('/:userId', requireAdmin, async (req, res, next) => {
         const deletedUser = await destroyUser(req.params.userId);
         res.status(200).json({
             message: "User successfully deleted:",
-            user: deletedUser})
+            user: deletedUser
+        })
     } catch ({ name, message }) {
         next({ name, message });
     }
