@@ -1,0 +1,56 @@
+
+
+export function initializeGuestCart() {
+    // const cartKey = "guest_cart";
+    const existingCart = localStorage.getItem("guest_cart");
+    // console.log("existing guest cart:", existingCart);
+    if (!existingCart) {
+        const initialCart = {
+        cart_items: [],
+      // other cart properties like total, etc.
+        };
+        localStorage.setItem("guest_cart", JSON.stringify(initialCart));
+    }
+};
+
+export function getGuestCart(cartKey) {
+    return JSON.parse(localStorage.getItem(cartKey));
+};
+
+export function addToGuestCart(cartKey, item) {
+    // console.log("From init item", item);
+    const cart = JSON.parse(localStorage.getItem(cartKey));
+    // console.log("From init cart", cart);
+    const existingItem = cart.cart_items.find((cartItem) => cartItem.id === item.id);
+    if (existingItem) {
+        // If the item already exists, increment its quantity
+        existingItem.quantity +=  1;
+        existingItem.price += item.price;
+        // console.log("From init existingItem", existingItem.price);
+    } else {
+    // If the item is not in the cart, add it with a quantity of 1
+    item.quantity = 1;
+    cart.cart_items.push(item);
+}
+localStorage.setItem(cartKey, JSON.stringify(cart));
+};
+
+export function removeFromCart(cartKey, itemId) {
+    const cart = JSON.parse(localStorage.getItem(cartKey));
+    const itemIndex = cart.cart_items.findIndex((item) => item.id === itemId);
+
+    if (itemIndex !== -1) {
+        // If the item exists in the cart and its quantity is greater than 1, decrement the quantity
+        if (cart.cart_items[itemIndex].quantity > 1) {
+            cart.cart_items[itemIndex].quantity -= 1;
+        } else {
+            // If the item quantity is 1, remove the item from the cart
+            cart.cart_items.splice(itemIndex, 1);
+        }
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+    };
+};
+
+export function clearCart() {
+    localStorage.removeItem(cartKey);
+};

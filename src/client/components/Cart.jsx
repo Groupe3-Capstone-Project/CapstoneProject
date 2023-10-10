@@ -11,9 +11,11 @@ export default function Cart({ userId, cart, setCart }) {
   useEffect(() => {
     async function fetchCartData() {
       try {
-        const cartData = await getCart(userId);
-        setCart(cartData);
-        console.log("Cart data fetched:", cartData);
+        if (userId) {
+          const cartData = await getCart(userId);
+          setCart(cartData);
+          console.log("Cart data fetched:", cartData);
+        }
       } catch (error) {
         console.error(error);
       }
