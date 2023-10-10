@@ -14,6 +14,7 @@ import ProtectedRoute from "./protectedRoute";
 import DashBoard from "./dashboard/DashBoard";
 import UsersDashboard from "./dashboard/usersDashboard";
 import ProductsDashboard from "./dashboard/productsDashboard";
+import Checkout from "./Checkout";
 
 
 
@@ -33,6 +34,7 @@ export default function MainContainer() {
                 <Route path="/login" element={<Login setToken={setToken} setIsAdmin={setIsAdmin} />} />
                 <Route path="/logout" element={<Logout setToken={setToken} setIsAdmin={setIsAdmin} />} />
                 <Route path="/products/:id" element={<SingleProduct token={token} setToken={setToken} />} />
+                <Route path="/checkout" element={<Checkout token={token} setToken={setToken} />} />
                 <Route
                     path="/dashboard"
                     element={

@@ -22,6 +22,7 @@
     "react-icons": "^4.11.0",
     "react-image-gallery": "^1.3.0",
     "react-paginate": "^8.2.0",
+    "react-pagination": "^1.0.0",
     "react-router-dom": "^6.16.0",
     "vite-express": "*",
     "volleyball": "^1.5.1"

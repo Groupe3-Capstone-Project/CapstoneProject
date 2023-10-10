@@ -1,5 +1,5 @@
 import{ useState, useEffect} from "react"
-import { fetchSingleProduct } from "../api/ajaxHelper"
+import { fetchSingleProduct, addProduct } from "../api/ajaxHelper"
 import { useParams } from "react-router"
 import { VscChromeClose } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 
 export default function SingleProduct() {
     const [product, setProduct] = useState({})
+    const [cart, setCart] = useState([]);
+    const [showConfirmation, setShowConfirmation] = useState(false);
     let {id} = useParams()
     const navigate = useNavigate();
    
@@ -18,6 +20,28 @@ export default function SingleProduct() {
     }
     singlePlayerHandle();
  }, [id]);
+
+ async function handleAddToCart(product) {
+  try {
+    const response = await addProduct(product.id);
+
+    if (!response) {
+      console.error("Failed to add product to cart.");
+    } else {
+      setCart(response.userCart);
+
+      // Show the confirmation message
+      setShowConfirmation(true);
+
+      // Hide the confirmation message after 3 seconds
+      setTimeout(() => {
+        setShowConfirmation(false);
+      }, 3000);
+    }
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+  }
+}
 
  function renderSingleProduct() {
     return (
@@ -40,6 +64,16 @@ export default function SingleProduct() {
             <h2>Year: {product.year}</h2>
             <h2>Dimensions: {product.dimensions}</h2>
             <p className="font-semibold">$ {product.price}</p>
+            <div className="text-center mt-4">
+            <button
+              onClick={() => {
+                handleAddToCart(product);
+              }}
+              className="py-2 px-4 bg-gray-800 text-white rounded hover:bg-gray-900 focus:outline-none focus:ring focus:border-blue-400"
+            >
+              Add To Cart
+            </button>
+          </div>
           </div>
         </div>
       </div>
@@ -58,6 +92,12 @@ export default function SingleProduct() {
  return (
     <div>
         {renderSingleProduct()}
+        {showConfirmation && (
+       <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-400 text-white px-4 py-2 rounded-md shadow-lg text-xl">
+       Product added to cart!
+     </div>
+     
+      )}
     </div>
  );
 

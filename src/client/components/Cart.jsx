@@ -3,9 +3,19 @@ import React, { useState, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { GoChevronRight } from "react-icons/go";
 import { getCart, removeProduct } from "../api/ajaxHelper";
+import { Link } from "react-router-dom";
 
 export default function Cart({ userId, cart, setCart }) {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Calculate the total price of items in the cart
+  const calculateTotal = () => {
+    let total = 0;
+    for (const item of cart.cart_items) {
+      total += item.price * item.quantity;
+    }
+    return total.toFixed(2);
+  };
   
   
   useEffect(() => {
@@ -53,7 +63,7 @@ export default function Cart({ userId, cart, setCart }) {
       {!isOpen && (
         <button
           onClick={toggleCart}
-          className="text-2xl text-gray-900 hover:text-blue-400 absolute top-2 right-2 focus:outline-none"
+          className="text-2xl text-gray-800 hover:text-gray-900 absolute top-2 right-2 focus:outline-none"
         >
           <FaShoppingCart />
         </button>
@@ -94,8 +104,15 @@ export default function Cart({ userId, cart, setCart }) {
           <hr className="my-4 border-t border-gray-300" />
           <div className="flex items-center justify-between">
             <p className="text-lg font-semibold">Total Price:</p>
-            {/* <p className="text-lg font-semibold">${calculateTotal()}</p> */}
+            <p className="text-lg font-semibold">${calculateTotal()}</p>
           </div>
+          <Link to="/checkout">
+            <button
+              className="w-full py-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400"
+            >
+              Checkout
+            </button>
+          </Link>
         </div>
       )}
     </div>
