@@ -168,13 +168,22 @@ export async function deleteUser(userId) {
     const result = await response.json();
     console.log(result);
     return result;
-  } catch (error){
+  } catch (error) {
     console.error(error);
     throw error;
   }
 }
 
-export async function createProduct() {
+export async function createProduct({
+  title,
+  artist,
+  description,
+  price,
+  imgUrl,
+  year,
+  medium,
+  period,
+  dimensions, }) {
   try {
     const response = await fetch(`${BASE_URL}/products`, {
       headers: getHeaders(),
@@ -186,11 +195,15 @@ export async function createProduct() {
           description,
           price,
           imgUrl,
+          year,
+          medium,
+          period,
+          dimensions,
         },
       }),
     });
     const result = await response.json();
-    console.log(data);
+    console.log(result);
   } catch (error) {
     console.error(error);
   }

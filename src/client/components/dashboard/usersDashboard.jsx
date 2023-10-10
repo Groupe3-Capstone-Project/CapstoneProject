@@ -92,6 +92,7 @@ function Users({ users, fetchUsers }) {
           {users &&
             users.map((user) => (
               <User
+                key={user.id}
                 user={user}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
