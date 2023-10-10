@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 // import { fetchAllProducts } from "../api/ajaxHelper";
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { BsPlus, BsEyeFill } from "react-icons/bs"
 import { Link } from "react-router-dom";
 import Cart from "./Cart";
@@ -112,6 +112,7 @@ export default function Products({ addToCart, userId }) {
           setTimeout(() => {
             setShowConfirmation(false);
           }, 3000);
+        }
         } else {
           // console.log("From handleAddCart:", product);
           // Guest user, add the product to the guest cart in local storage
@@ -165,7 +166,7 @@ export default function Products({ addToCart, userId }) {
                   key={product.id}
                   className="mb-4 relative overflow-hidden group transition"
                 >
-                  <div className="border border-[#e4e4e4] h-[250px] w-[250px] relative">
+                  <div className="border border-[#635c5c] h-[250px] w-[250px] relative">
                     <div className="w-full h-full flex justify-center items-center relative">
                       <div className="w-[200px] mx-auto flex justify-center items-center">
                         <Link to={`/products/${product.id}`}>
@@ -188,7 +189,7 @@ export default function Products({ addToCart, userId }) {
                         </button>
                         <Link to={`/products/${product.id}`}>
                           <BsEyeFill
-                            className="w-5 h-5 bg-white text-blue-600 flex justify-center items-center text-primary drop-shadow-xl"
+                            className="w-5 h-5 bg-white text-blue-600 flex justify-center items-center drop-shadow-xl"
                           />
                         </Link>
                       </div>
