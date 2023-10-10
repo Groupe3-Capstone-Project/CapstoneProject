@@ -77,7 +77,7 @@ ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
         const updatedCart = await getCartByUserId(userId);
         // console.log("do I got a cart:", updatedCart);
         res.status(200).json({ 
-            message: 'Product added to cart successfully',
+            message: `Product id ${productId} added to cart successfully`,
             userCart: updatedCart });
     } catch ({ name, message }) {
       next({ name, message });
@@ -127,11 +127,11 @@ ordersRouter.delete('/remove_from_cart', requireUser, async (req, res, next) => 
 ordersRouter.get('/cart/:userId', requireUser, async (req, res, next) => {
     try {
         const userId = parseInt(req.params.userId, 10);
-        // console.log("get cart params id:", userId);
+        console.log("get cart params id:", userId);
         const cartOrder = await getCartByUserId(userId);
         // console.log("cartOrder:", cartOrder);
         if (!cartOrder) {
-            return res.status(404).json({ message: 'User cart not found' });
+            res.status(200).json({ message: 'User cart not found' });
         }
         if (!req.user.isAdmin && cartOrder.userId !== req.user.id) {
             return res.status(403).json({ message: 'Access denied, current user does not match cart user id, or is not admin'})

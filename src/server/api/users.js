@@ -1,5 +1,6 @@
 const express = require('express')
 const usersRouter = express.Router();
+const { createOrder} = require('../db');
 const { JWT_SECRET } = process.env;
 const jwt = require('jsonwebtoken')
 
@@ -87,10 +88,15 @@ usersRouter.post('/register', async (req, res, next) => {
         }, JWT_SECRET, {
             expiresIn: '1w'
         });
+        const order = await createOrder({
+            userId: user.id,
+            status: 'created' // You can customize this as needed
+          });
         res.status(201).json({
             message: 'Sign up successful!',
             token: token,
-            user: user
+            user: user,
+            order: order
         });
     } catch ({ name, message }) {
         next({ name, message })

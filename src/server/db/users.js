@@ -18,12 +18,12 @@ async function createUser({
         } 
         const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
         const { rows: [user] } = await client.query(`
-        INSERT INTO users(name, email, address, username, password, "imgUrl", "isAdmin")
-        VALUES($1, $2, $3, $4, $5, $6, $7)
-        ON CONFLICT (username) DO NOTHING
-        RETURNING *`, 
+            INSERT INTO users(name, email, address, username, password, "imgUrl", "isAdmin")
+            VALUES($1, $2, $3, $4, $5, $6, $7)
+            ON CONFLICT (username) DO NOTHING
+            RETURNING *`, 
         [name, email, address, username, hashedPassword, imgUrl, isAdmin]);
-
+        delete user.password
         return user;
     } catch (error) {
         console.error("Problem creating user into db", error);
@@ -36,6 +36,9 @@ async function getAllUsers() {
         const { rows: users } = await client.query(`
         SELECT * FROM users; 
         `);
+        users.forEach(user => {
+            delete user.password;
+        });
         return users;
     } catch (error) {
         console.error("Couldn't get all users:", error);
@@ -44,15 +47,19 @@ async function getAllUsers() {
 
 // Get user / login
 async function getUser({ username, password}) {
-    if(!username || !password) {
-        return;
-    }
     try {
+        if (!username || !password) {
+            throw new Error("Both username and password are required.");
+        }
         const user = await getUserByUsername(username);
-        if(!user) return;
+        if (!user) {
+            throw new Error("User not found.");
+        }
         const hashedPassword = user.password;
         const passwordsMatch = await bcrypt.compare(password, hashedPassword);
-        if(!passwordsMatch) return;
+        if (!passwordsMatch) {
+            throw new Error("Incorrect password.");
+        }
         delete user.password;
         return user;
     } catch (error) {
@@ -64,10 +71,11 @@ async function getUser({ username, password}) {
 async function getUserById(id) {
     try {
         const { rows: [user] } = await client.query(`
-        SELECT *
-        FROM users
-        WHERE id = $1;
+            SELECT *
+            FROM users
+            WHERE id = $1;
         `, [id]);
+        delete user.password
         return user;
     } catch (error) {
         console.error("Couldn't get User by Id:", error);
@@ -78,10 +86,11 @@ async function getUserById(id) {
 async function getUserByUsername(username) {
     try {
         const { rows: [ user ] } = await client.query(`
-        SELECT *
-        FROM users
-        WHERE username = $1;
+            SELECT *
+            FROM users
+            WHERE username = $1;
         `, [ username ]);
+        // delete user.password
         return user; 
     } catch (error) {
         console.error("Couldn't get user by username", error)
@@ -92,13 +101,14 @@ async function getUserByUsername(username) {
 const getUserByEmail = async(email) => {
     try {
         const { rows: [ user ] } = await client.query(`
-        SELECT * 
-        FROM users
-        WHERE email = $1;
+            SELECT * 
+            FROM users
+            WHERE email = $1;
         `, [ email ]);
            if(!user) {
             return;
         }
+        delete user.password
         return user;
     } catch (error) {
         throw error;
@@ -115,12 +125,12 @@ async function updateUser(id, fields) {
             toUpdate[column] = fields[column];
           }
         }
-        console.log("toUpdate:", toUpdate)
-        console.log("id is:", id)
+        // console.log("toUpdate:", toUpdate)
+        // console.log("id is:", id)
         if (toUpdate.hasOwnProperty('username')) {
             // Check if the new username already exists in the database, return early if it's the case
             const existingUser = await getUserByUsername(toUpdate.username);
-            console.log("Existing user:", existingUser)
+            // console.log("Existing user:", existingUser)
             if (existingUser) {
                 // Check if the existing username belongs to the same user
                 if (existingUser.id === id) {
@@ -134,15 +144,15 @@ async function updateUser(id, fields) {
         let user;
         if (dbFields(toUpdate).insert.length > 0) {
             const {rows} = await client.query(`
-            UPDATE users
-            SET ${ dbFields(toUpdate).insert }
-            WHERE id=${ id }
-            RETURNING *;
+                UPDATE users
+                SET ${ dbFields(toUpdate).insert }
+                WHERE id=${ id }
+                RETURNING *;
             `, Object.values(toUpdate));
-
             user = rows[0];
         }
-        console.log("Updated user correctly:", user);
+        // console.log("Updated user correctly:", user);
+        delete user.password
         return user;
     } catch (error) {
         console.error("DB can't update user:", error);
@@ -154,12 +164,13 @@ async function updateUser(id, fields) {
 async function destroyUser(id) {
     try {
         const { rows: [user] } = await client.query(`
-        DELETE FROM users
-        WHERE id = $1
-        RETURNING *;
+            DELETE FROM users
+            WHERE id = $1
+            RETURNING *;
         `, [id]);
+        delete user.password
         return user;
-        } catch (error) {
+    } catch (error) {
         console.error("Problem destroying user", error);
     }
 };

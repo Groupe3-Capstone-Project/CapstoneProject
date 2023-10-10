@@ -72,7 +72,7 @@ async function getOrderByUserId(id) {
 // Get cart from orderId
 async function getCartByOrderId(orderId) {
     try {
-        console.log("getCart order:", orderId);
+        // console.log("getCart order:", orderId);
         const { rows } = await client.query(`
         SELECT
             orders."userId" as user_id,
@@ -83,7 +83,8 @@ async function getCartByOrderId(orderId) {
             order_products."productId",
             order_products.quantity,
             order_products.price,
-            products.title AS product_title
+            products.title AS product_title,
+            products."imgUrl" AS product_img
         FROM 
             orders
         LEFT JOIN
@@ -114,12 +115,13 @@ async function getCartByOrderId(orderId) {
                     orderId: row.order_id,
                     productId: row.productId,
                     product_title: row.product_title,
+                    product_img: row.product_img,
                     quantity: row.quantity,
                     price: row.price,
                 });
             }
         });
-console.log("Fired from getCartByUserId:", result)
+        // console.log("Fired from getCartByUserId:", result)
         return result;
     } catch (error) {
         console.error("Could not get cart order by userId:", error);
@@ -130,7 +132,7 @@ console.log("Fired from getCartByUserId:", result)
 // Get cart from userId
 async function getCartByUserId(userId) {
     try {
-        console.log("getCart id:", userId);
+        // console.log("getCart id:", userId);
         const { rows } = await client.query(`
         SELECT
             orders."userId" as user_id,
@@ -141,7 +143,8 @@ async function getCartByUserId(userId) {
             order_products."productId",
             order_products.quantity,
             order_products.price,
-            products.title AS product_title
+            products.title AS product_title,
+            products."imgUrl" AS product_img
         FROM 
             orders
         LEFT JOIN
@@ -155,11 +158,9 @@ async function getCartByUserId(userId) {
         AND 
             orders.status = 'created'
         `, [userId]);
-
         if (rows.length === 0) {
             return null; // Return null if no cart order with status 'created' is found
         }
-
         const result = {
             userId: rows[0].user_id,
             username: rows[0].username,
@@ -167,7 +168,6 @@ async function getCartByUserId(userId) {
             status: rows[0].status,
             cart_items: [],
         };
-
         rows.forEach((row) => {
             if (row.cart_item_id) {
                 result.cart_items.push({
@@ -175,13 +175,13 @@ async function getCartByUserId(userId) {
                     orderId: row.order_id,
                     productId: row.productId,
                     product_title: row.product_title,
+                    product_img: row.product_img,
                     quantity: row.quantity,
                     price: row.price,
                 });
             }
         });
-
-console.log("Fired from getCartByUserId:", result)
+        // console.log("Fired from getCartByUserId:", result)
         return result;
     } catch (error) {
         console.error("Could not get cart order by userId:", error);

@@ -12,9 +12,8 @@ function dbFields(fields) {
   
     const vals = Object.values(fields);
     return {insert, select, vals};
-}
-  
-  
+};
+
 module.exports = {
     dbFields,
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-const BASE_URL = "http://localhost:3000/api";
+const BASE_URL = "http://localhost:4000/api";
 
 export default function SearchBar({ setResult }) {
   const [input, setInput] = useState("");
@@ -12,14 +12,18 @@ export default function SearchBar({ setResult }) {
         console.log("Fetched products:", products);
 
         if (Array.isArray(products)) {
-          const result = products.filter((product) => {
-            return (
-              value &&
-              product &&
-              product.title &&
-              product.title.toLowerCase().startsWith(value.toLowerCase())
-            );
-          });
+          const result = value 
+          ? products.filter((product) => {
+            const searchWords = value.toLowerCase().split(' ');
+            return searchWords.some((searchWord) => {
+              return (
+                product &&
+                product.title &&
+                product.title.toLowerCase().includes(searchWord)
+              );
+            }); 
+          }) 
+          : [];
           console.log(result);
           setResult(result);
         } else {

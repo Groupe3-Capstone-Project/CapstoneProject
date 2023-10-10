@@ -1,67 +1,94 @@
 
 
 import React, { useState, useEffect } from "react";
-import { fetchAllProducts } from "../api/ajaxHelper";
+// import { fetchAllProducts } from "../api/ajaxHelper";
 import { BsPlus, BsEyeFill } from "react-icons/bs"
 import { Link } from "react-router-dom";
 import Cart from "./Cart";
 import SearchBar from "./SearchBar";
-// import SearchResult from "./SearchResult";
 import SearchResultList from "./SearchResultList";
+import { addProduct, getCart, fetchPaginatedProducts, removeProduct } from "../api/ajaxHelper";
+
+
 
 const backgroundImageUrl =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg/640px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg";
 
 
-export default function Products({ addToCart }) {
+export default function Products({ addToCart, userId }) {
     const [products, setProducts] = useState([]);
     const [error, setError] = useState(null);
     const [cart, setCart] = useState([]);
-    const [result, setResult] = useState([])
+    const [result, setResult] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1); // Track current page
+    const [totalProducts, setTotalProducts] = useState(0);
+    const itemsPerPage = 10; // Items per page (you can adjust this)
 
     useEffect(() => {
-        async function fetchProducts() {
-            try {
-                const returnedProducts = await fetchAllProducts();
-                setProducts(returnedProducts);
-            } catch (err) {
-                console.error(err)
-                setError(err);
-            } 
-        }
+      async function fetchProducts() {
+        try {
+          // Fetch the list of paginated products
+          const data = await fetchPaginatedProducts(currentPage, itemsPerPage);
 
-        fetchProducts();
-    }, []);
+          if (data && data.products) {
+          setProducts(data.products);
+          setTotalProducts(data.totalProducts);
+          }
+        } catch (err) {
+          console.error(err);
+          setError(err);
+        }
+      }
+    
+      fetchProducts();
+    }, [currentPage]);
+
+    useEffect(() => {
+      async function fetchCartData() {
+        try {
+          const cartData = await getCart(userId);
+          setCart(cartData);
+          console.log("Cart data fetched:", cartData);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+  
+      // Call the fetchCartData function when the component is mounted
+      fetchCartData();
+    }, [userId]);
+
+    async function handlePageChange(newPage) {
+      // Handle page change when user clicks on pagination buttons
+      setCurrentPage(newPage);
+    }
 
     
-  function addToCart(product) {
-    // Check if the product is already in the cart
-    const existingItemIndex = cart.findIndex((item) => item.id === product.id);
-
-    if (existingItemIndex !== -1) {
-      // If the product is already in the cart, increase its quantity
-      const updatedCart = [...cart];
-      updatedCart[existingItemIndex].quantity += 1;
-      setCart(updatedCart);
-    } else {
-      // If the product is not in the cart, add it with a quantity of 1
-      setCart([...cart, { ...product, quantity: 1 }]);
+    async function handleAddToCart(product) {
+      try {
+        // Call the addProduct function from the backend to add the product to the cart
+        const response = await addProduct(product.id); 
+        // Assuming product.id is the ID of the product to add
+        if (!response) {
+          console.error("Failed to add product to cart.");
+        } else {
+          setCart(response.userCart);
+        }
+      } catch (error) {
+        console.error("Error adding product to cart:", error);
+      }
     }
-  }
+    
 
-  function removeFromCart(productId) {
-    // Remove the product with the specified productId from the cart
-    const updatedCart = cart.filter((item) => item.id !== productId);
-    setCart(updatedCart);
-  }
+  
 
-  function calculateTotal() {
-    // Calculate the total price of items in the cart
-    const total = cart.reduce((accumulator, item) => {
-      return accumulator + item.price * item.quantity;
-    }, 0);
-    return total;
-  }
+  // function calculateTotal() {
+  //   // Calculate the total price of items in the cart
+  //   const total = cart.reduce((accumulator, item) => {
+  //     return accumulator + item.price * item.quantity;
+  //   }, 0);
+  //   return total;
+  // }
 
 
     function renderAllProducts() {
@@ -96,7 +123,7 @@ export default function Products({ addToCart }) {
                                 </Link>    
                                 </div>
                                 <div className="absolute top-0 -right-8 group-hover:right-5 p-2 flex flex-col items-center justify-center gap-y-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                <button onClick={() => addToCart(product)}>
+                                <button onClick={() => handleAddToCart(product)}>
                                  <div className="flex justify-center items-center text-white w-5 h-5 bg-red-500">
                                  <BsPlus className="text-3xl" />
                                  </div>
@@ -119,11 +146,34 @@ export default function Products({ addToCart }) {
             </div>
             </div>
             <div className=" ml-10 mt-20">
-                <Cart cart={cart} removeFromCart={removeFromCart} calculateTotal={calculateTotal} />
+                <Cart userId={userId} cart={cart} setCart={setCart} />
             </div>
         </div>
     </div>    
         );
+    }
+
+    function renderPagination() {
+      const totalPages = Math.ceil(totalProducts / itemsPerPage);
+      const pageButtons = [];
+  
+      for (let i = 1; i <= totalPages; i++) {
+        pageButtons.push(
+          <button
+            key={i}
+            onClick={() => handlePageChange(i)}
+            className={`mx-1 ${
+              currentPage === i ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-600'
+            } rounded-md px-3 py-1 focus:outline-none focus:ring`}
+          >
+            {i}
+          </button>
+        );
+      }
+  
+      return (
+        <div className="flex justify-center mt-4">{pageButtons}</div>
+      );
     }
 
     
@@ -131,7 +181,10 @@ export default function Products({ addToCart }) {
 
 
     return (
-        <div>{renderAllProducts()}</div>
+        <div>
+          {renderAllProducts()}
+          {renderPagination()}
+        </div>
     )
 }
 

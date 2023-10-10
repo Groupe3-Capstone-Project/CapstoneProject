@@ -6,7 +6,7 @@ const { dbFields } = require('./utils');
 async function getAllProducts() {
     try {
         const { rows: products } = await client.query(`
-        SELECT * FROM products;
+            SELECT * FROM products;
         `);
         return products
     } catch (error) {
@@ -18,8 +18,8 @@ async function getAllProducts() {
 async function getProductById(id) {
     try {
         const { rows: [product] } = await client.query(`
-        SELECT * FROM products
-        WHERE id = $1;
+            SELECT * FROM products
+            WHERE id = $1;
         `, [id]);
         return product;
     } catch (error) {
@@ -43,17 +43,20 @@ async function getProductByTitle(title) {
 
 // Create product
 async function createProduct({ 
-    title, artist, description, period, medium, price, year, dimensions, imgUrl }) {
+    title, artist, description, period, medium, price, year, dimensions, imgUrl, isActive }) {
     try {
         // Insure placeholder img is attributed if none provided by user
         if (!imgUrl) {
             imgUrl = 'https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-default-male-avatar-png-image_2811083.jpg';
         }
+        if (!isActive) {
+            isActive = true;
+        }
         const { rows: [product] } = await client.query(`
-        INSERT INTO products(title, artist, description, period, medium, price, year, dimensions, "imgUrl")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        INSERT INTO products(title, artist, description, period, medium, price, year, dimensions, "imgUrl", "isActive")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING *;
-        `, [title, artist, description, period, medium, price, year, dimensions, imgUrl]);
+        `, [title, artist, description, period, medium, price, year, dimensions, imgUrl, isActive]);
         
         if (product) {
             return product;
@@ -70,16 +73,14 @@ async function createProduct({
 async function updateProduct(id, fields) {
     try {
         const toUpdate = {};
-    
         for(let column in fields) {
             if(fields[column] !== undefined) {
                 toUpdate[column] = fields[column];
             }
         }
-
         if (toUpdate.hasOwnProperty('title')) {
             const existingProduct = await getProductByTitle(toUpdate.title);
-            console.log("Existing: ", existingProduct);
+            // console.log("Existing: ", existingProduct);
             if (existingProduct && existingProduct.id !== id) {
                 throw new Error('Another painting already has this title');
             }
@@ -101,25 +102,25 @@ async function updateProduct(id, fields) {
     }
 };
 
-// Destroy product from productId
-async function destroyProduct(id) {
+// Makes product inactive and deletes it's corresponding orderProducts if present
+async function destroyProduct(id, isActive) {
     try {
         await client.query(`
         DELETE FROM order_products
         WHERE "productId" = $1;
     `, [id]);
-
-    
     const { rows: [product] } = await client.query(`
-        DELETE FROM products
+        UPDATE products
+        SET "isActive" = $2
         WHERE id = $1
         RETURNING *;
-    `, [id]);
+    `, [id, isActive]);
         return product;
     } catch (error) {
         console.error("Problem destroying product", error);
     }
 };
+
 
 module.exports = {
     client,
@@ -130,3 +131,22 @@ module.exports = {
     updateProduct,
     destroyProduct,
 };
+// // Destroy product from productId
+// async function destroyProduct(id) {
+//     try {
+//         await client.query(`
+//         DELETE FROM order_products
+//         WHERE "productId" = $1;
+//     `, [id]);
+
+    
+//     const { rows: [product] } = await client.query(`
+//         DELETE FROM products
+//         WHERE id = $1
+//         RETURNING *;
+//     `, [id]);
+//         return product;
+//     } catch (error) {
+//         console.error("Problem destroying product", error);
+//     }
+// };
