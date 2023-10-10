@@ -52,5 +52,5 @@ export function removeFromCart(cartKey, itemId) {
 };
 
 export function clearCart() {
-    localStorage.removeItem(cartKey);
+    localStorage.removeItem("guest_cart");
 };

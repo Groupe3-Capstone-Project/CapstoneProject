@@ -34,7 +34,8 @@ async function createTables() {
           username VARCHAR(255) UNIQUE NOT NULL,
           password VARCHAR(255) NOT NULL,
           "imgUrl" VARCHAR(255) DEFAULT 'https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-default-male-avatar-png-image_2811083.jpg',
-          "isAdmin" BOOLEAN DEFAULT false NOT NULL
+          "isAdmin" BOOLEAN DEFAULT false NOT NULL,
+          "isActive" BOOLEAN DEFAULT true NOT NULL
         );`)
 
         await client.query(`
@@ -84,6 +85,7 @@ async function insertUsers() {
         username: 'princessWarrior',
         password: 'securepass',
         isAdmin: false,
+        isActive: true,
       },
       {
         name: 'Naoko Kitamura',
@@ -100,6 +102,7 @@ async function insertUsers() {
         username: 'bellagringa',
         password: 'pass1234',
         isAdmin: false,
+        isActive: true,
       },
       {
         name: 'Mohammed Ahmed',
@@ -108,6 +111,7 @@ async function insertUsers() {
         username: 'momoismagic',
         password: 'mysecretpassword',
         isAdmin: false,
+        isActive: true,
       },
       {
         name: 'John Smith',
@@ -116,6 +120,7 @@ async function insertUsers() {
         username: 'getdagold',
         password: 'password123',
         isAdmin: false,
+        isActive: true,
       },
       // Add more user objects as needed
     ];

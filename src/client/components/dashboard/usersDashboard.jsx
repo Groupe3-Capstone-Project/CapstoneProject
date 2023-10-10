@@ -10,7 +10,7 @@ export default function UsersDashboard() {
   const handleCreate = async (data) => {
     try {
       await createUser(data);
-      console.log("user created!");
+      // console.log("user created!");
       fetchUsers();
     } catch (err) {
       console.error(err);
@@ -32,6 +32,7 @@ export default function UsersDashboard() {
     fetchUsers();
   }, []);
 
+  // console.log("Users mod:", users);
   return (
     <>
       <h1 className="text-center text-2xl mb-4">All Users</h1>
@@ -56,6 +57,7 @@ export default function UsersDashboard() {
 function Users({ users, fetchUsers }) {
   const handleDelete = async (id) => {
     try {
+      // console.log("HandleDel user id:", id);
       await deleteUser(id);
       fetchUsers();
     } catch (err) {
@@ -135,7 +137,11 @@ function User({ user, handleDelete, handleEdit }) {
         {user.email}
         <br />
         <span className="badge badge-ghost badge-sm">
-          {user.isAdmin ? "Admin" : "Regular User"}
+          {user.isActive 
+          ? user.isAdmin 
+          ? "Admin" 
+          : "Regular User"
+        : "Inactive User"}
         </span>
       </td>
       <td>{user.address}</td>
@@ -151,22 +157,24 @@ function User({ user, handleDelete, handleEdit }) {
             handleSubmit={handleEdit}
           />
         )}
+        {user.isActive && !user.isAdmin && ( // Conditionally render the "Delete" button
         <button
           className="btn btn-outline btn-error"
           onClick={() => setDeleteModel(true)}
         >
           Delete
         </button>
-        {deleteModal && (
-          <DeleteModal
-            type="user"
-            handleSubmit={handleDelete}
-            title={user.name}
-            id={user.id}
-            setModalOpen={setDeleteModel}
-          />
-        )}
-      </th>
-    </tr>
-  );
+      )}
+      {deleteModal && (
+        <DeleteModal
+          type="user"
+          handleSubmit={handleDelete}
+          title={user.name}
+          id={user.id}
+          setModalOpen={setDeleteModel}
+        />
+      )}
+    </th>
+  </tr>
+);
 }

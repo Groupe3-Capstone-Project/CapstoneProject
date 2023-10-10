@@ -14,9 +14,12 @@ export default function GuestCart({ cart, setCart, totalPrice, setTotalPrice }) 
                 const guestCart = localStorage.getItem("guest_cart");
                 const parsedCart = JSON.parse(guestCart);
                 setCart(parsedCart);
-                console.log("From GC:", parsedCart);
-                const total = calculateTotal(parsedCart.cart_items);
-                setTotalPrice(total);
+                // console.log("From GC:", parsedCart);
+                if (parsedCart && parsedCart.cart_items) {
+                    const total = calculateTotal(parsedCart.cart_items);
+                    setTotalPrice(total);
+                    // console.log("totalPrice from gc:", totalPrice);            
+                }
         } catch (error) {
             console.error(error);
         }
@@ -40,7 +43,7 @@ export default function GuestCart({ cart, setCart, totalPrice, setTotalPrice }) 
 
   async function handleRemove(productId) {
     try {
-      removeFromCart("guest_cart",productId);
+      removeFromCart("guest_cart", productId);
       const guestCart = localStorage.getItem("guest_cart");
       const parsedCart = JSON.parse(guestCart);
       setCart(parsedCart);
@@ -51,7 +54,7 @@ export default function GuestCart({ cart, setCart, totalPrice, setTotalPrice }) 
     }
   }
 
-  console.log("2nd one:", cart)
+//   console.log("2nd one:", cart);
   return (
     <div className="relative">
       {!isOpen && (

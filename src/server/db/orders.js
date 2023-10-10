@@ -224,7 +224,7 @@ async function updateOrderStatus(id, status) {
         if (!order) {
             return null;
         }
-
+        console.log(`Cancelled Order id ${id}`);
         return order;
     } catch (error) {
         console.error(`DB couldn't update order with id ${id}:`, error);

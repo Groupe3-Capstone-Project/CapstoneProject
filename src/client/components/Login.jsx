@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { loginUser } from "../api/ajaxHelper";
+import { clearCart } from "../api/initializeGuestCart";
 import earingPerl from '../assets/IMG/earingPerl.jpg';
 import { useNavigate } from "react-router-dom";
 
@@ -24,6 +25,7 @@ export default function Login({ setIsAdmin, setToken, setUserId }) {
         navigate("/products");
         setSuccessMessage("Login successful!");
         setError('');
+        clearCart();
       } else {
         setError("Login failed: Invalid username or password");
       }
