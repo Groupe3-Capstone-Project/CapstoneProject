@@ -1,14 +1,17 @@
-import { registerUser } from "../../api/ajaxHelper";
+import { createUser, deleteUser, editUser, fetchAllUsers } from "../../api/ajaxHelper";
 import UserModal from "./userModal";
-import { useState } from "react";
+import DeleteModal from "./deleteModal";
+import { useEffect, useState } from "react";
 
 export default function UsersDashboard() {
   const [modal, setModal] = useState(false);
+  const [users, setUsers] = useState([]);
 
-  const handleCreate = async ({ username, name, email, address, password }) => {
+  const handleCreate = async (data) => {
     try {
-      const rv = await registerUser(name, email, address, username, password);
-      console.log(rv);
+      await createUser(data);
+      // console.log("user created!");
+      fetchUsers();
     } catch (err) {
       console.error(err);
     }
@@ -16,6 +19,20 @@ export default function UsersDashboard() {
     setModal(false);
   };
 
+  async function fetchUsers() {
+    try {
+      const returnedUsers = await fetchAllUsers();
+      setUsers(returnedUsers);
+    } catch (err) {
+      setError(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  // console.log("Users mod:", users);
   return (
     <>
       <h1 className="text-center text-2xl mb-4">All Users</h1>
@@ -32,30 +49,30 @@ export default function UsersDashboard() {
         )}
       </div>
 
-      <Users />
+      <Users users={users} fetchUsers={fetchUsers} />
     </>
   );
 }
 
-function Users() {
-  // const [users, setUsers] = useState();
+function Users({ users, fetchUsers }) {
+  const handleDelete = async (id) => {
+    try {
+      // console.log("HandleDel user id:", id);
+      await deleteUser(id);
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  const users = [
-    {
-      name: "Naoko Kitamura",
-      username: "morinosei",
-      email: "naoko@example.com",
-      isAdmin: true,
-      address: "13 broad ave, chicago",
-    },
-    {
-      name: "Naoko Kitamura",
-      username: "morinosei",
-      email: "naoko@example.com",
-      isAdmin: false,
-      address: "13 broad ave, chicago",
-    },
-  ];
+  const handleEdit = async (data) => {
+    try {
+      await editUser(data);
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -74,19 +91,23 @@ function Users() {
           </tr>
         </thead>
         <tbody>
-          <User user={users[0]} />
-          <User user={users[0]} />
-          <User user={users[1]} />
-          <User user={users[0]} />
-          <User user={users[0]} />
-          <User user={users[1]} />
+          {users &&
+            users.map((user) => (
+              <User
+                key={user.id}
+                user={user}
+                handleDelete={handleDelete}
+                handleEdit={handleEdit}
+              />
+            ))}
         </tbody>
       </table>
     </div>
   );
 }
 
-function User({ user }) {
+function User({ user, handleDelete, handleEdit }) {
+  const [deleteModal, setDeleteModel] = useState(false);
   const [modal, setModal] = useState(false);
 
   return (
@@ -116,17 +137,44 @@ function User({ user }) {
         {user.email}
         <br />
         <span className="badge badge-ghost badge-sm">
-          {user.isAdmin ? "Admin" : "Regular User"}
+          {user.isActive 
+          ? user.isAdmin 
+          ? "Admin" 
+          : "Regular User"
+        : "Inactive User"}
         </span>
       </td>
       <td>{user.address}</td>
 
-      <th className="font-normal">
+      <th className="font-normal flex gap-4">
         <button className="btn" onClick={() => setModal(true)}>
           Edit
         </button>
-        {modal && <UserModal user={user} setModalOpen={setModal} />}
-      </th>
-    </tr>
-  );
+        {modal && (
+          <UserModal
+            user={user}
+            setModalOpen={setModal}
+            handleSubmit={handleEdit}
+          />
+        )}
+        {user.isActive && !user.isAdmin && ( // Conditionally render the "Delete" button
+        <button
+          className="btn btn-outline btn-error"
+          onClick={() => setDeleteModel(true)}
+        >
+          Delete
+        </button>
+      )}
+      {deleteModal && (
+        <DeleteModal
+          type="user"
+          handleSubmit={handleDelete}
+          title={user.name}
+          id={user.id}
+          setModalOpen={setDeleteModel}
+        />
+      )}
+    </th>
+  </tr>
+);
 }

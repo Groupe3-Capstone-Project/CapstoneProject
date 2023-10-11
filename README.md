@@ -1,3 +1,29 @@
+# TO START
+
+1. Install packages & dependencies
+
+```bash
+npm install
+```
+
+2. Add a `.env` file, in the root of your project, with your secret value for auth
+
+```
+JWT_SECRET='somesecretvalue'
+```
+
+3. Create the database
+
+- In your terminal:
+
+```bash
+- psql
+- CREATE DATABASE capstone_groupe3;
+```
+(The ';' after the database name is crucial)
+
+--------------------------------------------------------------------
+
 #  API DOCUMENTATION
 
 ### ROUTES INDEX :
@@ -94,7 +120,7 @@
 
 **Route:** `DELETE /api/users/:userId`
 
-**Description:** This route allows administrators to delete a user by providing their user ID.
+**Description:** This route allows administrators to delete a user by providing their user ID. It makes the user inactive by changing the value of isActive to false
 
 **Request Parameters:**
 - `userId`: ID of the user to be deleted.
@@ -120,6 +146,26 @@
 
 **Errors:** If there's an error in retrieving products, an error response will be sent.
 
+---
+
+## Get all products paginated
+
+**Route:** `GET /api/products/paginated`
+
+**Description:** This route retrieves a paginated list of products, allowing clients to specify the page number and the number of products per page using query parameters.
+
+**Request Parameters:**
+- `page` (optional): The page number to retrieve (default: 1).
+- `limit` (optional): The number of products per page (default: 10).
+
+**Response:**
+- `products` (array): An array of product objects representing the products on the requested page.
+- `totalProducts` (number): The total number of active products in the system.
+- `page` (number): The current page number.
+- `limit` (number): The number of products displayed per page.
+
+**Errors:** Returns a 404 error if there is a problem retrieving the list of products.
+ 
 ---
 
 ## Get product by productId

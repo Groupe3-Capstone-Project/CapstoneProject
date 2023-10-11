@@ -1,7 +1,6 @@
 
 const BASE_URL = "http://localhost:4000/api";
 
-
 function getHeaders() {
   let headers = {
     "Content-Type": "application/json",
@@ -12,14 +11,20 @@ function getHeaders() {
     // console.log("getHeaders current token:", currentToken);
   }
   return headers;
-};
-
-
-export async function registerUser(name, email, address, username, password, imgUrl, isAdmin) {
+}
+export async function registerUser(
+  name,
+  email,
+  address,
+  username,
+  password,
+  imgUrl,
+  isAdmin
+) {
   try {
     const response = await fetch(`${BASE_URL}/users/register`, {
-      headers: getHeaders(), //headers: { "Content-Type": "application/json" },
-      method: 'POST',
+      headers: getHeaders(),
+      method: "POST",
       body: JSON.stringify({
         name,
         email,
@@ -31,17 +36,52 @@ export async function registerUser(name, email, address, username, password, img
       }),
     });
 
-    const data = await response.json()
+    const data = await response.json();
     const token = data.token;
     window.localStorage.setItem("token", token);
-    console.log(data);
-    return token;
+    window.localStorage.setItem("userId", data.user.id)
+    // console.log("from the ajax register:", data);
+    return data;
   } catch (error) {
     console.error("An error occurred: ", error);
     throw error;
   }
 }
 
+// creating user using admin dashboard
+export async function createUser({
+  name,
+  email,
+  address,
+  username,
+  password,
+  imgUrl,
+  isAdmin,
+  isActive
+}) {
+  try {
+    // console.log("is admin in ajax");
+    // console.log(isAdmin);
+    await fetch(`${BASE_URL}/users/register`, {
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+      body: JSON.stringify({
+        name,
+        email,
+        address,
+        username,
+        password,
+        imgUrl,
+        isAdmin,
+        isActive
+      }),
+    });
+    return "ok";
+  } catch (error) {
+    console.error("An error occurred: ", error);
+    throw error;
+  }
+}
 
 export async function loginUser(username, password) {
     try {
@@ -53,16 +93,14 @@ export async function loginUser(username, password) {
                     password,
             }),
         });
-
-
         const data = await response.json();
         const token = data.token;
         const isAdmin = data.user.isAdmin;
         window.localStorage.setItem("isAdmin", isAdmin);
         window.localStorage.setItem("token", token)
         window.localStorage.setItem("userId", data.user.id)
-        // console.log(data.user.id)
-        return { token, isAdmin };
+        console.log("Logged as user: ", data);
+        return  data;
     } catch (error) {
         console.error("An error occurred: ", error)
         throw error;
@@ -75,6 +113,7 @@ export async function fetchAllProducts() {
       headers: getHeaders(),
     });
     const data = await res.json();
+    console.log("Fetched all products: ", data);
     return data;
   } catch (error) {
     console.error(error);
@@ -82,10 +121,13 @@ export async function fetchAllProducts() {
   }
 }
 
+
 export async function fetchPaginatedProducts(currentPage, itemsPerPage) {
   try {
     const response = await fetch(`/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`);
+
     const data = await response.json();
+    console.log("Fetched paginated products: ", data);
     return data;
   } catch (error) {
     console.error('Error fetching paginated products:', error);
@@ -105,7 +147,7 @@ export async function addProduct(productId) {
       }),
        });
     const data = await response.json();
-    console.log(data);
+    console.log("Added product: ", data);
     return data;
   } catch (error) {
     console.log(error)
@@ -123,13 +165,26 @@ export async function removeProduct(productId) {
       }),
        });
     const data = await response.json();
-    console.log(data);
+    console.log("Removed Product: ", data);
     return data;
   } catch (error) {
     console.log(error)
   }
 };
 
+export async function fetchAllUsers() {
+  try {
+    const res = await fetch(`${BASE_URL}/users`, {
+      headers: getHeaders(),
+    });
+    const data = await res.json();
+    console.table(data.users);
+    return data.users;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
 
 export async function fetchSingleProduct(productId) {
   try {
@@ -137,19 +192,20 @@ export async function fetchSingleProduct(productId) {
       headers: getHeaders(),
     });
     const data = await response.json();
-    console.log(data);
+    console.log("Fetched single product: ", data);
     return data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-};
+}
 
 export async function getCart(userId) {
   try {
+    console.log("From ajax cart:", userId)
     const response = await fetch(`${BASE_URL}/orders/cart/${userId}`, {
       headers: getHeaders(),
     });
-    console.log(userId)
+    // console.log(userId)
     const data = await response.json();
     console.log("fire from getCart", data);
     return data;
@@ -167,7 +223,7 @@ export async function deleteProduct(productId) {
       
     });
     const result = await response.json();
-    console.log(result);
+    console.log("Deleted product:", result);
     return result;
   } catch (error) {
     console.error(error);
@@ -175,7 +231,33 @@ export async function deleteProduct(productId) {
   }
 }
 
-export async function createProduct() {
+export async function deleteUser(userId) {
+  try {
+    const response = await fetch(`${BASE_URL}/users/${userId}`, {
+      headers: getHeaders(),
+      method: "DELETE",
+    });
+    const result = await response.json();
+    console.log("deleted user:", result);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function createProduct({
+  title,
+  artist,
+  description,
+  price,
+  imgUrl,
+  year,
+  medium,
+  period,
+  dimensions,
+}) {
+
   try {
     const response = await fetch(`${BASE_URL}/products`, {
       headers: getHeaders(),
@@ -187,34 +269,19 @@ export async function createProduct() {
           description,
           price,
           imgUrl,
+          year,
+          medium,
+          period,
+          dimensions,
         },
       }),
     });
     const result = await response.json();
-    console.log(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export async function sendMessage(postId, content) {
-  try {
-    const response = await fetch(`${BASE_URL}/posts/postId/messages`, {
-      headers: getHeaders(),
-      method: "POST",
-      body: JSON.stringify({
-        message: {
-          content: content,
-        },
-      }),
-    });
-    const result = await response.json();
-    console.log(result);
+    console.log("Created product:", result);
   } catch (error) {
     console.error(error);
   }
 }
-
 
 export async function editProduct({
   title,
@@ -226,10 +293,9 @@ export async function editProduct({
   medium,
   period,
   dimensions,
-  postId
+  postId,
 }) {
   const sendData = {
-
     title,
     artist,
     description,
@@ -239,10 +305,9 @@ export async function editProduct({
     period,
     dimensions,
     medium,
-
   };
-  console.log("SEND DAta ");
-  console.log(sendData);
+  // console.log("SEND DAta ");
+  // console.log(sendData);
   try {
     const res = await fetch(`${BASE_URL}/products/${postId}`, {
       headers: getHeaders(),
@@ -250,7 +315,7 @@ export async function editProduct({
       body: JSON.stringify(sendData),
     });
     const data = await res.json();
-    console.log(data);
+    console.log("Edited product:", data);
     return data.data.post;
   } catch (error) {
     console.log(error);
@@ -258,21 +323,42 @@ export async function editProduct({
   }
 }
 
-
-export async function fetchUserData() {
+export async function editUser({
+  name,
+  email,
+  address,
+  username,
+  password,
+  imgUrl,
+  isAdmin,
+  isActive,
+  userId
+}) {
+  const sendData = {
+    name,
+    email,
+    address,
+    username,
+    password,
+    imgUrl,
+    isAdmin,
+    isActive
+  };
+  // console.log("SEND DAta ");
+  // console.log(sendData);
   try {
-    const response = await fetch(`${BASE_URL}/users/me`, {
+    const res = await fetch(`${BASE_URL}/users/${userId}`, {
       headers: getHeaders(),
-      method: "GET",
+      method: "PATCH",
+      body: JSON.stringify(sendData),
     });
-
-    if (response.ok) {
-      const userData = await response.json();
-      console.log(userData)
-    } else {
-      console.log("Failed to fetch user data");
-    }
+    const data = await res.json();
+    console.log("Edited user:", data);
+    return data;
   } catch (error) {
-    console.log("Error fetching user data:", error);
+    console.log(error);
+    return {};
   }
 }
+
+

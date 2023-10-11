@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { loginUser } from "../api/ajaxHelper";
+import { clearCart } from "../api/initializeGuestCart";
 import earingPerl from '../assets/IMG/earingPerl.jpg';
 import { useNavigate } from "react-router-dom";
 
-export default function Login({ setIsAdmin, setToken }) {
+export default function Login({ setIsAdmin, setToken, setUserId }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState("");
@@ -12,13 +13,19 @@ export default function Login({ setIsAdmin, setToken }) {
 
   const handlerLogin = async () => {
     try {
-      const { token, isAdmin } = await loginUser(username, password);
+      const response = await loginUser(username, password);
+      console.log("Response from login:", response)
+      const token = response.token;
+      const isAdmin = response.user.isAdmin;
+      const userId = response.user.id
       if (token) {
         setToken(token);
         setIsAdmin(isAdmin);
+        setUserId(userId)
         navigate("/products");
         setSuccessMessage("Login successful!");
         setError('');
+        clearCart();
       } else {
         setError("Login failed: Invalid username or password");
       }

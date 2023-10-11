@@ -26,6 +26,8 @@ productsRouter.get('/', async (req, res, next) => {
     }
 });
 
+// Get all products paginated, itemPerPage is adjustable
+// GET /api/paginated
 productsRouter.get('/paginated', async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;

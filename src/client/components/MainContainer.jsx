@@ -18,9 +18,9 @@ import Checkout from "./Checkout";
 
 
 
-export default function MainContainer() {
+export default function MainContainer({ userId, setUserId }) {
     const [token, setToken] = useState(window.localStorage.getItem("token"));
-    const [userId, setUserId] = useState(window.localStorage.getItem("userId"));
+    // const [userId, setUserId] = useState(window.localStorage.getItem("userId"));
     const [isAdmin, setIsAdmin] = useState(window.localStorage.getItem("isAdmin"));
 
 
@@ -29,9 +29,9 @@ export default function MainContainer() {
             <NavBar token={token} setToken={setToken} isAdmin={isAdmin} />
             <Routes>
                 <Route path="/" element={<WelcomePage token={token} setToken={setToken} />} />
-                <Route path="/register" element={<Register token={token} setToken={setToken} />} />
+                <Route path="/register" element={<Register token={token} setToken={setToken} setUserId={setUserId} />} />
                 <Route path="/products" element={<Products userId={userId} token={token} setToken={setToken} />} />
-                <Route path="/login" element={<Login setToken={setToken} setIsAdmin={setIsAdmin} />} />
+                <Route path="/login" element={<Login setToken={setToken} setIsAdmin={setIsAdmin} setUserId={setUserId} />} />
                 <Route path="/logout" element={<Logout setToken={setToken} setIsAdmin={setIsAdmin} />} />
                 <Route path="/products/:id" element={<SingleProduct token={token} setToken={setToken} />} />
                 <Route path="/checkout" element={<Checkout token={token} setToken={setToken} />} />

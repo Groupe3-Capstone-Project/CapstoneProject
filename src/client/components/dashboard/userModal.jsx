@@ -9,19 +9,21 @@ function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
     address: user?.address || "",
     password: user?.password || "",
     imgUrl: user?.imgUrl || "",
-    isAdmin: user?.isAdmin || "",
+    isAdmin: user?.isAdmin || false,
+    isActive: user?.isActive,
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: type === "checkbox" ? e.target.checked : value,
     });
   };
 
   const handleSave = () => {
     handleSubmit(formData);
+    setModalOpen(false);
   };
 
   return (
@@ -79,6 +81,12 @@ function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
                   handleChange={handleChange}
                   formData={formData}
                 />
+                <Checkbox
+                  name="isActive"
+                  handleChange={handleChange}
+                  formData={formData}
+                  type="checkbox"
+                />
               </form>
             </div>
             {/*footer*/}
@@ -128,12 +136,13 @@ function Checkbox({ handleChange, formData, name }) {
   return (
     <div className="form-control">
       <label className="label cursor-pointer">
-        <span className="label-text">Is Admin?</span>
+        <span className="label-text">{name === 'isAdmin' ? 'Is Admin?' : 'Is Active?'}</span>
         <select
+          type="checkbox"
           name={name}
           id={name}
           onChange={handleChange}
-          value={formData.isAdmin}
+          value={formData[name]}
         >
           <option value="true">True</option>
           <option value="false">False</option>
