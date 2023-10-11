@@ -1,12 +1,12 @@
-
 import React, { useState, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { GoChevronRight } from "react-icons/go";
 import { getCart, removeProduct } from "../api/ajaxHelper";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart({ userId, cart, setCart }) {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Calculate the total price of items in the cart
   const calculateTotal = () => {
@@ -16,15 +16,14 @@ export default function Cart({ userId, cart, setCart }) {
     }
     return total.toFixed(2);
   };
-  
-  
+
   useEffect(() => {
     async function fetchCartData() {
       try {
         if (userId) {
           const cartData = await getCart(userId);
           setCart(cartData);
-          console.log("Cart data fetched:", cartData);
+          // console.log("Cart data fetched:", cartData);
         }
       } catch (error) {
         console.error(error);
@@ -34,7 +33,6 @@ export default function Cart({ userId, cart, setCart }) {
     // Call the fetchCartData function when the component is mounted
     fetchCartData();
   }, [userId, setCart]);
- 
 
   const toggleCart = async () => {
     setIsOpen(!isOpen);
@@ -47,8 +45,8 @@ export default function Cart({ userId, cart, setCart }) {
   async function removeFromCart(productId) {
     try {
       const response = await removeProduct(productId);
-      console.log("from remove in cart:", response);
-      
+      // console.log("from remove in cart:", response);
+
       setCart(response.userCart);
       if (response) {
       } else {
@@ -59,13 +57,13 @@ export default function Cart({ userId, cart, setCart }) {
     }
   }
 
-  console.log("2nd one:", cart)
+  // console.log("2nd one:", cart)
   return (
     <div className="relative">
       {!isOpen && (
         <button
           onClick={toggleCart}
-          className="text-2xl text-gray-800 hover:text-gray-900 absolute top-2 right-2 focus:outline-none"
+          className="text-2xl text-blue-500 hover:text-blue-900 absolute top-2 right-2 focus:outline-none"
         >
           <FaShoppingCart />
         </button>
@@ -80,7 +78,10 @@ export default function Cart({ userId, cart, setCart }) {
           </button>
           <h2 className="text-lg font-semibold mb-4">Your Shopping Cart</h2>
           {cart.cart_items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between mb-2">
+            <div
+              key={item.id}
+              className="flex items-center justify-between mb-2"
+            >
               <div className="flex items-center">
                 <img
                   src={item.product_img}
@@ -88,7 +89,9 @@ export default function Cart({ userId, cart, setCart }) {
                   className="w-12 h-12 object-cover rounded"
                 />
                 <div className="ml-2">
-                  <p className="text-gray-700 font-semibold">{item.product_title}</p>
+                  <p className="text-gray-700 font-semibold">
+                    {item.product_title}
+                  </p>
                   <p className="text-gray-500 text-sm">Price: ${item.price}</p>
                 </div>
               </div>
@@ -99,7 +102,9 @@ export default function Cart({ userId, cart, setCart }) {
                 >
                   Remove
                 </button>
-                <p className="ml-4 text-gray-700 font-semibold">Qty: {item.quantity}</p>
+                <p className="ml-4 text-gray-700 font-semibold">
+                  Qty: {item.quantity}
+                </p>
               </div>
             </div>
           ))}
@@ -108,13 +113,12 @@ export default function Cart({ userId, cart, setCart }) {
             <p className="text-lg font-semibold">Total Price:</p>
             <p className="text-lg font-semibold">${calculateTotal()}</p>
           </div>
-          <Link to="/checkout">
-            <button
-              className="w-full py-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400"
-            >
-              Checkout
-            </button>
-          </Link>
+          <button
+          onClick={() => navigate("/checkout", { state: { cart } })}
+          className="w-full py-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400"
+        >
+          Checkout
+        </button>
         </div>
       )}
     </div>

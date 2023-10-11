@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect, useState } from "react";
 import { Link} from "react-router-dom";
 import Gallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
@@ -88,7 +89,7 @@ const images = [
               to="/products"
               className="bg-orange-500 text-white py-2 px-4 rounded-full hover:bg-orange-600"
             >
-              Home
+              Browse Gallery
             </Link>
           </div>
         </div>

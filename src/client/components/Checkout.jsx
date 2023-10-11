@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { clearCart } from "../api/initializeGuestCart";
 import { AiFillCreditCard } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { completeOrder, cancelOrder } from "../api/ajaxHelper";
 
-export default function Checkout() {
+export default function Checkout({ userId }) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -18,20 +20,65 @@ export default function Checkout() {
   const [cvv, setCVV] = useState("");
   const [thankYouMessage, setThankYouMessage] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { cart } = location.state || {};
 
-//   const handleCheckout = () => {
-//     setThankYouMessage(true);
-//     setTimeout(() => {
-//         setThankYouMessage(false);
-//       }, 5000);
-  
-//   };
+  console.log("Check this cart out:", cart)
+  if (!cart) {
+    // Handle the case where cart and setCart are missing
+    // For example, you could display an error message or redirect the user.
+    return (
+      <div>
+        <p>Cart data is missing.</p>
+        <Link to="/products">Go back to products</Link>
+      </div>
+    );
+  }
 
 
-  const handleCheckout = () => {
-    alert("Thank you for purchasing our product!")
-  
+  //   const handleCheckout = () => {
+  //     setThankYouMessage(true);
+  //     setTimeout(() => {
+  //         setThankYouMessage(false);
+  //       }, 5000);
+
+  //   };
+
+  const handleCheckout = async () => {
+    try {
+      const orderId = cart.orderId;
+      console.log("orderId?? ", orderId)
+      if(userId) {
+        const result = await completeOrder(orderId);
+      } else {
+        clearCart();
+      }
+      alert("Order completed successfully");
+      navigate("/products");
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  const handleCancelOrder = async (orderId) => {
+    try {
+      const orderId = cart.orderId;
+      console.log("orderId?? ", orderId)
+      if (userId) {
+        const result = await cancelOrder(orderId);
+      } else {
+        clearCart(); 
+      }
+      alert("Order cancelled successfully");
+      navigate("/products");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // const handleCheckout = () => {
+  //   alert("Thank you for purchasing our product!");
+  // };
 
   const handleCheckoutHistory = () => {
     // Redirect to the products page
@@ -132,23 +179,32 @@ export default function Checkout() {
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-400"
             />
             <div className="col-span-2 mt-4">
-             <Link to="/products">  
-              <button
-              onClick={() => {
-                  handleCheckout();
-                handleCheckoutHistory();
-              }}
-                type="submit"
-                className="w-full py-2 bg-gray-800 text-white rounded hover:bg-gray-900 focus:outline-none focus:ring focus:border-blue-400"
-              >
-                Place Order
-              </button>
-              {thankYouMessage && (
-            <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-400 text-white px-4 py-2 rounded-md shadow-lg text-xl">
-              Thank you for purchasing our product!
-            </div>
-          )}
-              </Link>  
+              <Link to="/products">
+                <button
+                  onClick={() => {
+                    handleCheckout()
+                  }}
+                  type="submit"
+                  className="w-full py-2 bg-gray-800 text-white rounded hover:bg-gray-900 focus:outline-none focus:ring focus:border-blue-400"
+                >
+                  Place Order
+                </button>
+                {thankYouMessage && (
+                  <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-400 text-white px-4 py-2 rounded-md shadow-lg text-xl">
+                    Thank you for purchasing our product!
+                  </div>
+                )}
+              </Link>
+              <Link to="/products">
+                <button
+                  onClick={() => {
+                    handleCancelOrder();
+                  }}
+                  className="w-full py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring focus:border-red-400"
+                >
+                  Cancel Order
+                </button>
+              </Link>
             </div>
           </div>
         </div>

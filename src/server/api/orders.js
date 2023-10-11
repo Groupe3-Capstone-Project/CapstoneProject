@@ -61,7 +61,7 @@ ordersRouter.post('/add_to_cart', requireUser, async (req, res, next) => {
         if (existingCartItem !== undefined) {
             // Update the quantity and price of the existing cart item
             existingCartItem.quantity += 1;
-            existingCartItem.price += itemToAdd.price;
+            // existingCartItem.price += itemToAdd.price;
             // console.log("userCart quantity:", quantity);
             await updateOrderProduct(existingCartItem.id, existingCartItem.quantity, existingCartItem.price);
         } else {
@@ -139,8 +139,9 @@ ordersRouter.get('/cart/:userId', requireUser, async (req, res, next) => {
         }
         // console.log("response:", cartOrder);
         res.status(200).json(cartOrder);
-    }catch ({name, message}) {
-        next({name, message});
+    }catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "An error occurred fetching user cart." });
     }
 });
 
