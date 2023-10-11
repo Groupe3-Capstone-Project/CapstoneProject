@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa"; 
 
 export default function NavBar({token, setToken, isAdmin}) {
   const navigate = useNavigate();
@@ -11,7 +10,7 @@ export default function NavBar({token, setToken, isAdmin}) {
     navigate("/");
   };
   return (
-    <nav className="bg-gray-900 text-white p-4 fixed top-0 w-full z-50">
+    <nav className="bg-gray-900 text-white p-4 top-0 w-full z-50">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold">
           Capstone
@@ -37,11 +36,6 @@ export default function NavBar({token, setToken, isAdmin}) {
             <Link to="/products" className="hover:text-blue-400">Home</Link>
              ) : null }
           </li>
-          {token ? (
-          <button>
-            <FaShoppingCart />
-          </button>
-          ) : null }
           <li>
              {token ? (
              <span
