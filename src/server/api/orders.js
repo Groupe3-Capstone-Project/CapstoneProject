@@ -128,10 +128,11 @@ ordersRouter.get('/cart/:userId', requireUser, async (req, res, next) => {
     try {
         const userId = parseInt(req.params.userId, 10);
         console.log("get cart params id:", userId);
-        const cartOrder = await getCartByUserId(userId);
+        let cartOrder = await getCartByUserId(userId);
         // console.log("cartOrder:", cartOrder);
         if (!cartOrder) {
-            res.status(200).json({ message: 'User cart not found' });
+            const newOrder = await createOrder({ userId: userId, status: 'created' });
+            cartOrder = await getCartByOrderId(newOrder.id);
         }
         if (!req.user.isAdmin && cartOrder.userId !== req.user.id) {
             return res.status(403).json({ message: 'Access denied, current user does not match cart user id, or is not admin'})

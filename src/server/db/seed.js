@@ -402,7 +402,7 @@ async function createInitialOrders() {
       },
       {
         userId: 4,
-        status: 'created'
+        status: 'cancelled'
       },
     ];
     const orders = await Promise.all(ordersToCreate.map(createOrder));
