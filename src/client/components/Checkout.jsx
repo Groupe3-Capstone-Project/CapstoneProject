@@ -23,7 +23,7 @@ export default function Checkout({ userId }) {
   const location = useLocation();
   const { cart } = location.state || {};
 
-  console.log("Check this cart out:", cart)
+  console.log("Check this cart out:", cart);
   if (!cart) {
     // Handle the case where cart and setCart are missing
     // For example, you could display an error message or redirect the user.
@@ -34,7 +34,6 @@ export default function Checkout({ userId }) {
       </div>
     );
   }
-
 
   //   const handleCheckout = () => {
   //     setThankYouMessage(true);
@@ -47,8 +46,8 @@ export default function Checkout({ userId }) {
   const handleCheckout = async () => {
     try {
       const orderId = cart.orderId;
-      console.log("orderId?? ", orderId)
-      if(userId) {
+      console.log("orderId?? ", orderId);
+      if (userId) {
         const result = await completeOrder(orderId);
       } else {
         clearCart();
@@ -63,11 +62,11 @@ export default function Checkout({ userId }) {
   const handleCancelOrder = async (orderId) => {
     try {
       const orderId = cart.orderId;
-      console.log("orderId?? ", orderId)
+      console.log("orderId?? ", orderId);
       if (userId) {
         const result = await cancelOrder(orderId);
       } else {
-        clearCart(); 
+        clearCart();
       }
       alert("Order cancelled successfully");
       navigate("/products");
@@ -182,7 +181,7 @@ export default function Checkout({ userId }) {
               <Link to="/products">
                 <button
                   onClick={() => {
-                    handleCheckout()
+                    handleCheckout();
                   }}
                   type="submit"
                   className="w-full py-2 bg-gray-800 text-white rounded hover:bg-gray-900 focus:outline-none focus:ring focus:border-blue-400"

@@ -142,7 +142,7 @@ usersRouter.get("/check/:username", async (req, res, next) => {
         user,
       });
     } else {
-        res.status(200).send({message: "username good to go"})
+      res.status(200).send({ message: "username good to go" });
     }
   } catch (error) {
     next(error);
