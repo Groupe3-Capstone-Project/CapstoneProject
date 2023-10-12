@@ -94,6 +94,9 @@ async function getUserByUsername(username) {
             FROM users
             WHERE username = $1;
         `, [ username ]);
+        if (!user) {
+            return null;
+        }
         // delete user.password
         return user; 
     } catch (error) {

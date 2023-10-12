@@ -38,6 +38,7 @@ productsRouter.get('/paginated', async (req, res, next) => {
             res.status(404).json({
                 message: "Problem getting allProducts"
             });
+            return;
         }
 
         const filteredProducts = allProducts.filter(allProduct => allProduct.isActive); // Regular user sees only active products
