@@ -26,21 +26,21 @@ export default function Login({ setIsAdmin, setToken, setUserId }) {
       setError("");
       const response = await loginUser(username, password);
       if (response) {
-      const { token, user } = response;
-      setToken(token);
-      setIsAdmin(user.isAdmin);
-      setUserId(user.id);
-      navigate("/products");
-      setSuccessMessage("Login successful!");
-      setError(""); // Clear any previous error
-      clearCart();
-    } else {
+        const { token, user } = response;
+        setToken(token);
+        setIsAdmin(user.isAdmin);
+        setUserId(user.id);
+        navigate("/products");
+        setSuccessMessage("Login successful!");
+        setError(""); // Clear any previous error
+        clearCart();
+      } else {
+        setError("Login failed: Invalid username or password");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
       setError("Login failed: Invalid username or password");
     }
-  } catch (error) {
-    console.error("Login failed:", error);
-    setError("Login failed: Invalid username or password");
-  }
   };
 
   const handleUsernameChange = (e) => {

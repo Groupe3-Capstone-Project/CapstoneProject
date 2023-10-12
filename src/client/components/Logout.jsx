@@ -14,16 +14,12 @@ function Logout({ setToken, setIsAdmin, setUserId }) {
     localStorage.removeItem("userId");
     localStorage.removeItem("isAdmin");
 
-    console.log("from logout!!!")
+    console.log("from logout!!!");
     // Redirect to the home page
     navigate("/");
   }, [setToken, setIsAdmin, setUserId, navigate]);
 
-  return (
-    <div>
-      Logging out...
-    </div>
-  );
+  return <div>Logging out...</div>;
 }
 
 export default Logout;

@@ -1,4 +1,9 @@
-import { createUser, deleteUser, editUser, fetchAllUsers } from "../../api/ajaxHelper";
+import {
+  createUser,
+  deleteUser,
+  editUser,
+  fetchAllUsers,
+} from "../../api/ajaxHelper";
 import UserModal from "./userModal";
 import DeleteModal from "./deleteModal";
 import { useEffect, useState } from "react";
@@ -137,11 +142,11 @@ function User({ user, handleDelete, handleEdit }) {
         {user.email}
         <br />
         <span className="badge badge-ghost badge-sm">
-          {user.isActive 
-          ? user.isAdmin 
-          ? "Admin" 
-          : "Regular User"
-        : "Inactive User"}
+          {user.isActive
+            ? user.isAdmin
+              ? "Admin"
+              : "Regular User"
+            : "Inactive User"}
         </span>
       </td>
       <td>{user.address}</td>
@@ -157,24 +162,25 @@ function User({ user, handleDelete, handleEdit }) {
             handleSubmit={handleEdit}
           />
         )}
-        {user.isActive && !user.isAdmin && ( // Conditionally render the "Delete" button
-        <button
-          className="btn btn-outline btn-error"
-          onClick={() => setDeleteModel(true)}
-        >
-          Delete
-        </button>
-      )}
-      {deleteModal && (
-        <DeleteModal
-          type="user"
-          handleSubmit={handleDelete}
-          title={user.name}
-          id={user.id}
-          setModalOpen={setDeleteModel}
-        />
-      )}
-    </th>
-  </tr>
-);
+        {user.isActive &&
+          !user.isAdmin && ( // Conditionally render the "Delete" button
+            <button
+              className="btn btn-outline btn-error"
+              onClick={() => setDeleteModel(true)}
+            >
+              Delete
+            </button>
+          )}
+        {deleteModal && (
+          <DeleteModal
+            type="user"
+            handleSubmit={handleDelete}
+            title={user.name}
+            id={user.id}
+            setModalOpen={setDeleteModel}
+          />
+        )}
+      </th>
+    </tr>
+  );
 }

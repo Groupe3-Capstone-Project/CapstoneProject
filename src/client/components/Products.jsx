@@ -7,10 +7,7 @@ import Cart from "./Cart";
 import GuestCart from "./GuestCart";
 import {
   initializeGuestCart,
-  getGuestCart,
   addToGuestCart,
-  removeFromCart,
-  clearCart,
 } from "../api/initializeGuestCart";
 import SearchBar from "./SearchBar";
 import SearchResultList from "./SearchResultList";
@@ -24,7 +21,7 @@ export default function Products({ addToCart, userId }) {
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [orderId, setOrderId] = useState(null)
+  const [orderId, setOrderId] = useState(null);
   const [result, setResult] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // Track current page
   const [totalProducts, setTotalProducts] = useState(0);
@@ -105,7 +102,7 @@ export default function Products({ addToCart, userId }) {
           console.error("Failed to add product to cart.");
         } else {
           setCart(response.userCart);
-          console.log("handle add" , response.userCart)
+          console.log("handle add", response.userCart);
 
           // Show the confirmation message
           setShowConfirmation(true);
@@ -124,11 +121,12 @@ export default function Products({ addToCart, userId }) {
         setCart(parsedCart);
         const total = calculateTotal(parsedCart.cart_items);
         setTotalPrice(total);
-        
+
         // Show the confirmation message
         setShowConfirmation(true);
         // Hide the confirmation message after 3 seconds
-        setTimeout(() => {          setShowConfirmation(false);
+        setTimeout(() => {
+          setShowConfirmation(false);
         }, 3000);
         // console.log("UpdatedCart:", parsedCart);
       }
@@ -146,7 +144,10 @@ export default function Products({ addToCart, userId }) {
               className="bg-cover bg-center w-full h-[750px] relative"
               style={{ backgroundImage: `url(${backgroundImageUrl})` }}
             >
-              <h1 className="text-white-100 text-8xl font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center" style={{color: 'beige', textShadow: '1px 1px 6px black' }}>
+              <h1
+                className="text-white-100 text-8xl font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
+                style={{ color: "beige", textShadow: "1px 1px 6px black" }}
+              >
                 The Gallery Shop
               </h1>
             </div>

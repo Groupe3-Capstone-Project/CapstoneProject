@@ -1,6 +1,5 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
 import Register from "./Register";
 import Login from "./Login";
 import Logout from "./Logout";
@@ -67,11 +66,19 @@ export default function MainContainer({
         />
         <Route
           path="/logout"
-          element={<Logout setToken={setToken} setIsAdmin={setIsAdmin} setUserId={setUserId} />}
+          element={
+            <Logout
+              setToken={setToken}
+              setIsAdmin={setIsAdmin}
+              setUserId={setUserId}
+            />
+          }
         />
         <Route
           path="/products/:id"
-          element={<SingleProduct token={token} setToken={setToken} userId={userId} />}
+          element={
+            <SingleProduct token={token} setToken={setToken} userId={userId} />
+          }
         />
         <Route
           path="/checkout"

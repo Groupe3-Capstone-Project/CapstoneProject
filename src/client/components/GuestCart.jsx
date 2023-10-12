@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { GoChevronRight } from "react-icons/go";
-import { getGuestCart, removeFromCart } from "../api/initializeGuestCart";
+import { removeFromCart } from "../api/initializeGuestCart";
 import { useNavigate } from "react-router-dom";
 // import { getCart, removeProduct } from "../api/ajaxHelper";
 
@@ -68,7 +68,7 @@ export default function GuestCart({
       {!isOpen && (
         <button
           onClick={toggleCart}
-          className="text-2xl text-blue-600 hover:text-blue-900 absolute top-2 right-2 focus:outline-none" 
+          className="text-2xl text-blue-600 hover:text-blue-900 absolute top-2 right-2 focus:outline-none"
         >
           <FaShoppingCart />
         </button>

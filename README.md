@@ -91,6 +91,28 @@ JWT_SECRET='somesecretvalue'
 
 ---
 
+## Check Username Availability
+
+**Route:** `GET /api/users/check/:username`
+
+**Description:** This route checks the availability of a username. If the username is already in use, it returns the user's information without the password. If the username is available, it returns a success message.
+
+**Parameters:**
+- `username`: The username to check for availability.
+
+**Response:**
+- If the username is already in use:
+  - `user`: An object containing user information with the password removed.
+- If the username is available:
+  - `message`: A success message indicating the username is available.
+
+**Errors:**
+- If there's an error during the process, an error response will be sent.
+
+**Note:** This route is used during the registration process to ensure that the chosen username is unique.
+
+---
+
 ## Patch user by userId (User/Admin)
 
 **Route:** `PATCH /api/users/:userId`
