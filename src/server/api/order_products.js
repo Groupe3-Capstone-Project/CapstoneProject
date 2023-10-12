@@ -3,7 +3,6 @@ const orderProductsRouter = express.Router();
 const { requireUser, requireAdmin } = require("./utils");
 const {
   getAllOrderProducts,
-  getOrderProductByOrderId,
   getOrderProductById,
   destroyOrderProduct,
   updateOrderProduct,

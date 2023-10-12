@@ -7,10 +7,7 @@ import Cart from "./Cart";
 import GuestCart from "./GuestCart";
 import {
   initializeGuestCart,
-  getGuestCart,
   addToGuestCart,
-  removeFromCart,
-  clearCart,
 } from "../api/initializeGuestCart";
 import SearchBar from "./SearchBar";
 import SearchResultList from "./SearchResultList";

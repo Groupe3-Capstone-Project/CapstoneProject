@@ -1,6 +1,6 @@
 const express = require("express");
 productsRouter = express.Router();
-const { requireAdmin, requireUser, requiredNotSent } = require("./utils");
+const { requireAdmin, requiredNotSent } = require("./utils");
 const {
   getAllProducts,
   getProductById,

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { registerUser, fetchUserByUsername } from "../api/ajaxHelper";
-import { clearCart } from "../api/initializeGuestCart";
 import earingPerl from "../assets/IMG/earingPerl.jpg";
 import { useNavigate } from "react-router-dom";
 
