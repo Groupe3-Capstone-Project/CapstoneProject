@@ -13,7 +13,7 @@ export default function NavBar({ token, setToken, isAdmin }) {
     <nav className="bg-gray-900 text-white p-4 top-0 w-full z-50">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="text-2xl font-bold">
-          Capstone
+          - The Online Gallery -
         </Link>
         <ul className="flex space-x-4">
           <li>

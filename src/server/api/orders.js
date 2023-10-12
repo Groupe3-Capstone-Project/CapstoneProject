@@ -104,7 +104,7 @@ ordersRouter.delete('/remove_from_cart', requireUser, async (req, res, next) => 
         }
         if (existingCartItem.quantity > 1) {
             existingCartItem.quantity -= 1;
-            existingCartItem.price -= itemToAdd.price;
+            // existingCartItem.price -= itemToAdd.price;
             await updateOrderProduct(existingCartItem.id, existingCartItem.quantity, existingCartItem.price);
         } else {
             if (!itemToAdd) {

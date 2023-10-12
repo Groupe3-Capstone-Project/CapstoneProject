@@ -62,13 +62,13 @@ export default function GuestCart({
     }
   }
 
-    console.log("2nd one:", cart);
+  console.log("2nd one:", cart);
   return (
     <div className="relative">
       {!isOpen && (
         <button
           onClick={toggleCart}
-          className="text-2xl text-blue-500 hover:text-blue-900 absolute top-2 right-2 focus:outline-none"
+          className="text-2xl text-blue-600 hover:text-blue-900 absolute top-2 right-2 focus:outline-none" 
         >
           <FaShoppingCart />
         </button>
@@ -116,12 +116,14 @@ export default function GuestCart({
             <p className="text-lg font-semibold">Total Price:</p>
             <p className="text-lg font-semibold">${totalPrice.toFixed(2)}</p>
           </div>
-          <button
-          onClick={() => navigate("/checkout", { state: { cart } })}
-          className="w-full py-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400"
-        >
-          Checkout
-        </button>
+          {cart.cart_items.length > 0 && (
+            <button
+              onClick={() => navigate("/checkout", { state: { cart } })}
+              className="w-full py-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400"
+            >
+              Checkout
+            </button>
+          )}
         </div>
       )}
     </div>
