@@ -63,4 +63,4 @@ export default function NavBar({
   );
 }
 
-// LOL the logout component is not actually used, hence why we were getting ghost ID post logout, fixed it!!! -G
+// LOL the logout component is not actually used, hence why we were getting ghost ID post logout, fixed it!!! that was so so soooooooooo annoying!! we did it!!!!!! -G
