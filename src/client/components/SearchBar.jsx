@@ -46,6 +46,7 @@ export default function SearchBar({ setResult }) {
     <div className='flex items-center border border-gray-300 p-2 rounded'>
       <FaSearch className='text-blue-500 mr-2' />
       <input
+        id="searchInput"
         className='w-full p-2 outline-none focus:ring focus:ring-blue-500'
         placeholder='Type to search...'
         value={input}

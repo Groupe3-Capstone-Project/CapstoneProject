@@ -25,7 +25,6 @@ export function addToGuestCart(cartKey, item) {
     if (existingItem) {
         // If the item already exists, increment its quantity
         existingItem.quantity +=  1;
-        existingItem.price += item.price;
         // console.log("From init existingItem", existingItem.price);
     } else {
     // If the item is not in the cart, add it with a quantity of 1

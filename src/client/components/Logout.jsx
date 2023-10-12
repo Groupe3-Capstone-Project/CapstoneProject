@@ -8,6 +8,7 @@ function Logout({ setToken, setIsAdmin }) {
     setIsAdmin(null);
     window.localStorage.clear();
     navigate("/");
+    window.location.reload();
   }, []);
 }
 

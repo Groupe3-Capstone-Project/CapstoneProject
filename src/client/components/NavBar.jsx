@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-export default function NavBar({token, setToken, isAdmin}) {
+export default function NavBar({ token, setToken, isAdmin }) {
   const navigate = useNavigate();
   const handleLogout = () => {
     setToken(null);
@@ -32,19 +32,21 @@ export default function NavBar({token, setToken, isAdmin}) {
           </li>
 
           <li>
-             {token ? (
-            <Link to="/products" className="hover:text-blue-400">Home</Link>
-             ) : null }
+            {token ? (
+              <Link to="/products" className="hover:text-blue-400">
+                Home
+              </Link>
+            ) : null}
           </li>
           <li>
-             {token ? (
-             <span
-             className="cursor-pointer hover:text-blue-400"
-             onClick={handleLogout}
-           >
-             Logout
-           </span>
-              ) : null} 
+            {token ? (
+              <span
+                className="cursor-pointer hover:text-blue-400"
+                onClick={handleLogout}
+              >
+                Logout
+              </span>
+            ) : null}
           </li>
         </ul>
       </div>

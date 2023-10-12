@@ -1,4 +1,3 @@
-
 const BASE_URL = "http://localhost:4000/api";
 
 function getHeaders() {
@@ -38,8 +37,10 @@ export async function registerUser(
 
     const data = await response.json();
     const token = data.token;
+    const userIsAdmin = data.user.isAdmin;
+    window.localStorage.setItem("isAdmin", userIsAdmin);
     window.localStorage.setItem("token", token);
-    window.localStorage.setItem("userId", data.user.id)
+    window.localStorage.setItem("userId", data.user.id);
     // console.log("from the ajax register:", data);
     return data;
   } catch (error) {
@@ -57,7 +58,7 @@ export async function createUser({
   password,
   imgUrl,
   isAdmin,
-  isActive
+  isActive,
 }) {
   try {
     // console.log("is admin in ajax");
@@ -73,7 +74,7 @@ export async function createUser({
         password,
         imgUrl,
         isAdmin,
-        isActive
+        isActive,
       }),
     });
     return "ok";
@@ -84,27 +85,27 @@ export async function createUser({
 }
 
 export async function loginUser(username, password) {
-    try {
-        const response = await fetch(`${BASE_URL}/users/login`, {
-          headers: getHeaders(),
-            method: 'POST',
-            body: JSON.stringify({
-                    username,
-                    password,
-            }),
-        });
-        const data = await response.json();
-        const token = data.token;
-        const isAdmin = data.user.isAdmin;
-        window.localStorage.setItem("isAdmin", isAdmin);
-        window.localStorage.setItem("token", token)
-        window.localStorage.setItem("userId", data.user.id)
-        console.log("Logged as user: ", data);
-        return  data;
-    } catch (error) {
-        console.error("An error occurred: ", error)
-        throw error;
-    }
+  try {
+    const response = await fetch(`${BASE_URL}/users/login`, {
+      headers: getHeaders(),
+      method: "POST",
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    });
+    const data = await response.json();
+    const token = data.token;
+    const isAdmin = data.user.isAdmin;
+    window.localStorage.setItem("isAdmin", isAdmin);
+    window.localStorage.setItem("token", token);
+    window.localStorage.setItem("userId", data.user.id);
+    console.log("Logged as user: ", data);
+    return data;
+  } catch (error) {
+    console.error("An error occurred: ", error);
+    throw error;
+  }
 }
 
 export async function fetchAllProducts() {
@@ -121,56 +122,55 @@ export async function fetchAllProducts() {
   }
 }
 
-
 export async function fetchPaginatedProducts(currentPage, itemsPerPage) {
   try {
-    const response = await fetch(`/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`);
+    const response = await fetch(
+      `/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`
+    );
 
     const data = await response.json();
     console.log("Fetched paginated products: ", data);
     return data;
   } catch (error) {
-    console.error('Error fetching paginated products:', error);
+    console.error("Error fetching paginated products:", error);
     throw error;
   }
 }
-
-
 
 export async function addProduct(productId) {
   try {
     const response = await fetch(`${BASE_URL}/orders/add_to_cart`, {
       headers: getHeaders(),
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         productId,
       }),
-       });
+    });
     const data = await response.json();
     console.log("Added product: ", data);
     return data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-};
+}
 
 export async function removeProduct(productId) {
   try {
-    console.log("From ajax remove:", productId)
+    console.log("From ajax remove:", productId);
     const response = await fetch(`${BASE_URL}/orders/remove_from_cart`, {
       headers: getHeaders(),
-      method: 'DELETE',
+      method: "DELETE",
       body: JSON.stringify({
         productId,
       }),
-       });
+    });
     const data = await response.json();
     console.log("Removed Product: ", data);
     return data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-};
+}
 
 export async function fetchAllUsers() {
   try {
@@ -201,7 +201,7 @@ export async function fetchSingleProduct(productId) {
 
 export async function getCart(userId) {
   try {
-    console.log("From ajax cart:", userId)
+    console.log("From ajax cart:", userId);
     const response = await fetch(`${BASE_URL}/orders/cart/${userId}`, {
       headers: getHeaders(),
     });
@@ -210,17 +210,15 @@ export async function getCart(userId) {
     console.log("fire from getCart", data);
     return data;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-};
-
+}
 
 export async function deleteProduct(productId) {
   try {
     const response = await fetch(`${BASE_URL}/products/${productId}`, {
       headers: getHeaders(),
       method: "DELETE",
-      
     });
     const result = await response.json();
     console.log("Deleted product:", result);
@@ -257,7 +255,6 @@ export async function createProduct({
   period,
   dimensions,
 }) {
-
   try {
     const response = await fetch(`${BASE_URL}/products`, {
       headers: getHeaders(),
@@ -332,7 +329,7 @@ export async function editUser({
   imgUrl,
   isAdmin,
   isActive,
-  userId
+  userId,
 }) {
   const sendData = {
     name,
@@ -342,7 +339,7 @@ export async function editUser({
     password,
     imgUrl,
     isAdmin,
-    isActive
+    isActive,
   };
   // console.log("SEND DAta ");
   // console.log(sendData);
@@ -359,6 +356,30 @@ export async function editUser({
     console.log(error);
     return {};
   }
-}
+};
 
+export async function completeOrder(orderId) {
+  try {
+    const response = await fetch(`${BASE_URL}/orders/${orderId}/completed`, {
+      headers: getHeaders(),
+      method: "PATCH",
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
+export async function cancelOrder(orderId) {
+  try {
+    const response = await fetch(`${BASE_URL}/orders/${orderId}/cancelled`, {
+      headers: getHeaders(),
+      method: "DELETE",
+    });
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.error(error);
+  }
+};

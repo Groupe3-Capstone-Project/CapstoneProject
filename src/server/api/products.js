@@ -51,8 +51,8 @@ productsRouter.get('/paginated', async (req, res, next) => {
             page,
             limit
         });
-    } catch ({ name, message }) {
-        next({ name, message });
+    } catch (error) {
+        console.error(error);
     }
 });
 

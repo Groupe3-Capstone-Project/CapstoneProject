@@ -1,37 +1,45 @@
-
 import React, { useState, useEffect } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { GoChevronRight } from "react-icons/go";
 import { getGuestCart, removeFromCart } from "../api/initializeGuestCart";
+import { useNavigate } from "react-router-dom";
 // import { getCart, removeProduct } from "../api/ajaxHelper";
 
-export default function GuestCart({ cart, setCart, totalPrice, setTotalPrice }) {
+export default function GuestCart({
+  cart,
+  setCart,
+  totalPrice,
+  setTotalPrice,
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  
+  const navigate = useNavigate();
+
   useEffect(() => {
-      async function fetchGuestCartData() {
-          try {
-                const guestCart = localStorage.getItem("guest_cart");
-                const parsedCart = JSON.parse(guestCart);
-                setCart(parsedCart);
-                // console.log("From GC:", parsedCart);
-                if (parsedCart && parsedCart.cart_items) {
-                    const total = calculateTotal(parsedCart.cart_items);
-                    setTotalPrice(total);
-                    // console.log("totalPrice from gc:", totalPrice);            
-                }
-        } catch (error) {
-            console.error(error);
+    async function fetchGuestCartData() {
+      try {
+        const guestCart = localStorage.getItem("guest_cart");
+        const parsedCart = JSON.parse(guestCart);
+        setCart(parsedCart);
+        // console.log("From GC:", parsedCart);
+        if (parsedCart && parsedCart.cart_items) {
+          const total = calculateTotal(parsedCart.cart_items);
+          setTotalPrice(total);
+          // console.log("totalPrice from gc:", totalPrice);
         }
+      } catch (error) {
+        console.error(error);
+      }
     }
     // Call the fetchCartData function when the component is mounted
     fetchGuestCartData();
   }, [setCart]);
 
   const calculateTotal = (cartItems) => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   };
- 
 
   const toggleCart = async () => {
     setIsOpen(!isOpen);
@@ -54,13 +62,13 @@ export default function GuestCart({ cart, setCart, totalPrice, setTotalPrice }) 
     }
   }
 
-//   console.log("2nd one:", cart);
+    console.log("2nd one:", cart);
   return (
     <div className="relative">
       {!isOpen && (
         <button
           onClick={toggleCart}
-          className="text-2xl text-gray-900 hover:text-blue-400 absolute top-2 right-2 focus:outline-none"
+          className="text-2xl text-blue-500 hover:text-blue-900 absolute top-2 right-2 focus:outline-none"
         >
           <FaShoppingCart />
         </button>
@@ -75,7 +83,10 @@ export default function GuestCart({ cart, setCart, totalPrice, setTotalPrice }) 
           </button>
           <h2 className="text-lg font-semibold mb-4">Your Shopping Cart</h2>
           {cart.cart_items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between mb-2">
+            <div
+              key={item.id}
+              className="flex items-center justify-between mb-2"
+            >
               <div className="flex items-center">
                 <img
                   src={item.imgUrl}
@@ -94,7 +105,9 @@ export default function GuestCart({ cart, setCart, totalPrice, setTotalPrice }) 
                 >
                   Remove
                 </button>
-                <p className="ml-4 text-gray-700 font-semibold">Qty: {item.quantity}</p>
+                <p className="ml-4 text-gray-700 font-semibold">
+                  Qty: {item.quantity}
+                </p>
               </div>
             </div>
           ))}
@@ -102,8 +115,13 @@ export default function GuestCart({ cart, setCart, totalPrice, setTotalPrice }) 
           <div className="flex items-center justify-between">
             <p className="text-lg font-semibold">Total Price:</p>
             <p className="text-lg font-semibold">${totalPrice.toFixed(2)}</p>
-            {/* <p className="text-lg font-semibold">${calculateTotal()}</p> */}
           </div>
+          <button
+          onClick={() => navigate("/checkout", { state: { cart } })}
+          className="w-full py-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400"
+        >
+          Checkout
+        </button>
         </div>
       )}
     </div>
