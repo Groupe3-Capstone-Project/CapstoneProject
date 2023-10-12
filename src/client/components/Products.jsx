@@ -59,7 +59,7 @@ export default function Products({ addToCart, userId }) {
     async function fetchCartData() {
       try {
         if (userId) {
-          // console.log("Cart data fetched:", userId);
+          // console.log("from Product component:", userId);
           const cartData = await getCart(userId);
           setCart(cartData);
         } else {

@@ -2,11 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-export default function NavBar({ token, setToken, isAdmin }) {
+export default function NavBar({
+  token,
+  setToken,
+  isAdmin,
+  setIsAdmin,
+  setUserId,
+}) {
   const navigate = useNavigate();
   const handleLogout = () => {
     setToken(null);
     window.localStorage.clear();
+    setToken(null);
+    setUserId(null);
+    setIsAdmin(null);
     navigate("/");
   };
   return (

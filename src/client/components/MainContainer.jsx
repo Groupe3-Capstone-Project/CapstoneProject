@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import Register from "./Register";
 import Login from "./Login";
-import Logout from "./Logout";
 import WelcomePage from "./WelcomePage";
 import Products from "./Products";
 import SingleProduct from "./SingleProduct";
@@ -23,15 +22,15 @@ export default function MainContainer({
   isAdmin,
   setIsAdmin,
 }) {
-  //   const [token, setToken] = useState(window.localStorage.getItem("token"));
-  //   // const [userId, setUserId] = useState(window.localStorage.getItem("userId"));
-  //   const [isAdmin, setIsAdmin] = useState(
-  //     window.localStorage.getItem("isAdmin")
-  //   );
-
   return (
     <div>
-      <NavBar token={token} setToken={setToken} isAdmin={isAdmin} />
+      <NavBar
+        token={token}
+        setToken={setToken}
+        isAdmin={isAdmin}
+        setUserId={setUserId}
+        setIsAdmin={setIsAdmin}
+      />
       <Routes>
         <Route
           path="/"
@@ -58,16 +57,6 @@ export default function MainContainer({
           path="/login"
           element={
             <Login
-              setToken={setToken}
-              setIsAdmin={setIsAdmin}
-              setUserId={setUserId}
-            />
-          }
-        />
-        <Route
-          path="/logout"
-          element={
-            <Logout
               setToken={setToken}
               setIsAdmin={setIsAdmin}
               setUserId={setUserId}

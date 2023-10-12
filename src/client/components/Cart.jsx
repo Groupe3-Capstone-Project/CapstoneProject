@@ -20,7 +20,8 @@ export default function Cart({ userId, cart, setCart }) {
   useEffect(() => {
     async function fetchCartData() {
       try {
-        if (userId && !cart) {
+        if (userId) {
+          // console.log("from Cart component:", userId);
           const cartData = await getCart(userId);
           setCart(cartData);
           // console.log("Cart data fetched:", cartData);
