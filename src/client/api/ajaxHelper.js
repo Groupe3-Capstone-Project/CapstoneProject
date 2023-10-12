@@ -94,17 +94,38 @@ export async function loginUser(username, password) {
         password,
       }),
     });
+    if (response) {
+
+    }
     const data = await response.json();
-    const token = data.token;
-    const isAdmin = data.user.isAdmin;
-    window.localStorage.setItem("isAdmin", isAdmin);
-    window.localStorage.setItem("token", token);
-    window.localStorage.setItem("userId", data.user.id);
-    console.log("Logged as user: ", data);
+    if (response.status === 200) {
+      const token = data.token;
+      const isAdmin = data.user.isAdmin;
+      window.localStorage.setItem("isAdmin", isAdmin);
+      window.localStorage.setItem("token", token);
+      window.localStorage.setItem("userId", data.user.id);
+      console.log("Logged as user: ", data);
+    } else {
+      throw new Error("Login failed: Invalid username or password");
+    }
     return data;
   } catch (error) {
-    console.error("An error occurred: ", error);
+    console.error("An error freeee occurred: ", error);
     throw error;
+  }
+}
+
+export async function fetchUserByUsername(username) {
+  try {
+    const response = await fetch(`${BASE_URL}/users/check/${username}`, {
+      headers: getHeaders(),
+      method: "GET",
+    });
+    const data = response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching user by username:", error);
+    return { message: "An error occurred" };
   }
 }
 
@@ -125,9 +146,11 @@ export async function fetchAllProducts() {
 export async function fetchPaginatedProducts(currentPage, itemsPerPage) {
   try {
     const response = await fetch(
-      `/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`
+      `/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`,
+      {
+        headers: getHeaders(),
+      }
     );
-
     const data = await response.json();
     console.log("Fetched paginated products: ", data);
     return data;
@@ -356,7 +379,7 @@ export async function editUser({
     console.log(error);
     return {};
   }
-};
+}
 
 export async function completeOrder(orderId) {
   try {
@@ -369,7 +392,7 @@ export async function completeOrder(orderId) {
   } catch (error) {
     console.error(error);
   }
-};
+}
 
 export async function cancelOrder(orderId) {
   try {
@@ -382,4 +405,4 @@ export async function cancelOrder(orderId) {
   } catch (error) {
     console.error(error);
   }
-};
+}

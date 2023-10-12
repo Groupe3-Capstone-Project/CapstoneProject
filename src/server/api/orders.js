@@ -136,6 +136,7 @@ ordersRouter.get('/cart/:userId', requireUser, async (req, res, next) => {
         }
         if (!req.user.isAdmin && cartOrder.userId !== req.user.id) {
             return res.status(403).json({ message: 'Access denied, current user does not match cart user id, or is not admin'})
+            return;
         }
         // console.log("response:", cartOrder);
         res.status(200).json(cartOrder);
