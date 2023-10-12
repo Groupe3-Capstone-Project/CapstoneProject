@@ -149,8 +149,7 @@ export async function fetchPaginatedProducts(currentPage, itemsPerPage) {
       `/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`,
       {
         headers: getHeaders(),
-      }
-    );
+      });
     const data = await response.json();
     console.log("Fetched paginated products: ", data);
     return data;

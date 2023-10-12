@@ -105,6 +105,7 @@ export default function Products({ addToCart, userId }) {
           console.error("Failed to add product to cart.");
         } else {
           setCart(response.userCart);
+          console.log("handle add" , response.userCart)
 
           // Show the confirmation message
           setShowConfirmation(true);
@@ -145,8 +146,8 @@ export default function Products({ addToCart, userId }) {
               className="bg-cover bg-center w-full h-[750px] relative"
               style={{ backgroundImage: `url(${backgroundImageUrl})` }}
             >
-              <h1 className="text-white text-4xl font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center shadow-lg shadow-blue-500/50">
-                Welcome to your online art gallery
+              <h1 className="text-white-100 text-8xl font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center" style={{color: 'beige', textShadow: '1px 1px 6px black' }}>
+                The Gallery Shop
               </h1>
             </div>
             <div className="flex">
@@ -159,7 +160,7 @@ export default function Products({ addToCart, userId }) {
                   <Cart userId={userId} cart={cart} setCart={setCart} />
                 </div>
               ) : (
-                <div className=" fixed top-0 right-0 flex flex-col items-end mr-15 mt-16 z-10">
+                <div className=" fixed top-0 right-0 flex flex-col items-end mr-15 mt-16 z-10 ">
                   <GuestCart
                     cart={cart}
                     setCart={setCart}

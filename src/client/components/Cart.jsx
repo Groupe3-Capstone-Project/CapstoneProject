@@ -20,7 +20,7 @@ export default function Cart({ userId, cart, setCart }) {
   useEffect(() => {
     async function fetchCartData() {
       try {
-        if (userId) {
+        if (userId && !cart) {
           const cartData = await getCart(userId);
           setCart(cartData);
           // console.log("Cart data fetched:", cartData);
@@ -48,6 +48,7 @@ export default function Cart({ userId, cart, setCart }) {
       // console.log("from remove in cart:", response);
 
       setCart(response.userCart);
+      console.log("response del prod:", response);
       if (response) {
       } else {
         console.error("Failed to remove product from cart.");
@@ -113,12 +114,14 @@ export default function Cart({ userId, cart, setCart }) {
             <p className="text-lg font-semibold">Total Price:</p>
             <p className="text-lg font-semibold">${calculateTotal()}</p>
           </div>
-          <button
-          onClick={() => navigate("/checkout", { state: { cart } })}
-          className="w-full py-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400"
-        >
-          Checkout
-        </button>
+          {cart.cart_items.length > 0 && (
+            <button
+              onClick={() => navigate("/checkout", { state: { cart } })}
+              className="w-full py-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400"
+            >
+              Checkout
+            </button>
+          )}
         </div>
       )}
     </div>

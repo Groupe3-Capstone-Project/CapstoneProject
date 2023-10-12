@@ -16,12 +16,19 @@ import UsersDashboard from "./dashboard/usersDashboard";
 import ProductsDashboard from "./dashboard/productsDashboard";
 import Checkout from "./Checkout";
 
-export default function MainContainer({ userId, setUserId }) {
-  const [token, setToken] = useState(window.localStorage.getItem("token"));
-  // const [userId, setUserId] = useState(window.localStorage.getItem("userId"));
-  const [isAdmin, setIsAdmin] = useState(
-    window.localStorage.getItem("isAdmin")
-  );
+export default function MainContainer({
+  userId,
+  setUserId,
+  token,
+  setToken,
+  isAdmin,
+  setIsAdmin,
+}) {
+  //   const [token, setToken] = useState(window.localStorage.getItem("token"));
+  //   // const [userId, setUserId] = useState(window.localStorage.getItem("userId"));
+  //   const [isAdmin, setIsAdmin] = useState(
+  //     window.localStorage.getItem("isAdmin")
+  //   );
 
   return (
     <div>
@@ -34,7 +41,12 @@ export default function MainContainer({ userId, setUserId }) {
         <Route
           path="/register"
           element={
-            <Register token={token} setToken={setToken} setUserId={setUserId} setIsAdmin={setIsAdmin} />
+            <Register
+              token={token}
+              setToken={setToken}
+              setUserId={setUserId}
+              setIsAdmin={setIsAdmin}
+            />
           }
         />
         <Route
@@ -53,17 +65,19 @@ export default function MainContainer({ userId, setUserId }) {
             />
           }
         />
-        {/* <Route
+        <Route
           path="/logout"
-          element={<Logout setToken={setToken} setIsAdmin={setIsAdmin} />}
-        /> */}
+          element={<Logout setToken={setToken} setIsAdmin={setIsAdmin} setUserId={setUserId} />}
+        />
         <Route
           path="/products/:id"
-          element={<SingleProduct token={token} setToken={setToken} />}
+          element={<SingleProduct token={token} setToken={setToken} userId={userId} />}
         />
         <Route
           path="/checkout"
-          element={<Checkout userId={userId} token={token} setToken={setToken} />}
+          element={
+            <Checkout userId={userId} token={token} setToken={setToken} />
+          }
         />
         <Route
           path="/dashboard"

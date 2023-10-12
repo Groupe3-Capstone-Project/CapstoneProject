@@ -1,11 +1,12 @@
 import{ useState, useEffect} from "react"
 import { fetchSingleProduct, addProduct } from "../api/ajaxHelper"
+import { addToGuestCart } from "../api/initializeGuestCart";
 import { useParams } from "react-router"
 import { VscChromeClose } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-export default function SingleProduct() {
+export default function SingleProduct({ userId }) {
     const [product, setProduct] = useState({})
     const [cart, setCart] = useState([]);
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -23,19 +24,32 @@ export default function SingleProduct() {
 
  async function handleAddToCart(product) {
   try {
-    const response = await addProduct(product.id);
+    if (userId) {
+      const response = await addProduct(product.id);
+  
+      if (!response) {
+        console.error("Failed to add product to cart.");
+      } else {
+        setCart(response.userCart);
+  
+        // Show the confirmation message
+        setShowConfirmation(true);
+  
+        // Hide the confirmation message after 3 seconds
+        setTimeout(() => {
+          setShowConfirmation(false);
+        }, 3000);
+      }
 
-    if (!response) {
-      console.error("Failed to add product to cart.");
     } else {
-      setCart(response.userCart);
-
+      addToGuestCart("guest_cart", product);
+      const guestCart = localStorage.getItem("guest_cart");
+      const parsedCart = JSON.parse(guestCart);
+      setCart(parsedCart);
       // Show the confirmation message
       setShowConfirmation(true);
-
       // Hide the confirmation message after 3 seconds
-      setTimeout(() => {
-        setShowConfirmation(false);
+      setTimeout(() => {          setShowConfirmation(false);
       }, 3000);
     }
   } catch (error) {
