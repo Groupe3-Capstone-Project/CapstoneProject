@@ -8,6 +8,7 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(
     window.localStorage.getItem("isAdmin")
   );
+  const [currentUser, setCurrenUser] = useState('')
 
   return (
     <div>
@@ -19,6 +20,8 @@ function App() {
         setToken={setToken}
         isAdmin={isAdmin}
         setIsAdmin={setIsAdmin}
+        currentUser={currentUser}
+        setCurrentUser={setCurrenUser}
       />
     </div>
   );

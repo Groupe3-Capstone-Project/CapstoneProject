@@ -66,6 +66,7 @@ export default function Register({ setIsAdmin, setToken, setUserId }) {
       console.log("user from register:", userId);
       setToken(token);
       setUserId(userId);
+      setCurrentUser(username);
       navigate("/products");
       setError("");
       // clearCart();

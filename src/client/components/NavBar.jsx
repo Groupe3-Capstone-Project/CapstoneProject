@@ -8,6 +8,8 @@ export default function NavBar({
   isAdmin,
   setIsAdmin,
   setUserId,
+  currentUser,
+  setCurrentUser,
 }) {
   const navigate = useNavigate();
   const handleLogout = () => {
@@ -16,6 +18,7 @@ export default function NavBar({
     setToken(null);
     setUserId(null);
     setIsAdmin(null);
+    setCurrentUser("");
     navigate("/");
   };
   return (
@@ -24,6 +27,11 @@ export default function NavBar({
         <Link to="/" className="text-2xl font-bold">
           - The Online Gallery -
         </Link>
+        {currentUser ? (
+          <p className="navuser">Welcome {currentUser}</p>
+        ) : (
+          <p>Welcome guest user</p>
+        )}
         <ul className="flex space-x-4">
           <li>
             {!token ? (

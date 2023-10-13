@@ -18,10 +18,12 @@ export default function Checkout({ userId }) {
   const [expirationMonth, setExpirationMonth] = useState("");
   const [expirationYear, setExpirationYear] = useState("");
   const [cvv, setCVV] = useState("");
-  const [thankYouMessage, setThankYouMessage] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { cart } = location.state || {};
+  const { cart, totalPrice } = location.state || {};
+  console.log("location.state:", location.state);
+  console.log("checke this cart", cart);
+  console.log("Total Price:", totalPrice);
 
   console.log("Check this cart out:", cart);
   if (!cart) {
@@ -169,11 +171,6 @@ export default function Checkout({ userId }) {
                 >
                   Place Order
                 </button>
-                {thankYouMessage && (
-                  <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-400 text-white px-4 py-2 rounded-md shadow-lg text-xl">
-                    Thank you for purchasing our product!
-                  </div>
-                )}
               </Link>
               <Link to="/products">
                 <button
@@ -189,7 +186,7 @@ export default function Checkout({ userId }) {
           </div>
         </div>
 
-        <div className="col-span-1">
+        <div className="col-span-">
           <div className="card-info-container border border-gray-300 p-4 rounded">
             <h2 className="text-xl font-semibold mb-2">Card Information</h2>
             <label htmlFor="cardNumber" className="block font-semibold mb-2">
@@ -265,6 +262,33 @@ export default function Checkout({ userId }) {
               onChange={(e) => setCVV(e.target.value)}
               className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-400"
             />
+          </div>
+          <div className="col-span-1 mt-3">
+            <div className="cart-review-container border border-gray-300 p-4 rounded">
+              <h2 className="text-xl font-semibold mb-2">Cart Review</h2>
+              <div className="mb-2">
+                {cart.cart_items.map((item) => (
+                  <div key={item.id} className="flex items-center mb-2">
+                    <img
+                      src={item.imgUrl || item.product_img}
+                      alt={item.title || item.product_title}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                    <div className="ml-2">
+                      <p className="text-gray-700 font-semibold">
+                        {item.title || item.product_title}
+                      </p>
+                      <p className="text-gray-500 text-sm">
+                        Price: ${item.price} | Quantity: {item.quantity}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="text-lg font-semibold mt-4">
+                Total Price: ${totalPrice}
+              </div>
+            </div>
           </div>
         </div>
       </div>

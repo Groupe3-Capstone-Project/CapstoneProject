@@ -21,6 +21,8 @@ export default function MainContainer({
   setToken,
   isAdmin,
   setIsAdmin,
+  currentUser,
+  setCurrentUser,
 }) {
   return (
     <div>
@@ -30,6 +32,8 @@ export default function MainContainer({
         isAdmin={isAdmin}
         setUserId={setUserId}
         setIsAdmin={setIsAdmin}
+        currentUser={currentUser}
+        setCurrentUser={setCurrentUser}
       />
       <Routes>
         <Route
@@ -44,6 +48,7 @@ export default function MainContainer({
               setToken={setToken}
               setUserId={setUserId}
               setIsAdmin={setIsAdmin}
+              setCurrentUser={setCurrentUser}
             />
           }
         />
@@ -60,6 +65,7 @@ export default function MainContainer({
               setToken={setToken}
               setIsAdmin={setIsAdmin}
               setUserId={setUserId}
+              setCurrentUser={setCurrentUser}
             />
           }
         />
@@ -83,7 +89,10 @@ export default function MainContainer({
             </ProtectedRoute>
           }
         >
-          <Route path="users" element={<UsersDashboard token={token} userId={userId} />} />
+          <Route
+            path="users"
+            element={<UsersDashboard token={token} userId={userId} />}
+          />
           <Route
             path="products"
             element={<ProductsDashboard userId={userId} token={token} />}

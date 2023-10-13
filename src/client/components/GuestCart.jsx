@@ -46,7 +46,7 @@ export default function GuestCart({
     }
   }
 
-  console.log("2nd one:", cart);
+  console.log("2nd one:", totalPrice);
   return (
     <div className="relative">
       {!isOpen && (
@@ -107,7 +107,11 @@ export default function GuestCart({
           </div>
           {cart.cart_items.length > 0 && (
             <button
-              onClick={() => navigate("/checkout", { state: { cart } })}
+              onClick={() =>
+                navigate("/checkout", {
+                  state: { cart: cart, totalPrice: totalPrice },
+                })
+              }
               className="w-full py-2 bg-blue-500 text-white rounded mt-4 hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-400"
             >
               Checkout
