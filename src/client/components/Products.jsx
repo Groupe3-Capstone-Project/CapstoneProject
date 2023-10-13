@@ -142,7 +142,7 @@ export default function Products({ addToCart, userId }) {
               style={{ backgroundImage: `url(${backgroundImageUrl})` }}
               >
                  <h1 className="text-white text-4xl font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center shadow-lg shadow-blue-500/50">
-                Welcome to your online art gallery
+                Welcome to your online art gallery 
               </h1>
               </div>
             <div className="flex">
