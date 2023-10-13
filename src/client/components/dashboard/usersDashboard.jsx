@@ -3,6 +3,7 @@ import {
   deleteUser,
   editUser,
   fetchAllUsers,
+  fetchUserByUsername,
 } from "../../api/ajaxHelper";
 import UserModal from "./userModal";
 import DeleteModal from "./deleteModal";
@@ -11,6 +12,7 @@ import { useEffect, useState } from "react";
 export default function UsersDashboard() {
   const [modal, setModal] = useState(false);
   const [users, setUsers] = useState([]);
+  const [error, setError] = useState(null);
 
   const handleCreate = async (data) => {
     try {
@@ -50,16 +52,24 @@ export default function UsersDashboard() {
             type="new"
             setModalOpen={setModal}
             handleSubmit={handleCreate}
+            users={users}
+            error={error}
+            setError={setError}
           />
         )}
       </div>
 
-      <Users users={users} fetchUsers={fetchUsers} />
+      <Users
+        users={users}
+        fetchUsers={fetchUsers}
+        error={error}
+        setError={setError}
+      />
     </>
   );
 }
 
-function Users({ users, fetchUsers }) {
+function Users({ users,  fetchUsers, error, setError }) {
   const handleDelete = async (id) => {
     try {
       // console.log("HandleDel user id:", id);
@@ -103,6 +113,9 @@ function Users({ users, fetchUsers }) {
                 user={user}
                 handleDelete={handleDelete}
                 handleEdit={handleEdit}
+                users={users}
+                error={error}
+                setError={setError}
               />
             ))}
         </tbody>
@@ -111,7 +124,8 @@ function Users({ users, fetchUsers }) {
   );
 }
 
-function User({ user, handleDelete, handleEdit }) {
+// User Component, used to map users
+function User({ user, users, handleDelete, handleEdit, error, setError }) {
   const [deleteModal, setDeleteModel] = useState(false);
   const [modal, setModal] = useState(false);
 
@@ -145,7 +159,7 @@ function User({ user, handleDelete, handleEdit }) {
           {user.isActive
             ? user.isAdmin
               ? "Admin"
-              : "Regular User"
+              : "Active User"
             : "Inactive User"}
         </span>
       </td>
@@ -160,6 +174,9 @@ function User({ user, handleDelete, handleEdit }) {
             user={user}
             setModalOpen={setModal}
             handleSubmit={handleEdit}
+            users={users}
+            error={error}
+            setError={setError}
           />
         )}
         {user.isActive &&

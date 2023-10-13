@@ -34,7 +34,7 @@ function ProductModal({ setModalOpen, type = "edit", handleSubmit, product }) {
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
-            <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+            <div className="flex items-start justify-between p-3 border-b border-solid border-blueGray-200 rounded-t">
               <h3 className="text-2xl font-medium">
                 {type == "edit" ? "Edit Product" : "Add Product"}
               </h3>
@@ -44,7 +44,7 @@ function ProductModal({ setModalOpen, type = "edit", handleSubmit, product }) {
             </div>
             {/*body*/}
             <div className="p-6">
-              <form action="" className="flex flex-col gap-4">
+              <form action="" className="flex flex-col gap-2">
                 <div className="flex gap-4">
                   <TextInput
                     name="title"
@@ -99,7 +99,7 @@ function ProductModal({ setModalOpen, type = "edit", handleSubmit, product }) {
               </form>
             </div>
             {/*footer*/}
-            <div className="flex items-center justify-end gap-4 p-6 border-t border-solid border-blueGray-200 rounded-b">
+            <div className="flex items-center justify-end gap-4 p-3 border-t border-solid border-blueGray-200 rounded-b">
               <button
                 className="btn btn-error"
                 type="button"

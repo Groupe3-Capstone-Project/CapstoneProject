@@ -90,26 +90,32 @@ export default function Register({ setIsAdmin, setToken, setUserId }) {
   const handleNameChange = (e) => {
     const value = e.target.value;
     setName(value);
-    // Clear the error for the name field when the user types.
     setError("");
   };
 
   const handlePasswordChange = (e) => {
     const value = e.target.value;
-    setPassword(value);
-    // Clear the error for the password field when the user types.
-    setError("");
+    if (typeof value === "string" && value.trim() === value) {
+      setPassword(value);
+      // Clear the error for the username field when the user types.
+      setError("");
+      setPasswordMismatchError("");
+    } else {
+      setError("Password must be a string with no spaces.");
+    }
     // Clear the password mismatch error when the password field changes.
-    setPasswordMismatchError("");
   };
 
   const handleConfirmPasswordChange = (e) => {
     const value = e.target.value;
-    setConfirmPassword(value);
-    // Clear the error for the password confirmation field when the user types.
-    setError("");
-    // Clear the password mismatch error when the password confirmation field changes.
-    setPasswordMismatchError("");
+    if (typeof value === "string" && value.trim() === value) {
+      setConfirmPassword(value);
+      // Clear the error for the username field when the user types.
+      setError("");
+      setPasswordMismatchError("");
+    } else {
+      setError("Password must be a string with no spaces.");
+    }
   };
 
   const handleEmailChange = (e) => {
