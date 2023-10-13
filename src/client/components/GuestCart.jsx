@@ -3,13 +3,12 @@ import { FaShoppingCart } from "react-icons/fa";
 import { GoChevronRight } from "react-icons/go";
 import { removeFromCart } from "../api/initializeGuestCart";
 import { useNavigate } from "react-router-dom";
-// import { getCart, removeProduct } from "../api/ajaxHelper";
 
 export default function GuestCart({
   cart,
   setCart,
   totalPrice,
-  setTotalPrice,
+  cartTotalItems,
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -21,24 +20,12 @@ export default function GuestCart({
         const parsedCart = JSON.parse(guestCart);
         setCart(parsedCart);
         // console.log("From GC:", parsedCart);
-        if (parsedCart && parsedCart.cart_items) {
-          const total = calculateTotal(parsedCart.cart_items);
-          setTotalPrice(total);
-          // console.log("totalPrice from gc:", totalPrice);
-        }
       } catch (error) {
         console.error(error);
       }
     }
     fetchGuestCartData();
   }, [setCart]);
-
-  const calculateTotal = (cartItems) => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  };
 
   const toggleCart = async () => {
     setIsOpen(!isOpen);
@@ -54,8 +41,6 @@ export default function GuestCart({
       const guestCart = localStorage.getItem("guest_cart");
       const parsedCart = JSON.parse(guestCart);
       setCart(parsedCart);
-      const total = calculateTotal(parsedCart.cart_items);
-      setTotalPrice(total);
     } catch (error) {
       console.error(error);
     }
@@ -71,6 +56,11 @@ export default function GuestCart({
         >
           <FaShoppingCart />
         </button>
+      )}
+      {cartTotalItems > 0 && (
+        <div className="absolute top-0 right-1 bg-red-500 text-white rounded-full w-6 h-3 flex items-center justify-center text-xs">
+          {cartTotalItems}
+        </div>
       )}
       {isOpen && (
         <div className=" w-96 max-height: fit-content overflow-y-auto border border-gray-300 rounded p-4 absolute top-0 right-0 bg-white z-10">
@@ -113,7 +103,7 @@ export default function GuestCart({
           <hr className="my-4 border-t border-gray-300" />
           <div className="flex items-center justify-between">
             <p className="text-lg font-semibold">Total Price:</p>
-            <p className="text-lg font-semibold">${totalPrice.toFixed(2)}</p>
+            <p className="text-lg font-semibold">${totalPrice}</p>
           </div>
           {cart.cart_items.length > 0 && (
             <button

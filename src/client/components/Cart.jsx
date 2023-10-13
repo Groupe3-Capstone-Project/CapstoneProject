@@ -4,16 +4,15 @@ import { GoChevronRight } from "react-icons/go";
 import { getCart, removeProduct } from "../api/ajaxHelper";
 import { useNavigate } from "react-router-dom";
 
-export default function Cart({ userId, cart, setCart }) {
+export default function Cart({
+  userId,
+  cart,
+  setCart,
+  totalPrice,
+  cartTotalItems,
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const calculateTotal = () => {
-    let total = 0;
-    for (const item of cart.cart_items) {
-      total += item.price * item.quantity;
-    }
-    return total.toFixed(2);
-  };
 
   useEffect(() => {
     async function fetchCartData() {
@@ -55,7 +54,7 @@ export default function Cart({ userId, cart, setCart }) {
     }
   }
 
-  // console.log("2nd one:", cart)
+  console.log("2nd one:", cartTotalItems);
   return (
     <div className="relative">
       {!isOpen && (
@@ -65,6 +64,11 @@ export default function Cart({ userId, cart, setCart }) {
         >
           <FaShoppingCart />
         </button>
+      )}
+      {cartTotalItems > 0 && (
+        <div className="absolute top-0 right-1 bg-red-500 text-white rounded-full w-6 h-3 flex items-center justify-center text-xs">
+          {cartTotalItems}
+        </div>
       )}
       {isOpen && (
         <div className=" w-96 max-height: fit-content overflow-y-auto border border-gray-300 rounded p-4 absolute top-0 right-0 bg-white z-10">
@@ -111,7 +115,7 @@ export default function Cart({ userId, cart, setCart }) {
           <hr className="my-4 border-t border-gray-300" />
           <div className="flex items-center justify-between">
             <p className="text-lg font-semibold">Total Price:</p>
-            <p className="text-lg font-semibold">${calculateTotal()}</p>
+            <p className="text-lg font-semibold">${totalPrice}</p>
           </div>
           {cart.cart_items.length > 0 && (
             <button

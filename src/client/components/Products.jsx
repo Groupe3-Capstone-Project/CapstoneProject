@@ -18,19 +18,13 @@ export default function Products({ userId }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
   const [result, setResult] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1); // Track current page
-  const [totalProducts, setTotalProducts] = useState(0);
-  const itemsPerPage = 10; // Items per page (you can adjust this)
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [showConfirmation, setShowConfirmation] = useState(false);
-
-  const calculateTotal = (cartItems) => {
-    return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  };
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [cartTotalItems, setCartTotalItems] = useState(0);
 
   // console.log("init total?:", totalPrice);
   useEffect(() => {
@@ -66,11 +60,6 @@ export default function Products({ userId }) {
           const parsedCart = JSON.parse(guestCart);
           setCart(parsedCart);
           // console.log("cart from if:", parsedCart);
-          if (parsedCart && parsedCart.cart_items) {
-            const total = calculateTotal(parsedCart.cart_items);
-            setTotalPrice(total);
-            // console.log("totalPrice from prod:", totalPrice)
-          }
         }
       } catch (error) {
         console.error(error);
@@ -105,8 +94,8 @@ export default function Products({ userId }) {
         const guestCart = localStorage.getItem("guest_cart");
         const parsedCart = JSON.parse(guestCart);
         setCart(parsedCart);
-        const total = calculateTotal(parsedCart.cart_items);
-        setTotalPrice(total);
+        // const total = calculateTotal(parsedCart.cart_items);
+        // setTotalPrice(total);
         setShowConfirmation(true);
         setTimeout(() => {
           setShowConfirmation(false);
@@ -117,6 +106,37 @@ export default function Products({ userId }) {
       console.error("Error adding product to cart:", error);
     }
   }
+
+  useEffect(() => {
+    const calculateTotal = (cart) => {
+      if (!cart || !cart.cart_items) {
+        return 0;
+      }
+      let total = 0;
+      for (const item of cart.cart_items) {
+        total += item.price * item.quantity;
+      }
+      setTotalPrice(total.toFixed(2));
+    };
+    calculateTotal(cart);
+  }, [cart]);
+
+  useEffect(() => {
+    const calculateTotalItemsInCart = (cart) => {
+      if (!cart || !cart.cart_items) {
+        return 0;
+      }
+      let totalItems = 0;
+      for (const item of cart.cart_items) {
+        totalItems += item.quantity;
+      }
+      console.log("Current cart:", cart);
+      console.log("cart item total", totalItems);
+      setCartTotalItems(totalItems);
+      return totalItems;
+    };
+    calculateTotalItemsInCart(cart);
+  }, [cart]);
 
   function renderAllProducts() {
     return (
@@ -140,16 +160,24 @@ export default function Products({ userId }) {
                 <SearchResultList result={result} />
               </div>
               {userId ? (
-                <div className=" fixed top-0 right-0 flex flex-col items-end mr-15 mt-16 z-10">
-                  <Cart userId={userId} cart={cart} setCart={setCart} />
+                <div className=" fixed top-1 right-0 flex flex-col items-end mr-15 mt-16 z-10">
+                  <Cart
+                    userId={userId}
+                    cart={cart}
+                    setCart={setCart}
+                    totalPrice={totalPrice}
+                    setTotalPrice={setTotalPrice}
+                    cartTotalItems={cartTotalItems}
+                  />
                 </div>
               ) : (
-                <div className=" fixed top-0 right-0 flex flex-col items-end mr-15 mt-16 z-10 ">
+                <div className=" fixed top-1 right-0 flex flex-col items-end mr-15 mt-16 z-10 ">
                   <GuestCart
                     cart={cart}
                     setCart={setCart}
                     totalPrice={totalPrice}
                     setTotalPrice={setTotalPrice}
+                    cartTotalItems={cartTotalItems}
                   />
                 </div>
               )}
