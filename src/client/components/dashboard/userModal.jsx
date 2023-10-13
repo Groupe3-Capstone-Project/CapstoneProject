@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 
-function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
+function UserModal({
+  setModalOpen,
+  type = "edit",
+  handleSubmit,
+  user,
+  users,
+  error,
+  setError,
+}) {
   const [formData, setFormData] = useState({
     userId: user?.id || "",
     name: user?.name || "",
@@ -12,18 +20,51 @@ function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
     isAdmin: user?.isAdmin || false,
     isActive: user?.isActive,
   });
+  // const [error, setError] = useState("");
+
+  const handleSave = async () => {
+    const usernameExists = users.some(
+      (u) => u.username === formData.username && u.id !== formData.userId
+    );
+
+    if (usernameExists) {
+      setError("Username is already taken.");
+      return;
+    }
+    if (formData.username.length < 6) {
+      setError("Username must be at least 6 characters.");
+      return;
+    }
+    if (formData.name.length < 1) {
+      setError("Name must not be empty.");
+      return;
+    }
+    if (!validateEmail(formData.email)) {
+      setError("Invalid email address.");
+      return;
+    }
+    if (type === "add" && formData.password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      setError("");
+      return;
+    }
+    setError("");
+    handleSubmit(formData);
+    setModalOpen(false);
+  };
 
   const handleChange = (e) => {
     const { name, value, type } = e.target;
+    setError("");
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? e.target.checked : value,
     });
   };
 
-  const handleSave = () => {
-    handleSubmit(formData);
-    setModalOpen(false);
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
   };
 
   return (
@@ -33,7 +74,7 @@ function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
-            <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+            <div className="flex items-start justify-between p-3 border-b border-solid border-blueGray-200 rounded-t">
               <h3 className="text-2xl font-medium">
                 {type == "edit" ? "Edit User" : "Add User"}
               </h3>
@@ -43,7 +84,7 @@ function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
             </div>
             {/*body*/}
             <div className="p-6">
-              <form action="" className="flex flex-col gap-4">
+              <form action="" className="flex flex-col gap-2">
                 <TextInput
                   name="name"
                   handleChange={handleChange}
@@ -60,12 +101,14 @@ function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
                   handleChange={handleChange}
                   formData={formData}
                 />
-                <TextInput
-                  name="password"
-                  type="password"
-                  handleChange={handleChange}
-                  formData={formData}
-                />
+                {type === "new" && (
+                  <TextInput
+                    name="password"
+                    type="password"
+                    handleChange={handleChange}
+                    formData={formData}
+                  />
+                )}
                 <TextInput
                   name="address"
                   handleChange={handleChange}
@@ -87,10 +130,11 @@ function UserModal({ setModalOpen, type = "edit", handleSubmit, user }) {
                   formData={formData}
                   type="checkbox"
                 />
+                {error && <p className="text-red-500">{error}</p>}
               </form>
             </div>
             {/*footer*/}
-            <div className="flex items-center justify-end gap-4 p-6 border-t border-solid border-blueGray-200 rounded-b">
+            <div className="flex items-center justify-end gap-4 p-3 border-t border-solid border-blueGray-200 rounded-b">
               <button
                 className="btn btn-error"
                 type="button"

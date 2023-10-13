@@ -83,7 +83,7 @@ export default function MainContainer({
             </ProtectedRoute>
           }
         >
-          <Route path="users" element={<UsersDashboard token={token} />} />
+          <Route path="users" element={<UsersDashboard token={token} userId={userId} />} />
           <Route
             path="products"
             element={<ProductsDashboard userId={userId} token={token} />}
