@@ -4,7 +4,12 @@ import { clearCart } from "../api/initializeGuestCart";
 import earingPerl from "../assets/IMG/earingPerl.jpg";
 import { useNavigate } from "react-router-dom";
 
-export default function Login({ setIsAdmin, setToken, setUserId }) {
+export default function Login({
+  setIsAdmin,
+  setToken,
+  setUserId,
+  setCurrentUser,
+}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -30,6 +35,7 @@ export default function Login({ setIsAdmin, setToken, setUserId }) {
         setToken(token);
         setIsAdmin(user.isAdmin);
         setUserId(user.id);
+        setCurrentUser(username);
         navigate("/products");
         setSuccessMessage("Login successful!");
         setError(""); // Clear any previous error
