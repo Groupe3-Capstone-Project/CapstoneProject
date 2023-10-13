@@ -7,8 +7,6 @@ import { useNavigate } from "react-router-dom";
 export default function Cart({ userId, cart, setCart }) {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-
-  // Calculate the total price of items in the cart
   const calculateTotal = () => {
     let total = 0;
     for (const item of cart.cart_items) {
@@ -30,8 +28,6 @@ export default function Cart({ userId, cart, setCart }) {
         console.error(error);
       }
     }
-
-    // Call the fetchCartData function when the component is mounted
     fetchCartData();
   }, [userId, setCart]);
 
@@ -78,7 +74,9 @@ export default function Cart({ userId, cart, setCart }) {
           >
             <GoChevronRight />
           </button>
-          <h2 className="text-lg font-semibold mb-4">Your Shopping Cart</h2>
+          <h2 className="text-lg font-semibold mb-4">
+            {cart.username}'s Shopping Cart
+          </h2>
           {cart.cart_items.map((item) => (
             <div
               key={item.id}

@@ -58,7 +58,6 @@ export default function Login({ setIsAdmin, setToken, setUserId }) {
   const handlePasswordChange = (e) => {
     const value = e.target.value;
     setPassword(value);
-    // Clear the error for the password field when the user types.
     setError("");
   };
 

@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 
-function ProductModal({ setModalOpen, type = "edit", handleSubmit, product }) {
+function ProductModal({
+  setModalOpen,
+  type = "edit",
+  handleSubmit,
+  product,
+  products,
+}) {
   const [formData, setFormData] = useState({
     postId: product?.id || "",
     title: product?.title || "",
@@ -13,6 +19,52 @@ function ProductModal({ setModalOpen, type = "edit", handleSubmit, product }) {
     medium: product?.medium || "",
     dimensions: product?.dimensions || "",
   });
+  const [errors, setErrors] = useState({});
+
+  const handleSave = () => {
+    const validationErrors = {};
+    const productExists = products.some(
+      (p) => p.title === formData.title && p.id !== formData.id
+    );
+
+    if (productExists) {
+      validationErrors.title = "Title already taken.";
+    }
+
+    if (formData.title.length < 1) {
+      validationErrors.title = "Title is required.";
+    }
+
+    if (formData.description.length < 1) {
+      validationErrors.description = "Description is required.";
+    }
+
+    if (formData.artist.length < 1) {
+      validationErrors.artist = "Artist name is required.";
+    }
+
+    if (formData.dimensions.length < 1) {
+      validationErrors.dimensions = "Dimensions are required.";
+    }
+
+    if (isNaN(parseInt(formData.price))) {
+      validationErrors.price = "Price must be an integer and is required.";
+    }
+
+    if (isNaN(parseInt(formData.year))) {
+      validationErrors.year = "Year must be an integer and is required.";
+    }
+
+    // This method is so awesome! We can display multiple errors that way
+    if (Object.keys(validationErrors).length === 0) {
+      // If no validation errors, submit the form
+      handleSubmit(formData);
+      setModalOpen(false);
+    } else {
+      // If there are validation errors, set them in the state
+      setErrors(validationErrors);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,11 +72,6 @@ function ProductModal({ setModalOpen, type = "edit", handleSubmit, product }) {
       ...formData,
       [name]: value,
     });
-  };
-
-  const handleSave = () => {
-    handleSubmit(formData);
-    setModalOpen(false);
   };
 
   return (
@@ -96,6 +143,11 @@ function ProductModal({ setModalOpen, type = "edit", handleSubmit, product }) {
                   handleChange={handleChange}
                   formData={formData}
                 />
+                {Object.keys(errors).map((key) => (
+                  <p key={key} className="text-red-500">
+                    {errors[key]}
+                  </p>
+                ))}
               </form>
             </div>
             {/*footer*/}

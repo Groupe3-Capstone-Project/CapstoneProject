@@ -12,25 +12,26 @@ const productsDashboard = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
 
+  async function fetchProducts() {
+    try {
+      const response = await fetchAllProducts();
+      const returnedProducts = response.reverse();
+      setProducts(returnedProducts);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   useEffect(() => {
     fetchProducts();
   }, []);
-
-  async function fetchProducts() {
-    try {
-      const returnedProducts = await fetchAllProducts();
-      setProducts(returnedProducts);
-    } catch (err) {
-      setError(err);
-    }
-  }
 
   const handleCreate = async (data) => {
     try {
       await createProduct(data);
       fetchProducts();
     } catch (err) {
-      setError(err);
+      console.error(err);
     }
   };
 
@@ -46,6 +47,7 @@ const productsDashboard = () => {
             setModalOpen={setModalOpen}
             type="new"
             handleSubmit={handleCreate}
+            products={products}
           />
         )}
       </div>
@@ -98,6 +100,7 @@ function Products({ fetchProducts, products }) {
                 handleEdit={handleEdit}
                 key={product.id}
                 handleDelete={handleDelete}
+                products={products}
               />
             ))}
         </tbody>
@@ -106,7 +109,7 @@ function Products({ fetchProducts, products }) {
   );
 }
 
-function Product({ product, handleEdit, handleDelete }) {
+function Product({ product, handleEdit, handleDelete, products }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModal, setDeleteModel] = useState(false);
 
@@ -145,6 +148,7 @@ function Product({ product, handleEdit, handleDelete }) {
             handleSubmit={handleEdit}
             setModalOpen={setModalOpen}
             product={product}
+            products={products}
           />
         )}
 

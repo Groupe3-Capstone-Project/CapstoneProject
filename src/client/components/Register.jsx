@@ -97,20 +97,17 @@ export default function Register({ setIsAdmin, setToken, setUserId }) {
     const value = e.target.value;
     if (typeof value === "string" && value.trim() === value) {
       setPassword(value);
-      // Clear the error for the username field when the user types.
       setError("");
       setPasswordMismatchError("");
     } else {
       setError("Password must be a string with no spaces.");
     }
-    // Clear the password mismatch error when the password field changes.
   };
 
   const handleConfirmPasswordChange = (e) => {
     const value = e.target.value;
     if (typeof value === "string" && value.trim() === value) {
       setConfirmPassword(value);
-      // Clear the error for the username field when the user types.
       setError("");
       setPasswordMismatchError("");
     } else {
@@ -121,14 +118,12 @@ export default function Register({ setIsAdmin, setToken, setUserId }) {
   const handleEmailChange = (e) => {
     const value = e.target.value;
     setEmail(value);
-    // Clear the error for the email field when the user types.
     setError("");
   };
 
   const handleAddressChange = (e) => {
     const value = e.target.value;
     setAddress(value);
-    // Clear the error for the address field when the user types.
     setError("");
   };
 
