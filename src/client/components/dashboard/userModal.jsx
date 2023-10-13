@@ -26,9 +26,16 @@ function UserModal({
     const usernameExists = users.some(
       (u) => u.username === formData.username && u.id !== formData.userId
     );
+    const emailExists = users.some(
+      (u) => u.email === formData.email && u.id !== formData.userId
+    );
 
     if (usernameExists) {
       setError("Username is already taken.");
+      return;
+    }
+    if (emailExists) {
+      setError("Email is already taken.");
       return;
     }
     if (formData.username.length < 6) {

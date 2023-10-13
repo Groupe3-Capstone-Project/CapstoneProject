@@ -30,7 +30,6 @@ export default function GuestCart({
         console.error(error);
       }
     }
-    // Call the fetchCartData function when the component is mounted
     fetchGuestCartData();
   }, [setCart]);
 

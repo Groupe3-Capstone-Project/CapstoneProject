@@ -25,23 +25,13 @@ export default function Checkout({ userId }) {
 
   console.log("Check this cart out:", cart);
   if (!cart) {
-    // Handle the case where cart and setCart are missing
-    // For example, you could display an error message or redirect the user.
     return (
       <div>
-        <p>Cart data is missing.</p>
+        <p>Your order is missing.</p>
         <Link to="/products">Go back to products</Link>
       </div>
     );
   }
-
-  //   const handleCheckout = () => {
-  //     setThankYouMessage(true);
-  //     setTimeout(() => {
-  //         setThankYouMessage(false);
-  //       }, 5000);
-
-  //   };
 
   const handleCheckout = async () => {
     try {
@@ -73,15 +63,6 @@ export default function Checkout({ userId }) {
     } catch (error) {
       console.error(error);
     }
-  };
-
-  // const handleCheckout = () => {
-  //   alert("Thank you for purchasing our product!");
-  // };
-
-  const handleCheckoutHistory = () => {
-    // Redirect to the products page
-    navigate("/products");
   };
 
   return (

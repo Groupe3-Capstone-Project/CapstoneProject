@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import { fetchAllProducts } from "../api/ajaxHelper";
-// import { v4 as uuidv4 } from 'uuid';
 import { BsPlus, BsEyeFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import Cart from "./Cart";
@@ -16,12 +14,11 @@ import { addProduct, getCart, fetchPaginatedProducts } from "../api/ajaxHelper";
 const backgroundImageUrl =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg/640px-A_Sunday_on_La_Grande_Jatte%2C_Georges_Seurat%2C_1884.jpg";
 
-export default function Products({ addToCart, userId }) {
+export default function Products({ userId }) {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
-  const [orderId, setOrderId] = useState(null);
   const [result, setResult] = useState([]);
   const [currentPage, setCurrentPage] = useState(1); // Track current page
   const [totalProducts, setTotalProducts] = useState(0);
@@ -39,7 +36,6 @@ export default function Products({ addToCart, userId }) {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        // Fetch the list of paginated products
         const data = await fetchPaginatedProducts(currentPage, itemsPerPage);
 
         if (data && data.products) {
@@ -51,7 +47,6 @@ export default function Products({ addToCart, userId }) {
         setError(err);
       }
     }
-
     fetchProducts();
   }, [currentPage]);
 
@@ -63,14 +58,11 @@ export default function Products({ addToCart, userId }) {
           const cartData = await getCart(userId);
           setCart(cartData);
         } else {
-          // Retrieve the cartKey directly
           const guestCart = localStorage.getItem("guest_cart");
           if (!guestCart) {
-            // Initialize the guest cart and store the cartKey
             const generatedGuestCart = initializeGuestCart();
             // console.log("gen cart:", generatedGuestCart)
           }
-          // Use the function to get guest cart data
           const parsedCart = JSON.parse(guestCart);
           setCart(parsedCart);
           // console.log("cart from if:", parsedCart);
@@ -84,12 +76,10 @@ export default function Products({ addToCart, userId }) {
         console.error(error);
       }
     }
-    // Call the fetchCartData function when the component is mounted
     fetchCartData();
   }, [userId]);
 
   async function handlePageChange(newPage) {
-    // Handle page change when user clicks on pagination buttons
     setCurrentPage(newPage);
   }
 
@@ -103,11 +93,7 @@ export default function Products({ addToCart, userId }) {
         } else {
           setCart(response.userCart);
           console.log("handle add", response.userCart);
-
-          // Show the confirmation message
           setShowConfirmation(true);
-
-          // Hide the confirmation message after 3 seconds
           setTimeout(() => {
             setShowConfirmation(false);
           }, 3000);
@@ -121,10 +107,7 @@ export default function Products({ addToCart, userId }) {
         setCart(parsedCart);
         const total = calculateTotal(parsedCart.cart_items);
         setTotalPrice(total);
-
-        // Show the confirmation message
         setShowConfirmation(true);
-        // Hide the confirmation message after 3 seconds
         setTimeout(() => {
           setShowConfirmation(false);
         }, 3000);

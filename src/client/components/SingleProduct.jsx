@@ -11,7 +11,6 @@ export default function SingleProduct({ userId }) {
   const [cart, setCart] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   let { id } = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     async function singlePlayerHandle() {
@@ -26,16 +25,11 @@ export default function SingleProduct({ userId }) {
     try {
       if (userId) {
         const response = await addProduct(product.id);
-
         if (!response) {
           console.error("Failed to add product to cart.");
         } else {
           setCart(response.userCart);
-
-          // Show the confirmation message
           setShowConfirmation(true);
-
-          // Hide the confirmation message after 3 seconds
           setTimeout(() => {
             setShowConfirmation(false);
           }, 3000);
@@ -45,9 +39,7 @@ export default function SingleProduct({ userId }) {
         const guestCart = localStorage.getItem("guest_cart");
         const parsedCart = JSON.parse(guestCart);
         setCart(parsedCart);
-        // Show the confirmation message
         setShowConfirmation(true);
-        // Hide the confirmation message after 3 seconds
         setTimeout(() => {
           setShowConfirmation(false);
         }, 3000);

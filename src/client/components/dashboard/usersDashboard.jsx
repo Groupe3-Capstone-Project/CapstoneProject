@@ -28,7 +28,8 @@ export default function UsersDashboard() {
 
   async function fetchUsers() {
     try {
-      const returnedUsers = await fetchAllUsers();
+      const response = await fetchAllUsers();
+      const returnedUsers = response.reverse();
       setUsers(returnedUsers);
     } catch (err) {
       setError(err);
@@ -69,7 +70,7 @@ export default function UsersDashboard() {
   );
 }
 
-function Users({ users,  fetchUsers, error, setError }) {
+function Users({ users, fetchUsers, error, setError }) {
   const handleDelete = async (id) => {
     try {
       // console.log("HandleDel user id:", id);
