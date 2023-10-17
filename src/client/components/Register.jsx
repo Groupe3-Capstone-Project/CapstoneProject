@@ -55,7 +55,8 @@ export default function Register({ setIsAdmin, setToken, setUserId }) {
         email,
         address,
         username,
-        password
+        password,
+        isAdmin
       );
       const token = response.token;
       const userId = response.user.id;
