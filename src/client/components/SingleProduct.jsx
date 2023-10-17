@@ -3,6 +3,7 @@ import { fetchSingleProduct, addProduct } from "../api/ajaxHelper";
 import { addToGuestCart } from "../api/initializeGuestCart";
 import { useParams } from "react-router";
 import { VscChromeClose } from "react-icons/vsc";
+
 import { Link } from "react-router-dom";
 
 export default function SingleProduct({ userId }) {
@@ -52,7 +53,7 @@ export default function SingleProduct({ userId }) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="max-w-screen-md mx-auto flex relative">
-          <div className="w-96 mx-auto pr-4">
+          <div className="w-96 mx-auto pr-4 hover:scale-150 transition-all duration-500 cursor-pointer z-10">
             <img src={product.imgUrl} alt={product.title} />
           </div>
           <div className="flex-1 px-4 bg-white rounded-lg shadow-md p-4 relative">
