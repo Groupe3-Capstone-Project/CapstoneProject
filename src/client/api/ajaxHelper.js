@@ -18,7 +18,6 @@ export async function registerUser(
   username,
   password,
   imgUrl,
-  isAdmin
 ) {
   try {
     const response = await fetch(`${BASE_URL}/users/register`, {
@@ -31,13 +30,12 @@ export async function registerUser(
         username,
         password,
         imgUrl,
-        isAdmin,
       }),
     });
-
     const data = await response.json();
     const token = data.token;
     const userIsAdmin = data.user.isAdmin;
+    console.log("respponse ajax reg:", userIsAdmin)
     window.localStorage.setItem("isAdmin", userIsAdmin);
     window.localStorage.setItem("token", token);
     window.localStorage.setItem("userId", data.user.id);

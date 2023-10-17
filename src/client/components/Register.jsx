@@ -3,7 +3,7 @@ import { registerUser, fetchUserByUsername } from "../api/ajaxHelper";
 import earingPerl from "../assets/IMG/earingPerl.jpg";
 import { useNavigate } from "react-router-dom";
 
-export default function Register({ setIsAdmin, setToken, setUserId }) {
+export default function Register({ setIsAdmin, setToken, setUserId, setCurrentUser }) {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -43,6 +43,7 @@ export default function Register({ setIsAdmin, setToken, setUserId }) {
 
       const usernameExists = await fetchUserByUsername(username);
       if (usernameExists && usernameExists.message === "username good to go") {
+        console.log("Username1 ?:", usernameExists);
         setError("");
       } else {
         setError("Username is already taken.");
@@ -59,9 +60,10 @@ export default function Register({ setIsAdmin, setToken, setUserId }) {
       );
       const token = response.token;
       const userId = response.user.id;
-      if (!response.user.isAdmin) {
-        setIsAdmin(null);
-      }
+      console.log("response?", response);
+      // if (response.user && response.user.isAdmin === false) {
+      //   setIsAdmin(null);
+      // }
       // const userId = response.user.id;
       console.log("user from register:", userId);
       setToken(token);

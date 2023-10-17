@@ -21,7 +21,7 @@ async function createUser({
         "https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-default-male-avatar-png-image_2811083.jpg";
     }
     // Insure default isAdmin value is false if none provided, and not null
-    if (!isAdmin) {
+    if (!isAdmin || isAdmin === undefined) {
       isAdmin = false;
     }
     // Insure default value of isActive is true, incase none provided

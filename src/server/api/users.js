@@ -84,7 +84,7 @@ usersRouter.post("/register", async (req, res, next) => {
     isActive,
   } = req.body;
   console.log("creating user with admin rights");
-  console.log(isAdmin);
+  console.log("Route is admin",isAdmin);
   try {
     const _user = await getUserByUsername(username);
     if (_user) {
