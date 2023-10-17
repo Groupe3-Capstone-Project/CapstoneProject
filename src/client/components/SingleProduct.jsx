@@ -3,7 +3,6 @@ import { fetchSingleProduct, addProduct } from "../api/ajaxHelper";
 import { addToGuestCart } from "../api/initializeGuestCart";
 import { useParams } from "react-router";
 import { VscChromeClose } from "react-icons/vsc";
-import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 export default function SingleProduct({ userId }) {

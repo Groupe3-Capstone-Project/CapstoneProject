@@ -11,6 +11,8 @@ function getHeaders() {
   }
   return headers;
 }
+
+// Register User
 export async function registerUser(
   name,
   email,
@@ -35,7 +37,7 @@ export async function registerUser(
     const data = await response.json();
     const token = data.token;
     const userIsAdmin = data.user.isAdmin;
-    console.log("respponse ajax reg:", userIsAdmin)
+    // console.log("respponse ajax reg:", userIsAdmin);
     window.localStorage.setItem("isAdmin", userIsAdmin);
     window.localStorage.setItem("token", token);
     window.localStorage.setItem("userId", data.user.id);
@@ -102,7 +104,7 @@ export async function loginUser(username, password) {
       window.localStorage.setItem("isAdmin", isAdmin);
       window.localStorage.setItem("token", token);
       window.localStorage.setItem("userId", data.user.id);
-      console.log("Logged as user: ", data);
+      // console.log("Logged as user: ", data);
     } else {
       throw new Error("Login failed: Invalid username or password");
     }
@@ -133,7 +135,7 @@ export async function fetchAllProducts() {
       headers: getHeaders(),
     });
     const data = await res.json();
-    console.log("Fetched all products: ", data);
+    // console.log("Fetched all products: ", data);
     return data;
   } catch (error) {
     console.error(error);
@@ -149,7 +151,7 @@ export async function fetchPaginatedProducts(currentPage, itemsPerPage) {
         headers: getHeaders(),
       });
     const data = await response.json();
-    console.log("Fetched paginated products: ", data);
+    // console.log("Fetched paginated products: ", data);
     return data;
   } catch (error) {
     console.error("Error fetching paginated products:", error);
@@ -167,7 +169,7 @@ export async function addProduct(productId) {
       }),
     });
     const data = await response.json();
-    console.log("Added product: ", data);
+    // console.log("Added product: ", data);
     return data;
   } catch (error) {
     console.log(error);
@@ -185,7 +187,7 @@ export async function removeProduct(productId) {
       }),
     });
     const data = await response.json();
-    console.log("Removed Product: ", data);
+    // console.log("Removed Product: ", data);
     return data;
   } catch (error) {
     console.log(error);
@@ -212,7 +214,7 @@ export async function fetchSingleProduct(productId) {
       headers: getHeaders(),
     });
     const data = await response.json();
-    console.log("Fetched single product: ", data);
+    // console.log("Fetched single product: ", data);
     return data;
   } catch (error) {
     console.log(error);
@@ -227,7 +229,7 @@ export async function getCart(userId) {
     });
     // console.log(userId)
     const data = await response.json();
-    console.log("fire from getCart", data);
+    // console.log("fire from getCart", data);
     return data;
   } catch (error) {
     console.log(error);
@@ -241,7 +243,7 @@ export async function deleteProduct(productId) {
       method: "DELETE",
     });
     const result = await response.json();
-    console.log("Deleted product:", result);
+    // console.log("Deleted product:", result);
     return result;
   } catch (error) {
     console.error(error);
@@ -256,7 +258,7 @@ export async function deleteUser(userId) {
       method: "DELETE",
     });
     const result = await response.json();
-    console.log("deleted user:", result);
+    // console.log("deleted user:", result);
     return result;
   } catch (error) {
     console.error(error);
@@ -294,7 +296,7 @@ export async function createProduct({
       }),
     });
     const result = await response.json();
-    console.log("Created product:", result);
+    // console.log("Created product:", result);
   } catch (error) {
     console.error(error);
   }
@@ -332,7 +334,7 @@ export async function editProduct({
       body: JSON.stringify(sendData),
     });
     const data = await res.json();
-    console.log("Edited product:", data);
+    // console.log("Edited product:", data);
     return data.data.post;
   } catch (error) {
     console.log(error);
@@ -370,7 +372,7 @@ export async function editUser({
       body: JSON.stringify(sendData),
     });
     const data = await res.json();
-    console.log("Edited user:", data);
+    // console.log("Edited user:", data);
     return data;
   } catch (error) {
     console.log(error);

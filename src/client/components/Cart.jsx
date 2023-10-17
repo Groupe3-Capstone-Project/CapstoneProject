@@ -44,7 +44,7 @@ export default function Cart({
       // console.log("from remove in cart:", response);
 
       setCart(response.userCart);
-      console.log("response del prod:", response);
+      // console.log("response del prod:", response);
       if (response) {
       } else {
         console.error("Failed to remove product from cart.");
@@ -54,7 +54,7 @@ export default function Cart({
     }
   }
 
-  console.log("2nd one:", cartTotalItems);
+  // console.log("2nd one:", cartTotalItems);
   return (
     <div className="relative">
       {!isOpen && (

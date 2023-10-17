@@ -64,8 +64,7 @@ export default function Register({ setIsAdmin, setToken, setUserId, setCurrentUs
       // if (response.user && response.user.isAdmin === false) {
       //   setIsAdmin(null);
       // }
-      // const userId = response.user.id;
-      console.log("user from register:", userId);
+      // console.log("user from register:", userId);
       setToken(token);
       setUserId(userId);
       setCurrentUser(username);

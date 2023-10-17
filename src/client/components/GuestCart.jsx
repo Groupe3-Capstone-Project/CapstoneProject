@@ -46,7 +46,7 @@ export default function GuestCart({
     }
   }
 
-  console.log("2nd one:", totalPrice);
+  // console.log("2nd one:", totalPrice);
   return (
     <div className="relative">
       {!isOpen && (

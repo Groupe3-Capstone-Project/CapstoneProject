@@ -25,7 +25,7 @@ export default function Checkout({ userId }) {
   console.log("checke this cart", cart);
   console.log("Total Price:", totalPrice);
 
-  console.log("Check this cart out:", cart);
+  // console.log("Check this cart out:", cart);
   if (!cart) {
     return (
       <div>
@@ -38,7 +38,7 @@ export default function Checkout({ userId }) {
   const handleCheckout = async () => {
     try {
       const orderId = cart.orderId;
-      console.log("orderId?? ", orderId);
+      // console.log("orderId?? ", orderId);
       if (userId) {
         const result = await completeOrder(orderId);
       } else {
@@ -54,7 +54,7 @@ export default function Checkout({ userId }) {
   const handleCancelOrder = async (orderId) => {
     try {
       const orderId = cart.orderId;
-      console.log("orderId?? ", orderId);
+      // console.log("orderId?? ", orderId);
       if (userId) {
         const result = await cancelOrder(orderId);
       } else {

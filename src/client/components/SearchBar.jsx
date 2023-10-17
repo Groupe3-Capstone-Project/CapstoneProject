@@ -9,7 +9,7 @@ export default function SearchBar({ setResult }) {
     fetch(`${BASE_URL}/products`)
       .then((response) => response.json())
       .then((products) => {
-        console.log("Fetched products:", products);
+        // console.log("Fetched products:", products);
 
         if (Array.isArray(products)) {
           const result = value
@@ -24,7 +24,7 @@ export default function SearchBar({ setResult }) {
                 });
               })
             : [];
-          console.log(result);
+          // console.log(result);
           setResult(result);
         } else {
           console.error("Product data is not an array:", products);

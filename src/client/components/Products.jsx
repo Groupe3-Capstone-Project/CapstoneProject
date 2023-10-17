@@ -76,12 +76,11 @@ export default function Products({ userId }) {
     try {
       if (userId) {
         const response = await addProduct(product.id);
-
         if (!response) {
           console.error("Failed to add product to cart.");
         } else {
           setCart(response.userCart);
-          console.log("handle add", response.userCart);
+          // console.log("handle add", response.userCart);
           setShowConfirmation(true);
           setTimeout(() => {
             setShowConfirmation(false);
@@ -130,8 +129,8 @@ export default function Products({ userId }) {
       for (const item of cart.cart_items) {
         totalItems += item.quantity;
       }
-      console.log("Current cart:", cart);
-      console.log("cart item total", totalItems);
+      // console.log("Current cart:", cart);
+      // console.log("cart item total", totalItems);
       setCartTotalItems(totalItems);
       return totalItems;
     };
