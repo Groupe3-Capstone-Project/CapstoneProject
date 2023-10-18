@@ -15,7 +15,6 @@ async function createOrder({ userId, status }) {
         `,
       [userId, status]
     );
-
     // Return the newly created order.
     //   console.log("db order:", userId);
     return order;
@@ -161,7 +160,7 @@ async function getCartByUserId(userId) {
             order_products.price,
             products.title AS product_title,
             products."imgUrl" AS product_img
-        FROM 
+        FROM
             orders
         LEFT JOIN
             users ON orders."userId" = users.id    
