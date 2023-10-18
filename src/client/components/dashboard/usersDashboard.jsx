@@ -16,6 +16,7 @@ export default function UsersDashboard() {
 
   const handleCreate = async (data) => {
     try {
+      console.log("creating data?", data);
       await createUser(data);
       // console.log("user created!");
       fetchUsers();

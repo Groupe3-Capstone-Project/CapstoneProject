@@ -131,12 +131,14 @@ function UserModal({
                   handleChange={handleChange}
                   formData={formData}
                 />
-                <Checkbox
-                  name="isActive"
-                  handleChange={handleChange}
-                  formData={formData}
-                  type="checkbox"
-                />
+                {!formData.isAdmin && (
+                  <Checkbox
+                    name="isActive"
+                    handleChange={handleChange}
+                    formData={formData}
+                    type="checkbox"
+                  />
+                )}
                 {error && <p className="text-red-500">{error}</p>}
               </form>
             </div>

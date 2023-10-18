@@ -18,6 +18,7 @@ function ProductModal({
     period: product?.period || "",
     medium: product?.medium || "",
     dimensions: product?.dimensions || "",
+    isActive: product?.isActive,
   });
   const [errors, setErrors] = useState({});
 
@@ -25,8 +26,8 @@ function ProductModal({
     const validationErrors = {};
     const productExists = products.some(
       (p) => p.title === formData.title && p.id !== formData.postId
-      );
-      if (productExists) {
+    );
+    if (productExists) {
       console.log("prod mod productsExist", productExists);
       validationErrors.title = "Title already taken.";
     }
@@ -67,10 +68,10 @@ function ProductModal({
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: type === "checkbox" ? e.target.checked : value,
     });
   };
 
@@ -143,6 +144,12 @@ function ProductModal({
                   handleChange={handleChange}
                   formData={formData}
                 />
+                <Checkbox
+                  name="isActive"
+                  handleChange={handleChange}
+                  formData={formData}
+                  type="checkbox"
+                />
                 {Object.keys(errors).map((key) => (
                   <p key={key} className="text-red-500">
                     {errors[key]}
@@ -210,4 +217,26 @@ function TextAreaInput({ name, handleChange, formData }) {
     </div>
   );
 }
+
+function Checkbox({ handleChange, formData, name }) {
+  return (
+    <div className="form-control">
+      <label className="label cursor-pointer">
+        <span className="label-text" style={{ marginLeft: '600px' }}>
+          {name === "isActive" ? "Is Active" : ""}</span>
+        <select
+          type="checkbox"
+          name={name}
+          id={name}
+          onChange={handleChange}
+          value={formData[name]}
+        >
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+      </label>
+    </div>
+  );
+}
+
 export default ProductModal;

@@ -28,6 +28,7 @@ const productsDashboard = () => {
 
   const handleCreate = async (data) => {
     try {
+      console.log("creating data?", data);
       await createProduct(data);
       fetchProducts();
     } catch (err) {
@@ -44,8 +45,8 @@ const productsDashboard = () => {
         </button>
         {modalOpen && (
           <ProductModal
-            setModalOpen={setModalOpen}
             type="new"
+            setModalOpen={setModalOpen}
             handleSubmit={handleCreate}
             products={products}
           />
@@ -69,6 +70,7 @@ function Products({ fetchProducts, products }) {
 
   const handleDelete = async (id) => {
     try {
+      console.log("delte prod?", products);
       await deleteProduct(id);
       fetchProducts();
     } catch (err) {
@@ -139,6 +141,13 @@ function Product({ product, handleEdit, handleDelete, products }) {
         <span className="badge badge-ghost badge-sm">{product.period}</span>
       </td>
       <td>{product.price}</td>
+      <td>
+        {product.isActive ? (
+          <span className="badge badge-success badge-sm">Active</span>
+        ) : (
+          <span className="badge badge-error badge-sm">Inactive</span>
+        )}
+      </td>
       <th className="flex gap-2 font-normal">
         <button className="btn" onClick={() => setModalOpen(true)}>
           Edit
@@ -151,13 +160,14 @@ function Product({ product, handleEdit, handleDelete, products }) {
             products={products}
           />
         )}
-
-        <button
-          className="btn btn-error btn-outline"
-          onClick={() => setDeleteModel(true)}
-        >
-          Delete
-        </button>
+        {product.isActive && (
+          <button
+            className="btn btn-error btn-outline"
+            onClick={() => setDeleteModel(true)}
+          >
+            Delete
+          </button>
+        )}
         {deleteModal && (
           <DeleteModal
             type="product"

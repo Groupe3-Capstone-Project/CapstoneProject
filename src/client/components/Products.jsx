@@ -138,6 +138,7 @@ export default function Products({ userId }) {
   }, [cart]);
 
   function renderAllProducts() {
+    
     return (
       <div className="mx-4 md:mx-8">
         <div className="flex">

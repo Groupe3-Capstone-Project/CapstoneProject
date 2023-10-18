@@ -19,7 +19,7 @@ export async function registerUser(
   address,
   username,
   password,
-  imgUrl,
+  imgUrl
 ) {
   try {
     const response = await fetch(`${BASE_URL}/users/register`, {
@@ -95,7 +95,6 @@ export async function loginUser(username, password) {
       }),
     });
     if (response) {
-
     }
     const data = await response.json();
     if (response.status === 200) {
@@ -149,7 +148,8 @@ export async function fetchPaginatedProducts(currentPage, itemsPerPage) {
       `/api/products/paginated?page=${currentPage}&limit=${itemsPerPage}`,
       {
         headers: getHeaders(),
-      });
+      }
+    );
     const data = await response.json();
     // console.log("Fetched paginated products: ", data);
     return data;
@@ -270,33 +270,42 @@ export async function createProduct({
   title,
   artist,
   description,
-  price,
-  imgUrl,
-  year,
-  medium,
   period,
+  medium,
+  price,
+  year,
   dimensions,
+  imgUrl,
+  isActive,
 }) {
   try {
     const response = await fetch(`${BASE_URL}/products`, {
       headers: getHeaders(),
       method: "POST",
       body: JSON.stringify({
-        post: {
           title,
           artist,
           description,
-          price,
-          imgUrl,
-          year,
-          medium,
           period,
+          medium,
+          price,
+          year,
           dimensions,
+          imgUrl,
+          isActive,
         },
-      }),
+      ),
     });
-    const result = await response.json();
-    // console.log("Created product:", result);
+    if (response.ok) {
+      const result = await response.json();
+      // Handle successful response
+      return result;
+    } else {
+      // Handle error response (e.g., server returned an error)
+      const errorData = await response.json();
+      console.error("Server Error:", errorData);
+      throw new Error("Failed to create product");
+    }
   } catch (error) {
     console.error(error);
   }
@@ -306,24 +315,26 @@ export async function editProduct({
   title,
   artist,
   description,
-  price,
-  imgUrl,
-  year,
-  medium,
   period,
+  medium,
+  price,
+  year,
   dimensions,
+  imgUrl,
+  isActive,
   postId,
 }) {
   const sendData = {
     title,
     artist,
     description,
-    price,
-    imgUrl,
-    year,
     period,
-    dimensions,
     medium,
+    price,
+    year,
+    dimensions,
+    imgUrl,
+    isActive,
   };
   // console.log("SEND DAta ");
   // console.log(sendData);

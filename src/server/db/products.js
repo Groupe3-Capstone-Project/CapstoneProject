@@ -69,7 +69,7 @@ async function createProduct({
       imgUrl =
         "https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-default-male-avatar-png-image_2811083.jpg";
     }
-    if (!isActive) {
+    if (!isActive || isActive === undefined) {
       isActive = true;
     }
     const {
