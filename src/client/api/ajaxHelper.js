@@ -37,7 +37,7 @@ export async function registerUser(
     const data = await response.json();
     const token = data.token;
     const userIsAdmin = data.user.isAdmin;
-    // console.log("respponse ajax reg:", userIsAdmin);
+    console.log("respponse ajax reg:", userIsAdmin);
     window.localStorage.setItem("isAdmin", userIsAdmin);
     window.localStorage.setItem("token", token);
     window.localStorage.setItem("userId", data.user.id);
@@ -334,8 +334,8 @@ export async function editProduct({
       body: JSON.stringify(sendData),
     });
     const data = await res.json();
-    // console.log("Edited product:", data);
-    return data.data.post;
+    console.log("Edited product:", data);
+    return data.product;
   } catch (error) {
     console.log(error);
     return {};

@@ -24,10 +24,10 @@ function ProductModal({
   const handleSave = () => {
     const validationErrors = {};
     const productExists = products.some(
-      (p) => p.title === formData.title && p.id !== formData.id
-    );
-
-    if (productExists) {
+      (p) => p.title === formData.title && p.id !== formData.postId
+      );
+      if (productExists) {
+      console.log("prod mod productsExist", productExists);
       validationErrors.title = "Title already taken.";
     }
 

@@ -83,8 +83,6 @@ usersRouter.post("/register", async (req, res, next) => {
     isAdmin,
     isActive,
   } = req.body;
-  console.log("creating user with admin rights");
-  // console.log("Route is admin",isAdmin);
   try {
     const _user = await getUserByUsername(username);
     if (_user) {
@@ -112,8 +110,8 @@ usersRouter.post("/register", async (req, res, next) => {
       {
         expiresIn: "1w",
       }
-    );
-    const order = await createOrder({
+      );
+      const order = await createOrder({
       userId: user.id,
       status: "created", // You can customize this as needed
     });
