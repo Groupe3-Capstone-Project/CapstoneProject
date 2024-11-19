@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { fetchUserByUsername } from "../api/ajaxHelper";
 
 export default function NavBar({
   token,
@@ -11,7 +12,24 @@ export default function NavBar({
   currentUser,
   setCurrentUser,
 }) {
+  const [theUser, setTheUser] = useState();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function fetchUserByName() {
+      try {
+        if (currentUser) {
+          const response = await fetchUserByUsername(currentUser);
+          console.log("theUser:", response);
+          setTheUser(response);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUserByName();
+  }, [currentUser]);
+
   const handleLogout = () => {
     setToken(null);
     window.localStorage.clear();
@@ -28,7 +46,14 @@ export default function NavBar({
           - The Online Gallery -
         </Link>
         {currentUser ? (
-          <p className="navuser">Welcome {currentUser}</p>
+          <div className="flex items-center gap-1">
+            <p className="navuser">Welcome {currentUser}</p>
+            {theUser && theUser.user && (
+              <div className="mask mask-squircle w-9 h-9">
+                <img src={theUser.user.imgUrl} alt="Profile avatar" />
+              </div>
+            )}
+          </div>
         ) : (
           <p>Welcome guest user</p>
         )}
@@ -70,5 +95,3 @@ export default function NavBar({
     </nav>
   );
 }
-
-// LOL the logout component is not actually used, hence why we were getting ghost ID post logout, fixed it!!! that was so so soooooooooo annoying!! we did it!!!!!! -G

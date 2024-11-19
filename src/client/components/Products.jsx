@@ -138,7 +138,6 @@ export default function Products({ userId }) {
   }, [cart]);
 
   function renderAllProducts() {
-    
     return (
       <div className="mx-4 md:mx-8">
         <div className="flex">
@@ -151,7 +150,7 @@ export default function Products({ userId }) {
                 className="text-white-100 text-8xl font-bold absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
                 style={{ color: "beige", textShadow: "1px 1px 6px black" }}
               >
-                The Gallery Shop
+                The Online Gallery
               </h1>
             </div>
             <div className="flex">

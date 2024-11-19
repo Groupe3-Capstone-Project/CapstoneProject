@@ -143,7 +143,7 @@ function User({ user, users, handleDelete, handleEdit, error, setError }) {
           <div className="avatar">
             <div className="mask mask-squircle w-12 h-12">
               <img
-                src="https://png.pngtree.com/png-clipart/20210129/ourmid/pngtree-default-male-avatar-png-image_2811083.jpg"
+                src={user.imgUrl}
                 alt="Profile avatar"
               />
             </div>
@@ -181,15 +181,14 @@ function User({ user, users, handleDelete, handleEdit, error, setError }) {
             setError={setError}
           />
         )}
-        {user.isActive &&
-          !user.isAdmin && ( // Conditionally render the "Delete" button
-            <button
-              className="btn btn-outline btn-error"
-              onClick={() => setDeleteModel(true)}
-            >
-              Delete
-            </button>
-          )}
+        {user.isActive && !user.isAdmin && (
+          <button
+            className="btn btn-outline btn-error"
+            onClick={() => setDeleteModel(true)}
+          >
+            Delete
+          </button>
+        )}
         {deleteModal && (
           <DeleteModal
             type="user"

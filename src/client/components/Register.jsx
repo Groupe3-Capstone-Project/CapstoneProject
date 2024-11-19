@@ -4,6 +4,7 @@ import earingPerl from "../assets/IMG/earingPerl.jpg";
 import { useNavigate } from "react-router-dom";
 
 export default function Register({ setIsAdmin, setToken, setUserId, setCurrentUser }) {
+  const [imgUrl, setImgUrl] = useState('')
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -16,6 +17,10 @@ export default function Register({ setIsAdmin, setToken, setUserId, setCurrentUs
 
   const handlerRegister = async () => {
     try {
+      if (imgUrl.length > 255) {
+        setError("Avatar image URL must be 255 characters or less.")
+        return;
+      }
       if (username.length < 6) {
         setError("Username must be at least 6 characters.");
         return;
@@ -52,12 +57,14 @@ export default function Register({ setIsAdmin, setToken, setUserId, setCurrentUs
       }
 
       const response = await registerUser(
+        imgUrl,
         name,
         email,
         address,
         username,
         password
       );
+      console.log("img?", imgUrl);
       const token = response.token;
       const userId = response.user.id;
       console.log("response?", response);
@@ -75,6 +82,12 @@ export default function Register({ setIsAdmin, setToken, setUserId, setCurrentUs
       setError("Registration failed, try again but better");
       console.error("Registration failed: ", error);
     }
+  };
+
+  const handleAvatarChange = (e) => {
+    const value = e.target.value;
+    setImgUrl(value);
+    setError("")
   };
 
   const handleUsernameChange = (e) => {
@@ -149,6 +162,15 @@ export default function Register({ setIsAdmin, setToken, setUserId, setCurrentUs
             <h2 className="text-4xl dark:text-white font-bold text-center">
               Register
             </h2>
+            <div className="flex flex-col text-gray-400 py-2">
+              <input
+                className="rounded-lg bg-gray-700 mt-2 p-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none"
+                type="url"
+                placeholder="Avatar image URL"
+                value={imgUrl}
+                onChange={handleAvatarChange}
+              />
+            </div>
             <div className="flex flex-col text-gray-400 py-2">
               <input
                 className="rounded-lg bg-gray-700 mt-2 p-2 focus:border-blue-500 focus:bg-gray-800 focus:outline-none"

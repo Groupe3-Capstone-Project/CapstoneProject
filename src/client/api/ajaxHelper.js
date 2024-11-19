@@ -14,24 +14,24 @@ function getHeaders() {
 
 // Register User
 export async function registerUser(
+  imgUrl,
   name,
   email,
   address,
   username,
   password,
-  imgUrl
 ) {
   try {
     const response = await fetch(`${BASE_URL}/users/register`, {
       headers: getHeaders(),
       method: "POST",
       body: JSON.stringify({
+        imgUrl,
         name,
         email,
         address,
         username,
         password,
-        imgUrl,
       }),
     });
     const data = await response.json();
